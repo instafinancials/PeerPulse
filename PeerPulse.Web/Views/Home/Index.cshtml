@@ -1,0 +1,1717 @@
+﻿@{
+    ViewData["Title"] = "Know Your Competitors Better & Faster";
+    ViewData["Description"] = "Benchmark confidently, outmaneuver competitors, and scale with precision using PeerPulse corporate intelligence.";
+}
+
+<div x-data="{ page: 'home', darkMode: false, mobileMenuOpen: false, pricingPeriod: 'quarterly', openFaq: 0 }"
+     :class="{ 'dark bg-gray-900 text-white': darkMode, 'bg-[#fcfdfd] text-gray-800': !darkMode }"
+     class="font-inter antialiased selection:bg-[#0f9b48]/20 selection:text-[#023e8a]">
+
+    <!-- ========================================================================= -->
+    <!-- NAVIGATION HEADER                                                         -->
+    <!-- ========================================================================= -->
+    <header class="sticky top-0 z-50 backdrop-blur-md transition-all duration-300 border-b border-gray-200/80 bg-white/90 dark:bg-gray-900/90 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <a href="#hero" class="flex items-center gap-2.5 group">
+                        <img src="../images/logo/logo-icon.svg" asp-append-version="true" alt="PeerPulse Logo" class="h-12 w-12" width="48" height="48" />
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-2xl font-extrabold tracking-tight text-[#023e8a] dark:text-white">
+                                    Peer<span class="text-[#0f9b48]">Pulse</span>
+                                </span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#0f9b48]/10 text-[#0f9b48] border border-[#0f9b48]/20">Pro</span>
+                            </div>
+                            <p class="text-[11px] font-medium text-gray-500 dark:text-gray-400 leading-none">by InstaFinancials</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600 dark:text-gray-300">
+                    <a href="#discovery" class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">
+                        Intelligence
+                        Matrix
+                    </a>
+                    <a href="#capabilities"
+                       class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">Capabilities</a>
+                    <a href="#pricing" class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">Pricing</a>
+                    <a href="#faq" class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">FAQ</a>
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-[#114fa2]/10 text-[#023e8a] dark:text-[#7cd4fd] hover:bg-[#114fa2]/20 transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-[#0f9b48] animate-pulse"></span>
+                        Live Demo Dashboard
+                    </a>
+                </nav>
+
+                <!-- CTAs & Theme Toggle -->
+                <div class="hidden lg:flex items-center gap-3">
+                    <!-- Dark Mode Toggle -->
+                    <button @@click="darkMode = !darkMode" type="button"
+                        class="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800 transition-colors"
+                        aria-label="Toggle theme">
+                        <template x-if="!darkMode">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                            </svg>
+                        </template>
+                        <template x-if="darkMode">
+                            <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                        </template>
+                    </button>
+
+                    <!-- Secondary CTA (Primary Dark Blue) -->
+                    <a href="#pricing" class="btn-secondary-cta text-xs px-3.5 py-2">
+                        Book a Strategy Demo
+                    </a>
+
+                    <!-- Primary CTA (Primary Green) -->
+                    <a  asp-controller="Account" asp-action="Login" class="btn-primary-cta text-xs px-4 py-2">
+                        Start Free Comparison
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Toggle Button -->
+                <div class="flex items-center gap-2 md:hidden">
+                    <button @@click="mobileMenuOpen = !mobileMenuOpen" type="button"
+                        class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        aria-label="Open mobile menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div x-show="mobileMenuOpen" x-collapse
+             class="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 pt-3 pb-6 space-y-3">
+            <a @@click="mobileMenuOpen = false" href="#discovery"
+            class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">Intelligence Matrix</a>
+            <a @@click="mobileMenuOpen = false" href="#capabilities"
+            class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">Capabilities</a>
+            <a @@click="mobileMenuOpen = false" href="#pricing"
+            class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">Pricing</a>
+            <a @@click="mobileMenuOpen = false" href="#faq"
+            class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">FAQ</a>
+            <a @@click="mobileMenuOpen = false" href="/Account/Login"
+            class="block py-2 text-sm font-medium text-[#023e8a] dark:text-[#36bffa]">Interactive Dashboard</a>
+            <div class="pt-2 flex flex-col gap-2">
+                <a href="/Account/Login" class="btn-primary-cta w-full text-center">Start Free Comparison</a>
+                <a href="#pricing" class="btn-secondary-cta w-full text-center">Book a Strategy Demo</a>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1: AWARENESS (Hero & Above the Fold)                              -->
+    <!-- ========================================================================= -->
+    <section id="hero" class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+        <!-- Ambient background glows with brand colors -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-[#023e8a]/10 via-[#0f9b48]/8 to-[#ffd203]/5 rounded-full blur-3xl pointer-events-none -z-10">
+        </div>
+        <div class="absolute top-1/3 -right-20 w-80 h-80 bg-[#114fa2]/10 rounded-full blur-2xl pointer-events-none -z-10">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Eyebrow Pill -->
+            <div class="flex justify-center mb-6">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#023e8a]/10 via-[#114fa2]/10 to-[#0f9b48]/15 border border-[#0f9b48]/30 shadow-xs">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1fb14c] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#0f9b48]"></span>
+                    </span>
+                    <span class="text-xs sm:text-sm font-semibold tracking-wide text-[#023e8a] dark:text-[#66d28c]">
+                        Corporate Intelligence &amp; Competitive Benchmarking Platform
+                    </span>
+                </div>
+            </div>
+
+            <!-- Main Headline & Subheadline -->
+            <div class="text-center max-w-4xl mx-auto mb-10">
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 dark:text-white leading-[1.15] mb-6">
+                    Feel the Market's Pulse <br class="hidden sm:block" />
+                    <span class="bg-gradient-to-r from-[#023e8a] via-[#114fa2] to-[#0f9b48] bg-clip-text text-transparent">
+                        Outsmart Competitors.
+                    </span> <br class="hidden sm:block" />
+                    Anticipate Next Moves.
+                </h1>
+
+                <p class="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                    PeerPulse aggregates regulatory filings, corporate structures, statutory compliances, website technical
+                    profiles & performance, and
+                    digital footprint analytics into unified, board-ready competitor benchmarking reports with <span class="text-[#023e8a] dark:text-[#7cd4fd] font-bold">AI powered</span> recommendations.
+                </p>
+
+                <!-- Hero CTA Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <!-- Primary CTA Button (Primary Green) -->
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="btn-primary-cta text-base px-8 py-3.5 w-full sm:w-auto shadow-lg shadow-[#0f9b48]/25 hover:shadow-[#0f9b48]/40 hover:-translate-y-0.5 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                            </path>
+                        </svg>
+                        Start Free Comparison
+                    </a>
+
+                    <!-- Secondary CTA Button (Primary Dark Blue BG) -->
+                    <a href="#pricing"
+                       class="btn-secondary-cta text-base px-7 py-3.5 w-full sm:w-auto shadow-lg shadow-[#023e8a]/20 hover:shadow-[#023e8a]/35 hover:-translate-y-0.5 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Book a Strategy Demo
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- Trust Proof Strip -->
+            <div class="max-w-5xl mx-auto mt-6 mb-12">
+                <div class="rounded-2xl bg-white dark:bg-gray-800/80 border border-gray-200/80 dark:border-gray-700/80 p-5 shadow-xs subtle-border-green">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-[#0f9b48]/10 text-[#0f9b48] flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Verified Indian Registry Data
+                                </p>
+                                <p class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">
+                                    Aggregating statutory and public intelligence across <span class="text-[#023e8a] dark:text-[#36bffa]">35 Lakh+</span> registered corporate & <span class="text-[#023e8a] dark:text-[#36bffa]">1.5 Crore+</span> GSTIN entities in India.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Live Counter Badges -->
+                        <div class="flex flex-col gap-2 shrink-0 lg:items-end items-center max-w-xl">
+                            <!-- Row 1: Statutory, Regulatory & Legal Intelligence -->
+                            <div class="flex flex-wrap items-center justify-center lg:justify-end gap-2">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] border border-[#023e8a]/20">
+                                    MCA
+                                    / ROC
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#0f9b48]/10 text-[#0f9b48] dark:text-[#66d28c] border border-[#0f9b48]/20">GSTIN</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#ffd203]/20 text-[#856404] dark:text-[#ffd203] border border-[#ffd203]/30">EPFO</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#ee312b]/10 text-[#ee312b] dark:text-[#ff807d] border border-[#ee312b]/20">eCourts</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#114fa2]/10 text-[#023e8a] dark:text-[#7cd4fd] border border-[#114fa2]/20">
+                                    Social
+                                    Media
+                                </span>
+                            </div>
+                            <!-- Row 2: Digital, Technology & Corporate DNA -->
+                            <div class="flex flex-wrap items-center justify-center lg:justify-end gap-2">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#0f9b48]/10 text-[#0f9b48] dark:text-[#66d28c] border border-[#0f9b48]/20">
+                                    Website
+                                    Tech
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#7c3aed]/10 text-[#7c3aed] dark:text-[#c4b5fd] border border-[#7c3aed]/20">
+                                    Tech
+                                    Stack
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#ed8231]/15 text-[#ed8231] dark:text-[#ffaa6b] border border-[#ed8231]/20">
+                                    Patents
+                                    &amp; Trademarks
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#0284c7]/10 text-[#0284c7] dark:text-[#38bdf8] border border-[#0284c7]/20">
+                                    Leadership
+                                    Team
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#059669]/10 text-[#059669] dark:text-[#34d399] border border-[#059669]/20">
+                                    Certifications
+                                    &amp; Awards
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2: INTEREST (Discovery, Unified Intelligence & Segmentation)      -->
+    <!-- ========================================================================= -->
+    <section id="discovery" class="py-20 bg-gray-50 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#114fa2]/10 text-[#023e8a] dark:text-[#7cd4fd] text-xs font-bold uppercase tracking-wider mb-3">
+                    Discover, Analyse & Monitor
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+                    The 360° Competitor Intelligence Surface
+                </h2>
+                <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300">
+                    Still learning who your competitors are from your lost prospects? Stop guessing and start Discovering,
+                    Analysing and Monitoring your competitors.
+                </p>
+            </div>
+
+            <!-- Subsection 1: Intelligent Discovery by Industry DNA -->
+            <div class="mb-20">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <!-- Card 1: Discovery -->
+                    <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-xs hover:shadow-md transition-shadow subtle-border-blue">
+                        <div class="w-12 h-12 rounded-xl bg-[#023e8a]/10 text-[#023e8a] dark:text-[#6699d1] flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#023e8a] dark:text-white mb-2">Discover Your Peers</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Discover your competitors using MCA national industry classifications and product-level GST codes,
+                            revenue, geographical and industry parameters.
+                        </p>
+                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center text-xs font-semibold text-[#023e8a]">
+                            <span>35 Lakh Companies & 1.5 Crore GSTINs</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Analyse Peer -->
+                    <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-xs hover:shadow-md transition-shadow subtle-border-green">
+                        <div class="w-12 h-12 rounded-xl bg-[#0f9b48]/10 text-[#0f9b48] flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#0f9b48] dark:text-white mb-2">Analyse Your Peers</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            With PeerPulse Report, get microscopic view of your peer performanceusing intelligent analytics,
+                            benchmarking and AI recommendations.
+                        </p>
+                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center text-xs font-semibold text-[#0f9b48]">
+                            <span>250+ financial and thousands of key signals</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Monitor Peers -->
+                    <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-xs hover:shadow-md transition-shadow subtle-border-orange">
+                        <div class="w-12 h-12 rounded-xl bg-[#ed8231]/10 text-[#ed8231] flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
+                                </path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-[#ed8231] dark:text-white mb-2">Monitor Your Peers</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Cluster competitors across business units, subsidiaries, or independent product lines to prevent
+                            apples-to-oranges financial evaluations.
+                        </p>
+                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center text-xs font-semibold text-[#ed8231]">
+                            <span>Multi-vertical watchlist clustering</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Subsection 2: Comprehensive 10-Layer Peer Intelligence Matrix -->
+            <div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
+                        Comprehensive Multi-Layer Peer Intelligence Matrix
+                    </h3>
+                    <span class="text-xs font-semibold px-3 py-1.5 rounded-full bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] self-start sm:self-auto">
+                        250+ Financial • 1000+ Business Signals
+                    </span>
+                </div>
+
+                <!-- 10-Layer Matrix Table Card -->
+                <div class="rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden subtle-border-primary">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300">
+                                    <th scope="col" class="py-4 px-6 w-1/4">Intelligence Vector</th>
+                                    <th scope="col" class="py-4 px-6 w-2/4">Data Points &amp; Coverage</th>
+                                    <th scope="col" class="py-4 px-6 w-1/4 text-right">Cadence &amp; Source</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700/60 text-sm">
+
+                                <!-- Row 1: Registry & Legal -->
+                                <tr class="hover:bg-blue-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#023e8a]"></span>
+                                        Registry &amp; Legal
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        CIN, ROC jurisdiction, incorporation date, authorized vs. paid-up capital, status under CIRP.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#023e8a]/10 text-[#023e8a] dark:text-[#6699d1]">
+                                            MCA
+                                            / Real-time
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 2: Governance & Ownership -->
+                                <tr class="hover:bg-blue-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#114fa2]"></span>
+                                        Governance &amp; Ownership
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Director networks, charges/encumbrances, cap tables, shareholding patterns, parent/subsidiary
+                                        hierarchies.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#114fa2]/10 text-[#114fa2] dark:text-[#7cd4fd]">
+                                            ROC
+                                            Filings
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 3: Audited Financials -->
+                                <tr class="hover:bg-green-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#0f9b48]"></span>
+                                        Audited Financials
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Multi-year balance sheets, P&amp;L statements, cash flows, key ratios, detailed expenditure
+                                        breakdowns, and auditor remarks.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#0f9b48]/10 text-[#0f9b48]">
+                                            Annual
+                                            / Quarterly
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 4: Statutory & Tax Compliance -->
+                                <tr class="hover:bg-green-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#1fb14c]"></span>
+                                        Statutory &amp; Tax Compliance
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Multi-state GST registrations, GST filing periodicity, returns compliance cadence.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#1fb14c]/15 text-[#0d873f] dark:text-[#66d28c]">
+                                            Monthly
+                                            GSTN
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 5: Workforce Dynamics -->
+                                <tr class="hover:bg-yellow-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#ffd203]"></span>
+                                        Workforce Dynamics
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        EPFO active establishment registrations, monthly EPFO wage contributions, headcount trend
+                                        trajectory.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#ffd203]/20 text-[#856404] dark:text-[#ffd203]">
+                                            Monthly
+                                            EPFO
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 6: Enterprise MSME Status -->
+                                <tr class="hover:bg-orange-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#ed8231]"></span>
+                                        Enterprise MSME Status
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Udyam/MSME enterprise classification, priority sector status, registered operational activities.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#ed8231]/15 text-[#ed8231]">
+                                            Udyam
+                                            Register
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 7: Legal & Litigation -->
+                                <tr class="hover:bg-red-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#ee312b]"></span>
+                                        Legal &amp; Litigation
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Active court proceedings, tribunal filings (NCLT/DRT), and public legal risk indicators.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#ee312b]/10 text-[#ee312b]">
+                                            Tribunals
+                                            &amp; Courts
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 8: Digital Tech Stack -->
+                                <tr class="hover:bg-blue-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#114fa2]"></span>
+                                        Digital Tech Stack
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Tech stack telemetry—cloud hosting, analytics, CRM, payments architecture, and marketing
+                                        automations.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#114fa2]/10 text-[#023e8a] dark:text-[#7cd4fd]">
+                                            Tech
+                                            Telemetry
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 9: Web & SEO Vitality -->
+                                <tr class="hover:bg-green-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#0f9b48]"></span>
+                                        Web &amp; SEO Vitality
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Core Web Vitals, speed index, performance score, monthly traffic momentum, and bounce rate.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#0f9b48]/10 text-[#0f9b48]">
+                                            Lighthouse
+                                            / Web
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 10: Social & Brand Reach -->
+                                <tr class="hover:bg-orange-50/30 dark:hover:bg-gray-700/30 transition-colors">
+                                    <td class="py-4 px-6 font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-[#ed8231]"></span>
+                                        Social &amp; Brand Reach
+                                    </td>
+                                    <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                        Audience distribution, engagement velocity, and cross-platform footprint.
+                                    </td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="inline-flex px-2.5 py-1 rounded text-xs font-medium bg-[#ed8231]/15 text-[#ed8231]">Omnichannel</span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3: CORE PLATFORM WORKFLOW & CAPABILITIES                          -->
+    <!-- ========================================================================= -->
+    <section id="capabilities"
+             class="py-20 relative overflow-hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <!-- Ambient subtle background graphics -->
+        <div class="absolute -top-40 right-0 w-96 h-96 bg-[#0f9b48]/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-40 left-0 w-96 h-96 bg-[#023e8a]/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+            <!-- Section Main Header -->
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0f9b48]/10 text-[#0f9b48] text-xs font-bold uppercase tracking-wider mb-3">
+                    Complete Platform Workflow
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+                    Discover, Analyse &amp; Monitor Your Rivals
+                </h2>
+                <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300">
+                    Everything you need to locate your direct competitors, perform deep multi-dimensional gap analysis, and
+                    receive automated quarterly change alerts.
+                </p>
+            </div>
+
+            <!-- ===================================================================== -->
+            <!-- 3.1. PEER DISCOVERY FEATURE & DISCOVERY SCREEN                        -->
+            <!-- ===================================================================== -->
+            <div id="peer-discovery" class="mb-24 scroll-mt-24">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] text-xs font-bold uppercase tracking-wider mb-2">
+                            <span>Discovery Engine</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                            Peer Discovery: Locate Competitors by Industry DNA
+                        </h3>
+                        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mt-1">
+                            Filter across 35 Lakh+ registered companies and 1.5 Crore+ GSTINs by NIC classifications, HSN/SAC codes,
+                            geographical presence, and audited revenue brackets.
+                        </p>
+                    </div>
+                    <div class="shrink-0">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] border border-[#023e8a]/20">
+                            <span class="w-2 h-2 rounded-full bg-[#023e8a] dark:bg-[#7cd4fd]"></span>
+                            5-Digit NIC &amp; 8-Digit HSN Precision
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Discovery Screen Mockup Container -->
+                <div class="rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden subtle-border-blue">
+
+                    <!-- Mockup Search & Filter Control Bar -->
+                    <div class="p-5 sm:p-6 bg-gradient-to-r from-gray-50 to-blue-50/40 dark:from-gray-900/80 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700">
+                        <!-- Search Input with Code Selector -->
+                        <div class="flex flex-col lg:flex-row items-stretch gap-3 mb-4">
+                            <div class="relative flex-1">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" readonly
+                                       value="NIC: 6201 - Software Publishing &amp; SaaS | Location: KA, MH, DL | Rev: ₹25 Cr – ₹100 Cr"
+                                       class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-xs sm:text-sm font-medium text-gray-900 dark:text-white shadow-xs focus:outline-hidden" />
+                            </div>
+                            <button type="button"
+                                    class="btn-primary-cta text-xs px-5 py-2.5 whitespace-nowrap shadow-md shadow-[#0f9b48]/20 flex items-center justify-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                                    </path>
+                                </svg>
+                                Apply Filters (1,428 Matched Peers)
+                            </button>
+                        </div>
+
+                        <!-- Active Discovery Filter Chips -->
+                        <div class="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                            <span class="text-gray-500 font-bold uppercase tracking-wider text-[10px] mr-1">Active Criteria:</span>
+
+                            <!-- Filter Chip 1: NIC Code -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-100/70 text-[#023e8a] dark:bg-[#023e8a]/30 dark:text-[#7cd4fd] font-semibold border border-blue-200 dark:border-blue-700/50">
+                                <span>NIC: 6201 (SaaS &amp; Software)</span>
+                                <svg class="w-3 h-3 text-[#023e8a] dark:text-[#7cd4fd]" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+
+                            <!-- Filter Chip 2: HSN / SAC Code -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-100/70 text-[#0f9b48] dark:bg-[#0f9b48]/30 dark:text-[#66d28c] font-semibold border border-emerald-200 dark:border-emerald-700/50">
+                                <span>HSN/SAC: 998313 (IT Services)</span>
+                                <svg class="w-3 h-3 text-[#0f9b48] dark:text-[#66d28c]" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+
+                            <!-- Filter Chip 3: Location -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-100/70 text-[#7c3aed] dark:bg-[#7c3aed]/30 dark:text-[#c4b5fd] font-semibold border border-purple-200 dark:border-purple-700/50">
+                                <span>Location: Karnataka &bull; Maharashtra &bull; NCR</span>
+                                <svg class="w-3 h-3 text-[#7c3aed] dark:text-[#c4b5fd]" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+
+                            <!-- Filter Chip 4: Revenue Range -->
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-100/70 text-[#856404] dark:bg-amber-900/40 dark:text-amber-300 font-semibold border border-amber-200 dark:border-amber-700/50">
+                                <span>Turnover: ₹25 Cr – ₹100 Cr (FY25/24)</span>
+                                <svg class="w-3 h-3 text-[#856404] dark:text-amber-300" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Discovery Results Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100/70 dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-700 text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300">
+                                    <th scope="col" class="py-3.5 px-5">Entity Name &amp; CIN</th>
+                                    <th scope="col" class="py-3.5 px-5">NIC / HSN DNA</th>
+                                    <th scope="col" class="py-3.5 px-5">Jurisdiction</th>
+                                    <th scope="col" class="py-3.5 px-5 text-right">Revenue (FY25)</th>
+                                    <th scope="col" class="py-3.5 px-5 text-center">EPFO Headcount</th>
+                                    <th scope="col" class="py-3.5 px-5 text-center">PeerPulse Rank</th>
+                                    <th scope="col" class="py-3.5 px-5 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700/70 text-xs sm:text-sm">
+
+                                <!-- Row 1 -->
+                                <tr class="hover:bg-blue-50/40 dark:hover:bg-gray-700/40 transition-colors">
+                                    <td class="py-4 px-5">
+                                        <div class="font-bold text-gray-900 dark:text-white">Apex FinServe Pvt Ltd</div>
+                                        <div class="text-[11px] font-mono text-gray-500">CIN: U72200KA2018PTC112340</div>
+                                    </td>
+                                    <td class="py-4 px-5">
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] font-medium text-xs">
+                                            NIC:
+                                            6201 (SaaS)
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-5 text-gray-600 dark:text-gray-300 font-medium">
+                                        Bengaluru, Karnataka
+                                    </td>
+                                    <td class="py-4 px-5 text-right font-bold text-gray-900 dark:text-white">
+                                        ₹42.8 Cr <span class="text-[#0f9b48] text-xs font-semibold">(+24%)</span>
+                                    </td>
+                                    <td class="py-4 px-5 text-center font-semibold text-gray-700 dark:text-gray-300">
+                                        184 active
+                                    </td>
+                                    <td class="py-4 px-5 text-center">
+                                        <span class="px-2 py-0.5 rounded-full font-bold text-xs bg-[#0f9b48]/15 text-[#0f9b48]">
+                                            #1
+                                            Sector
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-5 text-right">
+                                        <button type="button"
+                                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#023e8a] text-white font-bold text-xs hover:bg-[#114fa2] shadow-xs transition-colors">
+                                            + Add to Cohort
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 2 -->
+                                <tr class="hover:bg-blue-50/40 dark:hover:bg-gray-700/40 transition-colors">
+                                    <td class="py-4 px-5">
+                                        <div class="font-bold text-gray-900 dark:text-white">Nexus Pay Solutions Pvt Ltd</div>
+                                        <div class="text-[11px] font-mono text-gray-500">CIN: U67190MH2019PTC223451</div>
+                                    </td>
+                                    <td class="py-4 px-5">
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] font-medium text-xs">
+                                            NIC:
+                                            6419 (FinTech)
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-5 text-gray-600 dark:text-gray-300 font-medium">
+                                        Mumbai, Maharashtra
+                                    </td>
+                                    <td class="py-4 px-5 text-right font-bold text-gray-900 dark:text-white">
+                                        ₹36.2 Cr <span class="text-[#0f9b48] text-xs font-semibold">(+11%)</span>
+                                    </td>
+                                    <td class="py-4 px-5 text-center font-semibold text-gray-700 dark:text-gray-300">
+                                        142 active
+                                    </td>
+                                    <td class="py-4 px-5 text-center">
+                                        <span class="px-2 py-0.5 rounded-full font-bold text-xs bg-[#023e8a]/15 text-[#023e8a] dark:text-[#7cd4fd]">
+                                            #2
+                                            Sector
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-5 text-right">
+                                        <button type="button"
+                                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#023e8a] text-white font-bold text-xs hover:bg-[#114fa2] shadow-xs transition-colors">
+                                            + Add to Cohort
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 3 -->
+                                <tr class="hover:bg-blue-50/40 dark:hover:bg-gray-700/40 transition-colors">
+                                    <td class="py-4 px-5">
+                                        <div class="font-bold text-gray-900 dark:text-white">Zenith Capital Technologies Ltd</div>
+                                        <div class="text-[11px] font-mono text-gray-500">CIN: U74999DL2017PLC314562</div>
+                                    </td>
+                                    <td class="py-4 px-5">
+                                        <span class="inline-flex px-2 py-0.5 rounded bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] font-medium text-xs">
+                                            NIC:
+                                            6209 (IT Services)
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-5 text-gray-600 dark:text-gray-300 font-medium">
+                                        Gurugram, Delhi NCR
+                                    </td>
+                                    <td class="py-4 px-5 text-right font-bold text-gray-900 dark:text-white">
+                                        ₹19.5 Cr <span class="text-[#ee312b] text-xs font-semibold">(-3%)</span>
+                                    </td>
+                                    <td class="py-4 px-5 text-center font-semibold text-gray-700 dark:text-gray-300">
+                                        68 active
+                                    </td>
+                                    <td class="py-4 px-5 text-center">
+                                        <span class="px-2 py-0.5 rounded-full font-bold text-xs bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                            #4
+                                            Sector
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-5 text-right">
+                                        <button type="button"
+                                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#023e8a] text-white font-bold text-xs hover:bg-[#114fa2] shadow-xs transition-colors">
+                                            + Add to Cohort
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Bottom Footer Bar in Discovery Mockup -->
+                    <div class="px-5 py-3.5 bg-gray-50 dark:bg-gray-900/60 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+                        <span>Showing <strong>3 of 1,428</strong> matched corporate entities</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-gray-400">Selected for Cohort: <strong>3 peers</strong></span>
+                            <a asp-controller="Account"
+                               asp-action="Login"
+                               class="font-bold text-[#023e8a] dark:text-[#36bffa] hover:underline flex items-center gap-1">
+                                Open Discovery Workspace &rarr;
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ===================================================================== -->
+            <!-- 3.2. PEERPULSE REPORT & MICROSCOPIC BENCHMARKING MOCKUP               -->
+            <!-- ===================================================================== -->
+            <div id="peerpulse-report" class="mb-24 scroll-mt-24">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#0f9b48]/10 text-[#0f9b48] text-xs font-bold uppercase tracking-wider mb-2">
+                            <span>Benchmarking Intelligence</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                            PeerPulse Report: Microscopic Peer Performance View
+                        </h3>
+                        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mt-1">
+                            Go beyond surface-level metrics. Analyse audited financials, EBITDA growth trajectory, web traffic
+                            velocity, and AI-powered recommendations to make winning strategic moves.
+                        </p>
+                    </div>
+                    <div class="shrink-0">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-[#0f9b48]/10 text-[#0f9b48] border border-[#0f9b48]/20">
+                            <span class="w-2 h-2 rounded-full bg-[#0f9b48] animate-pulse"></span>
+                            250+ Financial Ratios &bull; AI Powered
+                        </span>
+                    </div>
+                </div>
+
+                <!-- PeerPulse Report Preview Card -->
+                <div class="rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden subtle-border-green">
+                    <!-- Mockup Toolbar Header -->
+                    <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/60 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="flex gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 ml-2">
+                                PeerPulse Report - Your Company
+                                Pvt Ltd
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-medium px-2.5 py-1 rounded bg-[#0f9b48]/15 text-[#0f9b48] font-mono">
+                                FY25-26
+                                Fresh Filings
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Mockup Content Grid (3 Cards) -->
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5 bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900/50">
+
+                        <!-- Entity Card 1 (Benchmark Leader) -->
+                        <div class="p-5 rounded-xl border-2 border-[#0f9b48]/30 bg-[#0f9b48]/5 relative">
+                            <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#0f9b48] text-white text-[10px] font-bold uppercase tracking-wider">
+                                Benchmark Leader
+                            </div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-900 dark:text-white">Peer 1 Pvt Ltd</h4>
+                                <span class="text-xs font-mono text-gray-500">CIN: U72200KA...</span>
+                            </div>
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between py-1">
+                                    <span class="text-gray-500">InstaPeerPulse Rank:</span>
+                                    <span class="px-2 py-0.5 rounded font-bold bg-[#0f9b48] text-white">#1 in Sector</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">Revenue (FY26):</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">
+                                        ₹42.8 Cr <span class="text-[#0f9b48] font-bold">(+24%)</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">EBITDA Growth:</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">
+                                        14.38% <span class="text-[#0f9b48] font-bold">(+20%)</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">Website Traffic:</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">2.2M / Month</span>
+                                </div>
+                                <div class="flex justify-between py-1">
+                                    <span class="text-gray-500">EPFO Headcount:</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">184 active (+12 MoM)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Entity Card 2 (Your Company) -->
+                        <div class="p-5 rounded-xl border-2 border-[#023e8a]/40 bg-[#023e8a]/5 dark:bg-gray-800 relative">
+                            <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#023e8a] text-white text-[10px] font-bold uppercase tracking-wider">
+                                Your Company
+                            </div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-[#023e8a] dark:text-white">Your Company Pvt Ltd</h4>
+                                <span class="text-xs font-mono text-gray-500">CIN: U67190MH...</span>
+                            </div>
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between py-1">
+                                    <span class="text-gray-500">InstaPeerPulse Rank:</span>
+                                    <span class="px-2 py-0.5 rounded font-bold bg-[#023e8a] text-white">#2 in Sector</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">Revenue (FY26):</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">
+                                        ₹36.2 Cr <span class="text-[#1fb14c] font-bold">(+11%)</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">EBITDA Growth:</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">
+                                        10.38% <span class="text-[#0f9b48] font-bold">(+2%)</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">Website Traffic:</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">1.4M / Month</span>
+                                </div>
+                                <div class="flex justify-between py-1">
+                                    <span class="text-gray-500">EPFO Headcount:</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">142 active (-4 MoM)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Entity Card 3 (Peer B) -->
+                        <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-900 dark:text-white">Peer 2 Pvt Ltd</h4>
+                                <span class="text-xs font-mono text-gray-500">CIN: U74999DL...</span>
+                            </div>
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between py-1">
+                                    <span class="text-gray-500">InstaPeerPulse Rank:</span>
+                                    <span class="px-2 py-0.5 rounded font-bold bg-gray-500 text-white">#4 in Sector</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">Revenue (FY26):</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">
+                                        ₹19.5 Cr <span class="text-[#ee312b] font-bold">(-3%)</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">EBITDA Growth:</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">
+                                        4.8% <span class="text-[#ee312b] font-bold">(-5%)</span>
+                                    </span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-gray-200/60 dark:border-gray-700/60">
+                                    <span class="text-gray-500">Website Traffic:</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">0.6M / Month</span>
+                                </div>
+                                <div class="flex justify-between py-1">
+                                    <span class="text-gray-500">EPFO Headcount:</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-200">68 active (+1 MoM)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- AI Diagnostic Banner inside Report Mockup -->
+                    <div class="px-6 py-4 bg-gradient-to-r from-[#023e8a]/10 via-[#0f9b48]/10 to-transparent border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                        <div class="flex items-start gap-2">
+                            <span class="text-base leading-none mt-0.5">💡</span>
+                            <p class="text-gray-700 dark:text-gray-200">
+                                <strong>AI Executive Insight:</strong> Your entity leads Peer 1 in gross margin retention
+                                (+3.2%), but Peer 2 is capturing market share with 57% higher digital search momentum and faster tier-2
+                                EPFO expansion.
+                            </p>
+                        </div>
+                        <a asp-controller="Account"
+                           asp-action="Login"
+                           class="btn-primary-cta text-xs px-5 py-2 whitespace-nowrap self-stretch sm:self-auto text-center shadow-xs">
+                            View Full PeerPulse Report &rarr;
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ===================================================================== -->
+            <!-- 3.3. PEERMONITOR SECTION & EMAIL SURVEILLANCE ALERTS                  -->
+            <!-- ===================================================================== -->
+            <div id="peermonitor" class="mb-20 scroll-mt-24">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#ed8231]/15 text-[#ed8231] text-xs font-bold uppercase tracking-wider mb-2">
+                            <span>Always-On Surveillance</span>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                            PeerMonitor: Continuous Surveillance &amp; Executive Email Alerts
+                        </h3>
+                        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mt-1">
+                            Track quarterly balance sheet filings, monthly EPFO hiring velocity, website traffic surges, and tech
+                            stack migrations. Receive actionable alert digests directly in your inbox.
+                        </p>
+                    </div>
+                    <div class="shrink-0">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-[#ed8231]/15 text-[#ed8231] border border-[#ed8231]/25">
+                            <span class="w-2 h-2 rounded-full bg-[#ed8231] animate-ping"></span>
+                            Quarterly Sync + Real-Time Trigger Digests
+                        </span>
+                    </div>
+                </div>
+
+                <!-- PeerMonitor Mockup Screen -->
+                <div class="rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden subtle-border-orange">
+
+                    <!-- Mockup Toolbar Header -->
+                    <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/60 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="flex gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 ml-2">
+                                Cohort Surveillance: FinTech
+                                SaaS (8 Peers Monitored)
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded bg-[#0f9b48]/15 text-[#0f9b48]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#0f9b48]"></span>
+                                Surveillance Active
+                            </span>
+                            <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded bg-blue-100 text-[#023e8a] dark:bg-blue-900/40 dark:text-[#7cd4fd]">
+                                ✉️ Email Alerts: ON
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Mockup Content: Two-Column Surveillance Grid -->
+                    <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900/50">
+
+                        <!-- Left Column (7 cols): Quarterly Event Timeline Feed -->
+                        <div class="lg:col-span-7 space-y-3.5">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                    Recent Quarterly Changes &amp; Triggers
+                                </h4>
+                                <span class="text-[11px] text-gray-400">Updated today</span>
+                            </div>
+
+                            <!-- Event Card 1: Financial Filing -->
+                            <div class="p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xs hover:border-[#0f9b48]/50 transition-colors">
+                                <div class="flex items-start justify-between gap-3 mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-7 h-7 rounded-lg bg-[#0f9b48]/10 text-[#0f9b48] flex items-center justify-center text-xs font-bold shrink-0">📊</span>
+                                        <div>
+                                            <h5 class="text-xs font-bold text-gray-900 dark:text-white">
+                                                Nexus Pay Solutions &bull; Financial
+                                                Statement Filed
+                                            </h5>
+                                            <p class="text-[10px] text-gray-500">MCA ROC Submission &bull; Q3 Fresh Annual Filing</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#0f9b48]/10 text-[#0f9b48]">
+                                        Revenue +11%
+                                        YoY
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed pl-9">
+                                    Filed FY25 statements: Revenue grew to <strong>₹36.2 Cr</strong> with EBITDA margin expanding +180
+                                    bps. Net operating cash flow improved by ₹4.2 Cr.
+                                </p>
+                            </div>
+
+                            <!-- Event Card 2: Tech Stack Migration -->
+                            <div class="p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xs hover:border-[#7c3aed]/50 transition-colors">
+                                <div class="flex items-start justify-between gap-3 mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-7 h-7 rounded-lg bg-[#7c3aed]/10 text-[#7c3aed] flex items-center justify-center text-xs font-bold shrink-0">⚙️</span>
+                                        <div>
+                                            <h5 class="text-xs font-bold text-gray-900 dark:text-white">
+                                                Zenith Capital Ltd &bull; Tech Stack
+                                                Migration Detected
+                                            </h5>
+                                            <p class="text-[10px] text-gray-500">Digital Telemetry Scan &bull; 3 New Toolings Added</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#7c3aed]/10 text-[#7c3aed]">
+                                        Tech
+                                        Expansion
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed pl-9">
+                                    Added <strong>Segment CDP</strong>, <strong>Mixpanel Telemetry</strong>, and migrated DNS routing to
+                                    <strong>AWS CloudFront CDN</strong> for faster regional loading.
+                                </p>
+                            </div>
+
+                            <!-- Event Card 3: Traffic & Hiring Surge -->
+                            <div class="p-4 rounded-xl border border-gray-200/80 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xs hover:border-[#023e8a]/50 transition-colors">
+                                <div class="flex items-start justify-between gap-3 mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-7 h-7 rounded-lg bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] flex items-center justify-center text-xs font-bold shrink-0">👥</span>
+                                        <div>
+                                            <h5 class="text-xs font-bold text-gray-900 dark:text-white">
+                                                Apex FinServe &bull; Web Traffic Surge
+                                                &amp; EPFO Growth
+                                            </h5>
+                                            <p class="text-[10px] text-gray-500">Traffic Momentum + EPFO Monthly Return</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd]">
+                                        +32%
+                                        Traffic Surge
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed pl-9">
+                                    Website visits reached <strong>2.2M/mo (+32% MoM)</strong> and added <strong>
+                                    +18 net new contributing
+                                    employees
+                                </strong> in Karnataka establishment.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Column (5 cols): Executive Email Alert Card Mockup -->
+                    <div class="lg:col-span-5">
+                        <div class="rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-4 shadow-sm h-full flex flex-col justify-between">
+                            <div>
+                                <!-- Email Header Banner -->
+                                <div class="pb-3 border-b border-gray-200 dark:border-gray-700 mb-3">
+                                    <div class="flex items-center justify-between text-[11px] text-gray-400 mb-1">
+                                        <span>From: <strong>alerts@peerpulse.instafinancials.com</strong></span>
+                                        <span class="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/50 text-[#023e8a] dark:text-[#7cd4fd] font-bold">
+                                            Email
+                                            Alert
+                                        </span>
+                                    </div>
+                                    <h5 class="text-xs font-bold text-gray-900 dark:text-white">
+                                        [Quarterly Alert] 3 Key Competitor Movements Detected (Q3 FY26)
+                                    </h5>
+                                    <p class="text-[10px] text-gray-500 mt-0.5">
+                                        Delivered to:
+                                        <strong>leadership-team@yourcompany.com</strong>
+                                    </p>
+                                </div>
+
+                                <!-- Email Body Snippet -->
+                                <div class="space-y-2.5 text-xs text-gray-600 dark:text-gray-300">
+                                    <p class="font-medium text-gray-800 dark:text-gray-200">Hi Leadership Team,</p>
+                                    <p class="text-[11px] leading-relaxed">
+                                        PeerPulse has detected 3 critical movements in your <strong>FinTech SaaS Cohort</strong> during
+                                        the last quarterly scan:
+                                    </p>
+                                    <ul class="space-y-1.5 text-[11px] bg-gray-50 dark:bg-gray-800/80 p-2.5 rounded-lg border border-gray-200/60 dark:border-gray-700/60 font-mono">
+                                        <li class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                                            <span class="text-[#0f9b48] font-bold">&check;</span> Nexus Pay: New FY25 MCA filing (+11% Rev)
+                                        </li>
+                                        <li class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                                            <span class="text-[#7c3aed] font-bold">&check;</span> Zenith Capital: Segment + Mixpanel
+                                            deployed
+                                        </li>
+                                        <li class="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
+                                            <span class="text-[#023e8a] font-bold">&check;</span> Apex FinServe: Web traffic spike to 2.2M
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Email CTA -->
+                            <div class="pt-4 mt-3 border-t border-gray-100 dark:border-gray-700">
+                                <a asp-controller="Account"
+                                   asp-action="Login"
+                                   class="btn-primary-cta w-full text-center py-2 text-xs flex items-center justify-center gap-1.5 shadow-sm">
+                                    Open PeerMonitor Dashboard
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mid-page Conversion Prompt -->
+        <div class="rounded-2xl bg-gradient-to-r from-[#023e8a] via-[#114fa2] to-[#0f9b48] p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <h3 class="text-2xl font-black mb-1">Ready to benchmark your market leaders?</h3>
+                <p class="text-sm text-blue-100 max-w-xl">
+                    Join founders, corporate strategy leaders, and investors who use PeerPulse to uncover statutory and
+                    financial gaps.
+                </p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="btn-primary-cta bg-white text-[#023e8a] hover:bg-gray-100 hover:text-[#023e8a] px-6 py-3 font-bold text-sm">
+                    Get Started Free
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================================= -->
+<!-- SECTION 4: ACTION (Transparent Tiered Pricing)                            -->
+<!-- ========================================================================= -->
+<section id="pricing" class="py-20 bg-gray-50 dark:bg-gray-900/60 border-t border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] text-xs font-bold uppercase tracking-wider mb-3">
+                Transparent Investment
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+                Predictable Pricing Built for Scaling Businesses
+            </h2>
+            <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300">
+                Choose the intelligence depth that matches your organization's strategic horizon.
+            </p>
+        </div>
+
+        <!-- 4 Pricing Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-16">
+
+            <!-- TIER 1: Starter -->
+            <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow subtle-border-blue">
+                <div>
+                    <div class="mb-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Tier 1</span>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-1">Starter</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Exploration &amp; basic checks</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="text-3xl font-black text-gray-900 dark:text-white">₹0</div>
+                        <span class="text-xs text-gray-500 font-medium">Free Forever</span>
+                    </div>
+
+                    <ul class="space-y-2.5 text-xs text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 pt-4 mb-6">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span><strong>Up to 5 peers</strong> monitored</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span><strong>1 category</strong> group</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Basic Registry &amp; High-level metrics</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Standard name search</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Semi-annual refresh</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Online view only</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="w-full text-center py-2.5 text-m font-bold text-[#023e8a] border border-[#023e8a] dark:border-[#ffffff] dark:text-[#ffffff] rounded-md">
+                    Get Started Free
+                </a>
+            </div>
+
+            <!-- TIER 2: Growth Strategy -->
+            <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow subtle-border-green">
+                <div>
+                    <div class="mb-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#0f9b48]">Tier 2</span>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-1">Growth Strategy</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Growing startups &amp; boutique advisors</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="text-3xl font-black text-gray-900 dark:text-white">₹14,999</div>
+                        <span class="text-xs text-gray-500 font-medium">per year</span>
+                    </div>
+
+                    <ul class="space-y-2.5 text-xs text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 pt-4 mb-6">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span><strong>Up to 10 peers</strong> monitored</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span><strong>Up to 2 peer categories</strong></span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Basic Peer Discovery Feature</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Basic PeerPulse Report</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Quarterly Refresh</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Excel/PDF Export</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>₹ 1,199 per extra peers</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <a asp-controller="Account"
+                   asp-action="Login" class="btn-secondary-cta w-full text-center py-2.5 text-m">
+                    Subscribe to Growth
+                </a>
+            </div>
+
+            <!-- TIER 3: Corporate (POPULAR / HIGHLIGHTED) -->
+            <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border-2 border-[#0f9b48] shadow-xl relative flex flex-col justify-between hover:scale-[1.02] transition-all subtle-border-green">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#0f9b48] text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                    Most Popular
+                </div>
+                <div>
+                    <div class="mb-4 mt-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#023e8a] dark:text-[#36bffa]">Tier 3</span>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-1">Corporate</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Mid-market enterprises &amp; PE/VC teams</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="text-3xl font-black text-gray-900 dark:text-white">₹35,999</div>
+                        <span class="text-xs text-gray-500 font-medium">per year</span>
+                    </div>
+
+                    <ul class="space-y-2.5 text-xs text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 pt-4 mb-6">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span><strong>Up to 25 peers</strong> monitored</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span><strong>Up to 5 peer categories</strong></span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Advanced Peer Discovery Feature</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Advanced PeerPulse Report</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Quarterly Refresh</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Excel/PDF Export</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>₹ 999 per extra peers</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>AI Insights</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="btn-primary-cta w-full text-center py-2.5 text-m shadow-md shadow-[#0f9b48]/30">
+                    Get Corporate Access
+                </a>
+            </div>
+
+            <!-- TIER 4: Enterprise Elite
+        <div
+          class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow subtle-border-yellow">
+          <div>
+            <div class="mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#ed8231]">Tier 4</span>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-1">Enterprise Elite</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Large conglomerates &amp; consultancies</p>
+            </div>
+
+            <div class="mb-6">
+              <div class="text-3xl font-black text-gray-900 dark:text-white">Custom</div>
+              <span class="text-xs text-gray-500 font-medium">Starting at ₹1,000 / company</span>
+            </div>
+
+            <ul
+              class="space-y-2.5 text-xs text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 pt-4 mb-6">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span><strong>50+ peers</strong> (Custom scale)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span><strong>Unlimited custom</strong> portfolio groups</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>360° Complete Dataset (Legal, Group)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Full Discovery Suite (HSN, GSTIN, PAN)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Monthly + 4x annual + On-demand pull</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#0f9b48] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Custom White-Label PDF + API Access</span>
+              </li>
+            </ul>
+          </div>
+
+           Secondary CTA (Primary Dark Blue BG) for Enterprise Sales
+          <a href="#faq" class="btn-secondary-cta w-full text-center py-2.5 text-xs">
+            Talk to Enterprise Sales
+          </a>
+        </div>
+-->
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================================= -->
+<!-- SECTION 5: FINAL CONVERSION & FAQ                                         -->
+<!-- ========================================================================= -->
+<section id="faq" class="py-20 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Closing Conversion Banner -->
+        <div class="rounded-3xl bg-gradient-to-br from-[#023e8a] via-[#114fa2] to-[#0f9b48] p-8 sm:p-12 text-white shadow-2xl mb-20 relative overflow-hidden subtle-border-green">
+            <div class="absolute -bottom-16 -right-16 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none">
+            </div>
+
+            <div class="max-w-3xl relative z-10">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold uppercase tracking-wider mb-4 backdrop-blur-sm">
+                    Get Ahead of the Competition
+                </span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4">
+                    Make Your Next Strategic Move with Complete Market Clarity.
+                </h2>
+                <p class="text-base sm:text-lg text-blue-100 leading-relaxed mb-8">
+                    Founders and strategy teams use PeerPulse to validate positioning, benchmark financials, and outpace market
+                    movements.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <!-- Primary CTA Button (Primary Green) -->
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="btn-primary-cta text-base px-8 py-3.5 w-full sm:w-auto shadow-lg shadow-black/20">
+                        Create Your First Peer Benchmark (Free)
+                    </a>
+                    <!-- Secondary CTA Button (Primary Dark Blue BG)
+            <a href="#pricing"
+              class="btn-secondary-cta bg-white/10 hover:bg-white/20 border border-white/30 text-white text-base px-7 py-3.5 w-full sm:w-auto">
+              Schedule a Walkthrough
+            </a>
+            -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Frequently Asked Questions -->
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#023e8a] dark:text-[#36bffa]">
+                    Got
+                    Questions?
+                </span>
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight mt-1">
+                    Frequently Asked Questions
+                </h2>
+            </div>
+
+            <!-- FAQ Accordion List -->
+            <div class="space-y-4">
+
+                <!-- FAQ 1 -->
+                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800 overflow-hidden subtle-border-blue">
+                    <button @@click="openFaq = (openFaq === 1 ? 0 : 1)" type="button"
+                        class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-bold text-gray-900 dark:text-white hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">
+                        <span>Where does PeerPulse source its corporate and financial data?</span>
+                        <svg :class="{ 'rotate-180 text-[#023e8a]': openFaq === 1 }"
+                             class="w-5 h-5 text-gray-400 transform transition-transform shrink-0" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div x-show="openFaq === 1" x-collapse
+                         class="px-6 pb-5 text-sm text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700/60 pt-3">
+                        PeerPulse aggregates and standardizes public records from statutory filings (MCA, ROC, GSTIN networks,
+                        EPFO records), legal registers, technical telemetry, and search metadata into a unified intelligence
+                        layer.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800 overflow-hidden subtle-border-green">
+                    <button @@click="openFaq = (openFaq === 2 ? 0 : 2)" type="button"
+                        class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-bold text-gray-900 dark:text-white hover:text-[#0f9b48] dark:hover:text-[#66d28c] transition-colors">
+                        <span>Can we track unlisted private limited companies in India?</span>
+                        <svg :class="{ 'rotate-180 text-[#0f9b48]': openFaq === 2 }"
+                             class="w-5 h-5 text-gray-400 transform transition-transform shrink-0" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div x-show="openFaq === 2" x-collapse
+                         class="px-6 pb-5 text-sm text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700/60 pt-3">
+                        Yes. PeerPulse indexes private limited, public unlisted, and LLP entities across India, providing complete
+                        audited financial statements, capital structures, charges, and director information.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800 overflow-hidden subtle-border-yellow">
+                    <button @@click="openFaq = (openFaq === 3 ? 0 : 3)" type="button"
+                        class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-bold text-gray-900 dark:text-white hover:text-[#023e8a] dark:hover:text-[#ffd203] transition-colors">
+                        <span>How often is competitor data refreshed?</span>
+                        <svg :class="{ 'rotate-180 text-[#023e8a]': openFaq === 3 }"
+                             class="w-5 h-5 text-gray-400 transform transition-transform shrink-0" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div x-show="openFaq === 3" x-collapse
+                         class="px-6 pb-5 text-sm text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700/60 pt-3">
+                        Operational compliance metrics (such as GST filing status, EPFO contribution numbers, and technical stack
+                        configurations) update monthly. Financial statements update on quarterly basis subject to available
+                        statutory filing data.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800 overflow-hidden subtle-border-orange">
+                    <button @@click="openFaq = (openFaq === 4 ? 0 : 4)" type="button"
+                        class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-bold text-gray-900 dark:text-white hover:text-[#ed8231] transition-colors">
+                        <span>Can I create separate benchmark portfolios for different product verticals?</span>
+                        <svg :class="{ 'rotate-180 text-[#ed8231]': openFaq === 4 }"
+                             class="w-5 h-5 text-gray-400 transform transition-transform shrink-0" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div x-show="openFaq === 4" x-collapse
+                         class="px-6 pb-5 text-sm text-gray-600 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700/60 pt-3">
+                        Yes. Our multi-category system allows you to isolate competitor cohorts per business line, subsidiary, or
+                        niche offering without mixing data models.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ========================================================================= -->
+<!-- FOOTER                                                                    -->
+<!-- ========================================================================= -->
+<footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+
+            <!-- Col 1: Brand Info -->
+            <div class="space-y-3 md:col-span-2">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#023e8a] via-[#114fa2] to-[#0f9b48] p-0.5">
+                        <div class="w-full h-full bg-gray-900 rounded-[6px] flex items-center justify-center">
+                            <span class="text-sm font-black text-[#0f9b48]">IP</span>
+                        </div>
+                    </div>
+                    <span class="text-xl font-black text-white">Insta<span class="text-[#0f9b48]">Peers</span></span>
+                </div>
+                <p class="text-xs text-gray-400 max-w-sm leading-relaxed">
+                    Corporate Intelligence &amp; Competitive Benchmarking Platform aggregating statutory, financial, and digital
+                    footprint telemetry across 2.5M+ Indian enterprises.
+                </p>
+                <p class="text-[11px] text-gray-500">
+                    Powered by InstaFinancials data infrastructure.
+                </p>
+            </div>
+
+            <!-- Col 2: Navigation -->
+            <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Platform</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#discovery" class="hover:text-white transition-colors">10-Layer Intelligence</a></li>
+                    <li><a href="#capabilities" class="hover:text-white transition-colors">Algorithmic Peer Ranking</a></li>
+                    <li><a href="#capabilities" class="hover:text-white transition-colors">AI Gap Analysis</a></li>
+                    <li>
+                        <a asp-controller="Account"
+                           asp-action="Login" class="hover:text-[#0f9b48] font-semibold transition-colors">
+                            Live Demo
+                            Dashboard →
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Pricing & Legal -->
+            <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Pricing &amp; Plans</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#pricing" class="hover:text-white transition-colors">Starter (₹0 Free)</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors">Growth Strategy (₹14,999)</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors">Corporate (₹35,999)</a></li>
+                    <!-- <li><a href="#pricing" class="hover:text-white transition-colors">Enterprise Elite</a></li> -->
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+            <p>&copy; <span id="year">2026</span> PeerPulse &bull; InstaFinancials. All rights reserved.</p>
+            <div class="flex items-center gap-6">
+                <a href="#hero" class="hover:text-gray-400">Back to Top ↑</a>
+                <a asp-controller="Account"
+                   asp-action="Login" class="text-[#0f9b48] hover:underline font-semibold">Open Dashboard</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</div>

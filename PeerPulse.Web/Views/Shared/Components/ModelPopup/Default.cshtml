@@ -1,0 +1,60 @@
+﻿@model PeerPulse.Web.ViewModels.Shared.PopupViewModel
+
+<dialog id="@Model.Id"
+        class="pp-modal pp-modal--@Model.Theme"
+        aria-labelledby="@Model.Id-title">
+
+    <section class="pp-modal__content">
+        <button type="button"
+                class="pp-modal__close"
+                aria-label="Close popup"
+                onclick="document.getElementById('@Model.Id').close()">
+            ×
+        </button>
+
+        <div class="pp-modal__icon" aria-hidden="true">
+            @Model.Icon
+        </div>
+
+        <h2 id="@Model.Id-title">@Model.Title</h2>
+
+        <p class="pp-modal__message">@Model.Message</p>
+
+        <div class="pp-modal__actions">
+            @if (!string.IsNullOrWhiteSpace(Model.SecondaryText))
+            {
+                @if (!string.IsNullOrWhiteSpace(Model.SecondaryUrl))
+                {
+                    <a class="pp-modal__button pp-modal__button--secondary"
+                       href="@Model.SecondaryUrl">
+                        @Model.SecondaryText
+                    </a>
+                }
+                else
+                {
+                    <button type="button"
+                            class="pp-modal__button pp-modal__button--secondary"
+                            onclick="document.getElementById('@Model.Id').close()">
+                        @Model.SecondaryText
+                    </button>
+                }
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.PrimaryUrl))
+            {
+                <a class="pp-modal__button pp-modal__button--primary"
+                   href="@Model.PrimaryUrl">
+                    @Model.PrimaryText
+                </a>
+            }
+            else
+            {
+                <button type="button"
+                        class="pp-modal__button pp-modal__button--primary"
+                        onclick="document.getElementById('@Model.Id').close()">
+                    @Model.PrimaryText
+                </button>
+            }
+        </div>
+    </section>
+</dialog>
