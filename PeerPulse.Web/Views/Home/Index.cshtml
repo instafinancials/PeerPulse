@@ -16,7 +16,7 @@
 
                 <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
-                    <a href="#hero" class="flex items-center gap-2.5 group">
+                    <a herf="#hero" class="flex items-center gap-2.5 group">
                         <img src="../images/logo/logo-icon.svg" asp-append-version="true" alt="PeerPulse Logo" class="h-12 w-12" width="48" height="48" />
                         <div>
                             <div class="flex items-center gap-1.5">
@@ -40,8 +40,8 @@
                        class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">Capabilities</a>
                     <a href="#pricing" class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">Pricing</a>
                     <a href="#faq" class="hover:text-[#023e8a] dark:hover:text-[#36bffa] transition-colors">FAQ</a>
-                    <a asp-controller="Account"
-                       asp-action="Login"
+                    <a href="#" @* asp-controller="Account"
+                       asp-action="Login" *@
                        class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-[#114fa2]/10 text-[#023e8a] dark:text-[#7cd4fd] hover:bg-[#114fa2]/20 transition-colors">
                         <span class="w-2 h-2 rounded-full bg-[#0f9b48] animate-pulse"></span>
                         Live Demo Dashboard
@@ -75,7 +75,7 @@
                     </a>
 
                     <!-- Primary CTA (Primary Green) -->
-                    <a  asp-controller="Account" asp-action="Login" class="btn-primary-cta text-xs px-4 py-2">
+                    <a href="#" @* asp-controller="Account" asp-action="Login" *@ class="btn-primary-cta text-xs px-4 py-2">
                         Start Free Comparison
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -110,10 +110,10 @@
             class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">Pricing</a>
             <a @@click="mobileMenuOpen = false" href="#faq"
             class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">FAQ</a>
-            <a @@click="mobileMenuOpen = false" href="/Account/Login"
+            <a @@click="mobileMenuOpen = false" href="#"
             class="block py-2 text-sm font-medium text-[#023e8a] dark:text-[#36bffa]">Interactive Dashboard</a>
             <div class="pt-2 flex flex-col gap-2">
-                <a href="/Account/Login" class="btn-primary-cta w-full text-center">Start Free Comparison</a>
+                <a href="#" class="btn-primary-cta w-full text-center">Start Free Comparison</a>
                 <a href="#pricing" class="btn-secondary-cta w-full text-center">Book a Strategy Demo</a>
             </div>
         </div>
@@ -164,8 +164,9 @@
                 <!-- Hero CTA Buttons -->
                 <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6">
                     <!-- Primary CTA Button (Primary Green) -->
-                    <a asp-controller="Account"
-                       asp-action="Login"
+                    <a herf="#"
+                     @*   asp-controller="Account"
+                       asp-action="Login" *@
                        class="btn-primary-cta text-base px-8 py-3.5 w-full sm:w-auto shadow-lg shadow-[#0f9b48]/25 hover:shadow-[#0f9b48]/40 hover:-translate-y-0.5 transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -797,8 +798,7 @@
                         <span>Showing <strong>3 of 1,428</strong> matched corporate entities</span>
                         <div class="flex items-center gap-2">
                             <span class="text-gray-400">Selected for Cohort: <strong>3 peers</strong></span>
-                            <a asp-controller="Account"
-                               asp-action="Login"
+                            <a herf="#"
                                class="font-bold text-[#023e8a] dark:text-[#36bffa] hover:underline flex items-center gap-1">
                                 Open Discovery Workspace &rarr;
                             </a>
@@ -980,8 +980,7 @@
                                 EPFO expansion.
                             </p>
                         </div>
-                        <a asp-controller="Account"
-                           asp-action="Login"
+                        <a herf="#"
                            class="btn-primary-cta text-xs px-5 py-2 whitespace-nowrap self-stretch sm:self-auto text-center shadow-xs">
                             View Full PeerPulse Report &rarr;
                         </a>
@@ -1707,8 +1706,7 @@
             <p>&copy; <span id="year">2026</span> PeerPulse &bull; InstaFinancials. All rights reserved.</p>
             <div class="flex items-center gap-6">
                 <a href="#hero" class="hover:text-gray-400">Back to Top ↑</a>
-                <a asp-controller="Account"
-                   asp-action="Login" class="text-[#0f9b48] hover:underline font-semibold">Open Dashboard</a>
+                <a herf="#" class="text-[#0f9b48] hover:underline font-semibold">Open Dashboard</a>
             </div>
         </div>
     </div>
