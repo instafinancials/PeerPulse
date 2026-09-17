@@ -1,0 +1,154 @@
+﻿/* PeerPulse Early Bird page styles */
+
+/* Countdown timer digit boxes */
+.eb-countdown-digit {
+    background: linear-gradient(135deg, rgba(2, 62, 138, 0.10) 0%, rgba(15, 155, 72, 0.08) 100%);
+    border: 1px solid rgba(2, 62, 138, 0.18);
+    border-radius: 12px;
+    min-width: 64px;
+    text-align: center;
+    padding: 10px 8px 6px;
+}
+
+/* Slot progress-bar stripe animation */
+@keyframes stripeMove {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 40px 0;
+    }
+}
+
+.eb-progress-stripe {
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.18) 10px, rgba(255, 255, 255, 0.18) 20px);
+    background-size: 40px 40px;
+    animation: stripeMove 1.2s linear infinite;
+}
+
+/* Gentle float on the widget card */
+@keyframes floatY {
+
+    0%, 100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+.eb-float {
+    animation: floatY 3.5s ease-in-out infinite;
+}
+
+/* Pulse ring on badge */
+@keyframes slowPulse {
+
+    0%, 100% {
+        opacity: 0.55;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.15;
+        transform: scale(1.7);
+    }
+}
+
+.eb-pulse-ring {
+    animation: slowPulse 2.5s ease-in-out infinite;
+}
+
+/* Card hover lift */
+.eb-privilege-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .eb-privilege-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(2, 62, 138, 0.10);
+    }
+
+/* Shimmer motion text */
+@keyframes shimmerSlide {
+    0% {
+        background-position: -200% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.eb-shimmer-text {
+    background: linear-gradient(90deg, #856404 0%, #ed8231 25%, #ffd203 50%, #ed8231 75%, #856404 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerSlide 2.4s linear infinite;
+}
+
+/* Date highlight glow */
+.eb-date-highlight {
+    background: linear-gradient(135deg, #ee312b 0%, #ed8231 60%, #ffd203 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.btn-primary-cta,
+.btn-secondary-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    border-radius: .5rem;
+    padding: .625rem 1rem;
+    color: #fff;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-decoration: none;
+    transition: all .15s ease;
+}
+
+.btn-primary-cta {
+    background: #0f9b48;
+    box-shadow: 0 1px 2px rgb(16 24 40 / 5%);
+}
+
+    .btn-primary-cta:hover {
+        background: #0d873f;
+        color: #fff;
+    }
+
+    .btn-primary-cta:active {
+        background: #0b7335;
+    }
+
+    .btn-primary-cta:focus {
+        outline: 2px solid rgb(15 155 72 / 30%);
+        outline-offset: 2px;
+    }
+
+.btn-secondary-cta {
+    background: #023e8a;
+    box-shadow: 0 1px 2px rgb(16 24 40 / 5%);
+}
+
+    .btn-secondary-cta:hover {
+        background: #114fa2;
+        color: #fff;
+    }
+
+    .btn-secondary-cta:active {
+        background: #012450;
+    }
+
+    .btn-secondary-cta:focus {
+        outline: 2px solid rgb(2 62 138 / 30%);
+        outline-offset: 2px;
+    }
