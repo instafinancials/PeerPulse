@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Identity.Client;
+using PeerPulse.Web.Models.InstaUsers;
 using PeerPulse.Web.Services;
 using PeerPulse.Web.ViewModels.Account;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Google;
-using PeerPulse.Web.Models.InstaUsers;
 
 namespace PeerPulse.Web.Controllers;
 
@@ -25,8 +26,10 @@ public sealed class AccountController : Controller
 
     [HttpGet]
     [EnableRateLimiting("login")]
-    public IActionResult Login(string? returnUrl = null)
+    public async Task<IActionResult> LoginAsync(string? returnUrl = null)
     {
+       
+
         if (User.Identity?.IsAuthenticated == true)
         {
             return RedirectToAction("Index", "Dashboard");
@@ -133,11 +136,11 @@ public sealed class AccountController : Controller
                         cancellationToken);
 
                     var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, result.User.InstaUserId.ToString()),
-                new(ClaimTypes.Name, result.User.UserName ?? result.User.UserEmail ?? "PeerPulse User"),
-                new(ClaimTypes.Email, result.User.UserEmail ?? string.Empty)
-            };
+                    {
+                        new(ClaimTypes.NameIdentifier, result.User.InstaUserId.ToString()),
+                        new(ClaimTypes.Name, result.User.UserName ?? result.User.UserEmail ?? "PeerPulse User"),
+                        new(ClaimTypes.Email, result.User.UserEmail ?? string.Empty)
+                    };
 
                     var identity = new ClaimsIdentity(claims, "PeerPulse");
                     var principal = new ClaimsPrincipal(identity);
@@ -219,132 +222,151 @@ public sealed class AccountController : Controller
     [EnableRateLimiting("login")]
     public IActionResult GoogleLogin(string? returnUrl)
     {
-        var properties = new AuthenticationProperties
+        var properties = new GoogleChallengeProperties
         {
-            RedirectUri = Url.Action(nameof(GoogleResponse),
+            RedirectUri = Url.Action(
+                nameof(GoogleResponse),
                 "Account",
-                new { returnUrl })
+                new { returnUrl }),
+            Prompt = "select_account"
         };
-
+        
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
+
     [HttpGet]
-    public async Task<IActionResult> GoogleResponse(string? returnUrl, CancellationToken cancellationToken)
+    public async Task<IActionResult> GoogleResponse(string? returnUrl,CancellationToken cancellationToken)
     {
         try
         {
+            var externalResult = await HttpContext.AuthenticateAsync(
+                "PeerPulse.External");
 
-
-            var externalResult = await HttpContext.AuthenticateAsync("PeerPulse.External");
-
-            if (!externalResult.Succeeded || externalResult.Principal is null)
+            try
             {
-                SetPopup("danger", "Google sign-in failed", "We could not complete Google sign-in. Please try again.", "Close");
-
-                return View("Login", new LoginViewModel
+                if (!externalResult.Succeeded ||
+                    externalResult.Principal is null)
                 {
-                    ReturnUrl = returnUrl
-                });
+                    SetPopup(
+                        "danger",
+                        "Google sign-in failed",
+                        "We could not complete Google sign-in. Please try again.",
+                        "Close");
+
+                    return View("Login", new LoginViewModel
+                    {
+                        ReturnUrl = returnUrl
+                    });
+                }
+
+                string? googleEmail = externalResult.Principal
+                    .FindFirstValue(ClaimTypes.Email);
+
+                if (string.IsNullOrWhiteSpace(googleEmail))
+                {
+                    SetPopup(
+                        "warning",
+                        "Google email not available",
+                        "Your Google account did not provide an email address.",
+                        "Close");
+
+                    return View("Login", new LoginViewModel
+                    {
+                        ReturnUrl = returnUrl
+                    });
+                }
+
+                // Find existing PeerPulse/InstaUser account by Gmail address.
+                InstaUser? user = await _loginService.FindByEmailAsync(
+                    googleEmail.Trim(),
+                    cancellationToken);
+
+                if (user is null)
+                {
+                    SetPopup(
+                        "warning",
+                        "Account not found",
+                        "This Google email is not registered with PeerPulse.",
+                        "Close");
+
+                    return View("Login", new LoginViewModel
+                    {
+                        ReturnUrl = returnUrl
+                    });
+                }
+
+                // Status 2 = permanently disabled: no login and no OTP.
+                if (user.StatusId == 2)
+                {
+                    SetPopup(
+                        "danger",
+                        "Account disabled",
+                        "Your account is disabled. Please contact PeerPulse support.",
+                        "Contact support",
+                        "mailto:support@instafinancials.com",
+                        "Close");
+
+                    return View("Login", new LoginViewModel
+                    {
+                        ReturnUrl = returnUrl
+                    });
+                }
+
+                // Status 0 / inactive user: send to your OTP verification flow later.
+                if (user.StatusId != 1 || user.IsUserActive != true)
+                {
+                    TempData["VerificationUserId"] = user.InstaUserId;
+
+                    SetPopup(
+                        "warning",
+                        "Verification required",
+                        "Verify your registered contact details before accessing PeerPulse.",
+                        "Close");
+
+                    return View("Login", new LoginViewModel
+                    {
+                        ReturnUrl = returnUrl
+                    });
+                }
+
+                // First successful login creates Starter plan.
+                await _subscriptionService.EnsureStarterSubscriptionAsync(
+                    user.InstaUserId,
+                    cancellationToken);
+
+                var claims = new List<Claim>
+                   {
+                       new(ClaimTypes.NameIdentifier, user.InstaUserId.ToString()),
+                       new(ClaimTypes.Name, user.UserName ?? user.UserEmail ?? "PeerPulse User"),
+                       new(ClaimTypes.Email, user.UserEmail ?? googleEmail),
+                       new(ClaimTypes.AuthenticationMethod, "Google")
+                   };
+
+                var identity = new ClaimsIdentity(claims, "PeerPulse");
+
+                await HttpContext.SignInAsync(
+                    "PeerPulse",
+                    new ClaimsPrincipal(identity),
+                    new AuthenticationProperties
+                    {
+                        // Program.cs controls the 15-minute inactivity expiry.
+                        IsPersistent = false,
+                        AllowRefresh = true
+                    });
+
+                // returnUrl can be null when Login page was opened directly.
+                if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Dashboard");
             }
-
-            string? googleEmail = externalResult.Principal.FindFirstValue(ClaimTypes.Email);
-
-            // Remove the temporary Google authentication cookie.
-            await HttpContext.SignOutAsync("PeerPulse.External");
-
-            if (string.IsNullOrWhiteSpace(googleEmail))
+            finally
             {
-                SetPopup(
-                    "warning",
-                    "Google email not available",
-                    "Your Google account did not provide an email address.",
-                    "Close");
-
-                return View("Login", new LoginViewModel
-                {
-                    ReturnUrl = returnUrl
-                });
+                // Always remove temporary Google OAuth cookie.
+                await HttpContext.SignOutAsync("PeerPulse.External");
             }
-
-            // Google email must match an existing InstaUser record.
-            InstaUser? user = await _loginService.FindByEmailAsync(googleEmail.Trim(), cancellationToken);
-
-            if (user is null)
-            {
-                SetPopup(
-                    "warning",
-                    "Account not found",
-                    "This Google email is not registered with PeerPulse.",
-                    "Close");
-
-                return View("Login", new LoginViewModel
-                {
-                    ReturnUrl = returnUrl
-                });
-            }
-
-            // Status 2: disabled. Do not sign in.
-            if (user.StatusId == 2)
-            {
-                SetPopup(
-                    "danger",
-                    "Account disabled",
-                    "Your account is disabled. Please contact PeerPulse support.",
-                    "Contact support",
-                    "mailto:support@instafinancials.com",
-                    "Close");
-
-                return View("Login", new LoginViewModel
-                {
-                    ReturnUrl = returnUrl
-                });
-            }
-
-            // Status 0 / inactive: user must complete verification first.
-            if (user.StatusId != 1 || user.IsUserActive != true)
-            {
-                TempData["VerificationUserId"] = user.InstaUserId;
-
-                SetPopup(
-                    "warning",
-                    "Verification required",
-                    "Verify your registered contact details before accessing PeerPulse.",
-                    "Close");
-
-                return View("Login", new LoginViewModel
-                {
-                    ReturnUrl = returnUrl
-                });
-            }
-
-            // Create Starter subscription only if no subscription history exists.
-            await _subscriptionService.EnsureStarterSubscriptionAsync(user.InstaUserId, cancellationToken);
-
-            var claims = new List<Claim>
-           {
-               new(ClaimTypes.NameIdentifier, user.InstaUserId.ToString()),
-               new(ClaimTypes.Name, user.UserName ?? user.UserEmail ?? "PeerPulse User"),
-               new(ClaimTypes.Email, user.UserEmail ?? googleEmail)
-           };
-
-            var identity = new ClaimsIdentity(claims, "PeerPulse");
-
-            await HttpContext.SignInAsync(
-                "PeerPulse",
-                new ClaimsPrincipal(identity),
-                new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24)
-                });
-
-            // Use Home until you create DashboardController.
-            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
-            {
-                return LocalRedirect(returnUrl);
-            }
-
-            return RedirectToAction("Index", "Home");
         }
         catch (OperationCanceledException)
         {
@@ -352,12 +374,17 @@ public sealed class AccountController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Google login failed. Trace ID: {TraceId}", HttpContext.TraceIdentifier);
+            _logger.LogError(
+                ex,
+                "Google login failed. Trace ID: {TraceId}",
+                HttpContext.TraceIdentifier);
+
             SetPopup(
                 "danger",
                 "Google sign-in failed",
                 "We could not complete Google sign-in. Please try again.",
                 "Close");
+
             return View("Login", new LoginViewModel
             {
                 ReturnUrl = returnUrl
