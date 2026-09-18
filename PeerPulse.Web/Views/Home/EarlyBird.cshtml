@@ -14,7 +14,6 @@
     <meta property="og:image" content="https://peerpulse.instafinancials.com/images/logo/logo.svg" />
 
     <style>
-        /* Countdown timer digit boxes */
         .eb-countdown-digit {
             background: linear-gradient(135deg, rgba(2, 62, 138, 0.10) 0%, rgba(15, 155, 72, 0.08) 100%);
             border: 1px solid rgba(2, 62, 138, 0.18);
@@ -24,7 +23,6 @@
             padding: 10px 8px 6px;
         }
 
-        /* Slot progress-bar stripe animation */
         @@keyframes stripeMove {
             0% {
                 background-position: 0 0;
@@ -41,7 +39,7 @@
             animation: stripeMove 1.2s linear infinite;
         }
 
-        /* Gentle float on the widget card */
+       
         @@keyframes floatY {
 
             0%,
@@ -58,7 +56,7 @@
             animation: floatY 3.5s ease-in-out infinite;
         }
 
-        /* Pulse ring on badge */
+      
         @@keyframes slowPulse {
 
             0%,
@@ -77,7 +75,7 @@
             animation: slowPulse 2.5s ease-in-out infinite;
         }
 
-        /* Card hover lift */
+       
         .eb-privilege-card {
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
@@ -87,7 +85,7 @@
                 box-shadow: 0 20px 40px rgba(2, 62, 138, 0.10);
             }
 
-        /* Shimmer motion text */
+       
         @@keyframes shimmerSlide {
             0% {
                 background-position: -200% center;
@@ -115,6 +113,16 @@
             background-clip: text;
         }
     </style>
+
+    <script type="text/javascript">
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-T4CLN53');
+    </script>
 }
 
 <div x-data="{ darkMode: false, mobileMenuOpen: false }"
@@ -125,10 +133,6 @@
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4CLN53" height="0" width="0"
                 style="display: none; visibility: hidden"></iframe>
     </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <!-- =========================================================================
-       NAVIGATION HEADER  (identical to index.html)
-  ========================================================================= -->
     <header class="sticky top-0 z-50 backdrop-blur-md transition-all duration-300 border-b border-gray-200/80 bg-white/90 dark:bg-gray-900/90 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
@@ -149,11 +153,11 @@
                     </a>
                 </div>
 
-                <!-- Desktop nav (intentionally minimal on early-bird page) -->
+              
                 <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600 dark:text-gray-300">
                 </nav>
 
-                <!-- CTAs + theme toggle -->
+               
                 <div class="hidden lg:flex items-center gap-3">
 
       
@@ -183,7 +187,6 @@
                     </a>
                 </div>
 
-                <!-- Mobile hamburger -->
                 <div class="flex items-center gap-2 md:hidden">
                     <button @@click="mobileMenuOpen = !mobileMenuOpen" type="button"
                         class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -199,7 +202,6 @@
             </div>
         </div>
 
-        <!-- Mobile dropdown -->
         <div x-show="mobileMenuOpen" x-collapse
              class="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 pt-3 pb-6 space-y-3">
             <a @@click="mobileMenuOpen=false" href="/#discovery"
@@ -210,8 +212,8 @@
             class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">Pricing</a>
             <a @@click="mobileMenuOpen=false" href="/#faq"
             class="block py-2 text-sm font-medium text-gray-700 dark:text-gray-200">FAQ</a>
-            <!-- <a @@click="mobileMenuOpen=false" href="dashboard.html" -->
-            class="block py-2 text-sm font-medium text-[#023e8a] dark:text-[#36bffa]">Interactive Dashboard</a>
+           @*  <!-- <a @@click="mobileMenuOpen=false" href="dashboard.html" -->
+            class="block py-2 text-sm font-medium text-[#023e8a] dark:text-[#36bffa]">Interactive Dashboard</a> *@
             <div class="pt-2 flex flex-col gap-2">
                 <a href="#pricing" class="btn-primary-cta w-full text-center">Pricing Comparison</a>
                 <a href="#early-bird-form" class="btn-secondary-cta w-full text-center">Claim Early Bird Access</a>
@@ -220,9 +222,7 @@
     </header>
 
 
-    <!-- =========================================================================
-       HERO — EARLY BIRD
-  ========================================================================= -->
+
     <section class="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-28">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-tr from-[#023e8a]/12 via-[#0f9b48]/8 to-[#ffd203]/6 rounded-full blur-3xl pointer-events-none -z-10">
         </div>
@@ -234,9 +234,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-                <!-- LEFT: Copy + Countdown -->
+                
                 <div>
-                    <!-- Eyebrow badge -->
+                   
                     <div class="inline-flex items-center gap-3 mb-6 relative">
                         <span class="absolute -inset-1 rounded-full eb-pulse-ring bg-[#ffd203]/35 pointer-events-none"></span>
                         <span class="relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#ffd203]/20 via-[#ed8231]/12 to-[#0f9b48]/12 border border-[#ffd203]/40 shadow-sm">
@@ -250,7 +250,7 @@
                         </span>
                     </div>
 
-                    <!-- Main headline -->
+                   
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 dark:text-white leading-[1.1] mb-6">
                         Be First.<br />
                         <span class="bg-gradient-to-r from-[#023e8a] via-[#114fa2] to-[#0f9b48] bg-clip-text text-transparent">
@@ -260,7 +260,7 @@
                         Win More.
                     </h1>
 
-                    <!-- Subtext -->
+                    
                     <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8 max-w-xl">
                         PeerPulse is launching soon — India's most comprehensive
                         <span class="text-[#023e8a] dark:text-[#7cd4fd] font-semibold">
@@ -273,7 +273,7 @@
 
 
 
-                    <!-- Enquiry slots -->
+                   
                     <div class="flex flex-col gap-3 mb-8">
 
                         <!-- First 100 Inquiries motion text -->
@@ -284,7 +284,7 @@
 
                     </div>
 
-                    <!-- Trust strip -->
+                    
                     <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                         <span class="flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-[#0f9b48]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,40 +309,12 @@
                             Powered by InstaFinancials
                         </span>
                     </div>
-                </div><!-- /left -->
-                <!-- RIGHT: GetSiteControl Widget Card -->
+                </div>
                 <div class="eb-float">
                     <div class="rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-
-
-
-                        <!-- GSC Widget Area -->
-
                         <div class="px-6 py-8 min-h-[340px] flex items-center justify-center" id="early-bird-form">
-
-                            <!-- ====== START: GetSiteControl Widget Code ====== -->
-
                             <div data-getsitecontrol-inline="615762"></div>
-
-                            <!-- ====== END: GetSiteControl Widget Code ====== -->
-                            <!-- Visible fallback until GSC code is pasted -->
-                            <!-- <div class="text-center w-full py-4">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#023e8a]/12 to-[#0f9b48]/12 flex items-center justify-center mx-auto mb-4 border border-[#0f9b48]/20">
-                  <svg class="w-7 h-7 text-[#0f9b48]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                  </svg>
-                </div>
-                <p class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Inquiry Form Widget</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 max-w-xs mx-auto leading-relaxed">
-                  Paste your <strong>GetSiteControl</strong> embed code inside
-                  <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-[10px] font-mono">#early-bird-form</code>
-                  to activate the form.
-                </p>
-              </div> -->
                         </div>
-
-                        <!-- Footer note -->
                         <div class="px-6 pb-5 border-t border-gray-100 dark:border-gray-700 pt-4 flex items-start gap-2">
                             <svg class="w-4 h-4 text-[#0f9b48] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -354,16 +326,10 @@
                             </p>
                         </div>
                     </div>
-                </div><!-- /right -->
-
-            </div><!-- /grid -->
+                </div>
+            </div>
         </div>
     </section>
-
-
-    <!-- =========================================================================
-       EARLY BIRD PRIVILEGES
-  ========================================================================= -->
     <section id="privileges" class="py-20 bg-gray-50 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -379,11 +345,7 @@
                     Act now — only 100 enquiry slots are available.
                 </p>
             </div>
-
-            <!-- 4 Privilege Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-16">
-
-                <!-- 1. Lifetime Pricing -->
                 <div class="eb-privilege-card rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#023e8a]/15 to-[#114fa2]/10 flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-[#023e8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -404,8 +366,6 @@
                         50% off — exclusive founding member rate
                     </div>
                 </div>
-
-                <!-- 2. Priority Onboarding -->
                 <div class="eb-privilege-card rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0f9b48]/15 to-[#1fb14c]/10 flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-[#0f9b48]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -427,7 +387,7 @@
                 </div>
 
 
-                <!-- 4. Free Benchmark Report -->
+                
                 <div class="eb-privilege-card rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7c3aed]/15 to-[#7c3aed]/10 flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-[#7c3aed]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -453,7 +413,7 @@
 
 
 
-                <!-- 6. Founding Badge -->
+               
                 <div class="eb-privilege-card rounded-2xl bg-gradient-to-br from-[#ffd203]/10 via-[#ed8231]/8 to-[#0f9b48]/10 p-6 border border-[#ffd203]/30 shadow-sm relative overflow-hidden">
                     <div class="absolute top-3 right-3">
                         <span class="inline-flex px-2 py-0.5 rounded-full bg-[#ffd203]/20 text-[#856404] text-[10px] font-black uppercase tracking-wider border border-[#ffd203]/30">Exclusive</span>
@@ -479,8 +439,7 @@
                     </div>
                 </div>
 
-            </div><!-- /privilege cards -->
-            <!-- Comparison Table -->
+            </div>
             <div class="max-w-4xl mx-auto">
                 <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white text-center mb-8">
                     Early Bird vs. Standard Access — Side by Side
@@ -597,15 +556,8 @@
 
         </div>
     </section>
-
-
-    <!-- =========================================================================
-       PRICING COMPARISON (from index page)
-  ========================================================================= -->
     <section id="pricing" class="py-20 bg-gray-50 dark:bg-gray-900/60 border-t border-gray-200 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <!-- Section Header -->
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#023e8a]/10 text-[#023e8a] dark:text-[#7cd4fd] text-xs font-bold uppercase tracking-wider mb-3">
                     Transparent Investment
@@ -619,10 +571,10 @@
                 </p>
             </div>
 
-            <!-- 3 Pricing Cards Grid -->
+           
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-16">
 
-                <!-- TIER 1: Starter -->
+                
                 <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow subtle-border-blue">
                     <div>
                         <div class="mb-4">
@@ -682,7 +634,7 @@
                     </a>
                 </div>
 
-                <!-- TIER 2: Growth Strategy -->
+               
                 <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow subtle-border-green">
                     <div>
                         <div class="mb-4">
@@ -750,7 +702,7 @@
                     </a>
                 </div>
 
-                <!-- TIER 3: Corporate (POPULAR / HIGHLIGHTED) -->
+               
                 <div class="rounded-2xl bg-white dark:bg-gray-800 p-6 border-2 border-[#0f9b48] shadow-xl relative flex flex-col justify-between hover:scale-[1.02] transition-all subtle-border-green">
                     <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#0f9b48] text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
                         Most Popular
@@ -830,7 +782,7 @@
 
             </div>
 
-            <!-- Early Bird Note -->
+           
             <p class="text-center text-sm text-gray-500 dark:text-gray-400">
                 🎉 Early Bird pricing shown above. Standard rates available at
                 <a href="/#pricing" class="text-[#023e8a] dark:text-[#7cd4fd] font-semibold hover:underline">here</a>.
@@ -839,11 +791,6 @@
 
         </div>
     </section>
-
-
-    <!-- =========================================================================
-       FINAL CONVERSION BANNER
-  ========================================================================= -->
     <section class="py-20 bg-white dark:bg-gray-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="rounded-3xl bg-gradient-to-br from-[#023e8a] via-[#114fa2] to-[#0f9b48] p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
@@ -878,11 +825,6 @@
         </div>
     </div>
 </section>
-
-
-<!-- =========================================================================
-       FOOTER (same as index.html)
-  ========================================================================= -->
 <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
@@ -941,7 +883,5 @@
         </div>
     </div>
 </footer>
-
-<!-- No countdown script needed — offer closes on 30 Sep 2026 (static date displayed) -->
 </div>
 
