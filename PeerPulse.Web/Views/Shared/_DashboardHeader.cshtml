@@ -1,0 +1,49 @@
+﻿<header class="sticky top-0 z-30 flex min-h-[76px] items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6 dark:border-slate-800 dark:bg-slate-900">
+
+    <div class="flex items-center gap-3">
+        <button type="button"
+            @@click="sidebarOpen = !sidebarOpen"
+                class="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 lg:hidden dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+            <i class="bi bi-list text-xl"></i>
+        </button>
+
+        <div class="hidden lg:block">
+            <div class="relative w-[360px] xl:w-[430px]">
+                <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+
+                <input type="search"
+                       placeholder="Search or type command..."
+                       class="h-11 w-full rounded-lg border border-slate-200 bg-white py-2 pl-11 pr-16 text-sm outline-none transition focus:border-[#023e8a] focus:ring-2 focus:ring-[#023e8a]/15 dark:border-slate-700 dark:bg-slate-800" />
+
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-900">
+                    ⌘ K
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <button type="button"
+            @@click="darkMode = !darkMode"
+                class="grid h-11 w-11 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+            <i class="bi bi-moon-stars" x-show="!darkMode"></i>
+            <i class="bi bi-sun" x-show="darkMode"></i>
+        </button>
+
+        <button type="button"
+                class="relative grid h-11 w-11 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+            <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#ed8231]"></span>
+            <i class="bi bi-bell"></i>
+        </button>
+
+        <div class="hidden border-l border-slate-200 pl-3 sm:flex sm:items-center sm:gap-2 dark:border-slate-700">
+            <div class="grid h-10 w-10 place-items-center rounded-full bg-[#023e8a] text-sm font-bold text-white">
+                @(User.Identity?.Name?.Substring(0, 1).ToUpperInvariant() ?? "U")
+            </div>
+
+            <span class="max-w-28 truncate text-sm font-semibold">
+                @(User.Identity?.Name ?? "PeerPulse User")
+            </span>
+        </div>
+    </div>
+</header>

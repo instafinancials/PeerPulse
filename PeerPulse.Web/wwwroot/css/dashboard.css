@@ -1,0 +1,117 @@
+﻿[x-cloak] {
+    display: none !important;
+}
+
+.dashboard-sidebar {
+    width: 290px;
+    flex: 0 0 290px;
+    min-height: 100vh;
+    border-right: 1px solid #e2e8f0;
+    background: #fff;
+    transition: transform .25s ease;
+}
+
+.dashboard-sidebar__brand {
+    padding: 28px 24px 24px;
+}
+
+.dashboard-sidebar__nav {
+    padding: 0 16px 24px;
+}
+
+.dashboard-sidebar__label {
+    display: block;
+    margin: 0 0 14px 4px;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.dashboard-nav-link,
+.dashboard-subnav__link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.dashboard-nav-link--button {
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dashboard-nav-link:hover,
+.dashboard-nav-link.is-active,
+.dashboard-subnav__link.is-active {
+    background: #e8f0fc;
+    color: #023e8a;
+}
+
+.dashboard-nav-link i:first-child {
+    font-size: 18px;
+}
+
+.dashboard-subnav {
+    padding: 6px 0 8px 32px;
+}
+
+.dashboard-subnav__link {
+    min-height: 38px;
+    padding: 8px 12px;
+}
+
+.peer-type-button {
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: #eff6ff;
+    padding: 10px 8px;
+    color: #1e40af;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .peer-type-button.is-active {
+        border-color: #3b82f6;
+        background: #dbeafe;
+        box-shadow: 0 0 0 2px rgb(59 130 246 / 18%);
+    }
+
+.dark .dashboard-sidebar {
+    border-color: #334155;
+    background: #0f172a;
+}
+
+.dark .dashboard-nav-link,
+.dark .dashboard-subnav__link {
+    color: #cbd5e1;
+}
+
+    .dark .dashboard-nav-link:hover,
+    .dark .dashboard-nav-link.is-active,
+    .dark .dashboard-subnav__link.is-active {
+        background: rgb(2 62 138 / 28%);
+        color: #93c5fd;
+    }
+
+@media (max-width: 1023px) {
+    .dashboard-sidebar {
+        position: fixed;
+        z-index: 50;
+        transform: translateX(-100%);
+    }
+
+        .dashboard-sidebar.is-open {
+            transform: translateX(0);
+        }
+}

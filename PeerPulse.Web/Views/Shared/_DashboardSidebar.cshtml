@@ -1,0 +1,71 @@
+﻿@{
+    string currentPage = ViewData["DashboardPage"]?.ToString() ?? "";
+}
+
+<aside class="dashboard-sidebar" :class="{ 'is-open': sidebarOpen }">
+
+    <div class="dashboard-sidebar__brand">
+        <a asp-controller="Dashboard" asp-action="Index">
+            <img src="~/images/logo/logo.svg" alt="InstaFinancials" class="h-12 w-auto" />
+        </a>
+    </div>
+
+    <nav class="dashboard-sidebar__nav">
+        <span class="dashboard-sidebar__label">MENU</span>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           class="dashboard-nav-link">
+            <i class="bi bi-grid"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <div x-data="{ peerMenu: true }">
+            <button type="button"
+                    class="dashboard-nav-link dashboard-nav-link--button"
+                    :class="{ 'is-active': peerMenu }"
+                @@click="peerMenu = !peerMenu">
+                <i class="bi bi-people-fill"></i>
+                <span>Peer Discovery</span>
+                <i class="bi bi-chevron-down ml-auto text-xs"
+                   :class="{ 'rotate-180': peerMenu }"></i>
+            </button>
+
+            <div x-show="peerMenu" x-cloak class="dashboard-subnav">
+                <a asp-controller="PeerDiscovery"
+                   asp-action="Add"
+                   class="dashboard-subnav__link @(currentPage == "add-peer" ? "is-active" : "")">
+                    Add Your Peer
+                </a>
+
+                <a asp-controller="PeerDiscovery"
+                   asp-action="Manage"
+                   class="dashboard-subnav__link @(currentPage == "manage-peers" ? "is-active" : "")">
+                    Manage Peers
+                </a>
+
+                <a asp-controller="PeerDiscovery"
+                   asp-action="Groups"
+                   class="dashboard-subnav__link @(currentPage == "peer-groups" ? "is-active" : "")">
+                    Manage Peer Groups
+                </a>
+            </div>
+        </div>
+
+        <a href="#" class="dashboard-nav-link">
+            <i class="bi bi-calendar3"></i>
+            <span>Calendar</span>
+        </a>
+
+        <a href="#" class="dashboard-nav-link">
+            <i class="bi bi-person-circle"></i>
+            <span>User Profile</span>
+        </a>
+    </nav>
+</aside>
+
+<div x-show="sidebarOpen"
+     x-cloak
+    @@click="sidebarOpen = false"
+     class="fixed inset-0 z-40 bg-slate-950/50 lg:hidden">
+</div>

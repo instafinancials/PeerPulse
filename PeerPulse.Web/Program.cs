@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using PeerPulse.Web.Data;
 using PeerPulse.Web.Services;
+using Serilog;
+using Serilog.Events;
 using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -101,14 +102,37 @@ builder.Services
         options.SaveTokens = false;
     });
 builder.Services.AddAuthorization();
+if (!builder.Environment.IsDevelopment())
+{
+    string logDirectory = Path.Combine(AppContext.BaseDirectory, "Logs");
+
+    // Creates Logs only when it does not already exist.
+    Directory.CreateDirectory(logDirectory);
+
+    builder.Host.UseSerilog((context, services, log) => log
+        .MinimumLevel.Information()
+        .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+        .Enrich.FromLogContext()
+        .Enrich.WithProperty("Application", "PeerPulse")
+        .WriteTo.File(
+            path: Path.Combine(logDirectory, "peerpulse-.log"),
+            rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 5,
+            shared: true,
+            outputTemplate:
+                "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}"));
+}
 
 var app = builder.Build();
 
+
 if (!app.Environment.IsDevelopment())
 {
+    app.UseSerilogRequestLogging();
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
