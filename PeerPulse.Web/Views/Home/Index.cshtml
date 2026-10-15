@@ -2,14 +2,27 @@
     ViewData["Title"] = "Know Your Competitors Better & Faster";
     ViewData["Description"] = "Benchmark confidently, outmaneuver competitors, and scale with precision using PeerPulse corporate intelligence.";
 }
+@section Head {
+    <script type="text/javascript">
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-5VXHTXDN');
+    </script>
+
+}
 
 <div x-data="{ page: 'home', darkMode: false, mobileMenuOpen: false, pricingPeriod: 'quarterly', openFaq: 0 }"
      :class="{ 'dark bg-gray-900 text-white': darkMode, 'bg-[#fcfdfd] text-gray-800': !darkMode }"
      class="font-inter antialiased selection:bg-[#0f9b48]/20 selection:text-[#023e8a]">
 
-    <!-- ========================================================================= -->
-    <!-- NAVIGATION HEADER                                                         -->
-    <!-- ========================================================================= -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VXHTXDN" height="0" width="0"
+                style="display: none; visibility: hidden"></iframe>
+    </noscript>
     <header class="sticky top-0 z-50 backdrop-blur-md transition-all duration-300 border-b border-gray-200/80 bg-white/90 dark:bg-gray-900/90 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
