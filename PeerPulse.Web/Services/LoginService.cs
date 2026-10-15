@@ -5,13 +5,13 @@ using System.Text.RegularExpressions;
 
 namespace PeerPulse.Web.Services;
 
-public sealed class LoginService
+public sealed class LoginService : ILoginService
 {
-    private readonly InstaUserLoginRepository _userRepository;
+    private readonly IInstaUserLoginRepository _userRepository;
     private readonly IConfiguration _configuration;
     private readonly ILogger<LoginService> _logger;
 
-    public LoginService(InstaUserLoginRepository userRepository,IConfiguration configuration, ILogger<LoginService> logger)
+    public LoginService(IInstaUserLoginRepository userRepository,IConfiguration configuration, ILogger<LoginService> logger)
     {
         _userRepository = userRepository;
         _configuration = configuration;

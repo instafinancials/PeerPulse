@@ -4,7 +4,7 @@ using PeerPulse.Web.Models.Subscriptions;
 
 namespace PeerPulse.Web.Services;
 
-public sealed class SubscriptionService
+public sealed class SubscriptionService: ISubscriptionService
 {
     private readonly PeerPulseDbContext _db;
 

@@ -1,0 +1,8 @@
+﻿@{
+    var text = TempData["PpMsg"] as string;
+    var type = TempData["PpMsgType"] as string ?? "info";
+}
+@if (!string.IsNullOrWhiteSpace(text))
+{
+    <div data-pp-msg hidden data-type="@type" data-text="@text"></div>
+}

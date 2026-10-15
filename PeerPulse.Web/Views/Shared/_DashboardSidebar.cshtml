@@ -1,71 +1,57 @@
 ﻿@{
     string currentPage = ViewData["DashboardPage"]?.ToString() ?? "";
+
+    string link = "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-[#114fa2] dark:text-slate-300 dark:hover:bg-slate-800";
+    string sub = "block rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-[#114fa2] dark:text-slate-300 dark:hover:bg-slate-800";
+    string subActive = "bg-blue-50 font-semibold text-[#114fa2] dark:bg-blue-950/40 dark:text-blue-300";
 }
 
-<aside class="dashboard-sidebar" :class="{ 'is-open': sidebarOpen }">
+<aside class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-4 py-5 transition-transform duration-200 lg:static lg:translate-x-0 dark:border-slate-800 dark:bg-gray-900"
+       :class="{ 'translate-x-0': sidebarOpen }">
 
-    <div class="dashboard-sidebar__brand">
+    <div class="mb-6 px-2">
         <a asp-controller="Dashboard" asp-action="Index">
             <img src="~/images/logo/logo.svg" alt="InstaFinancials" class="h-12 w-auto" />
         </a>
     </div>
-
-    <nav class="dashboard-sidebar__nav">
-        <span class="dashboard-sidebar__label">MENU</span>
-
-        <a asp-controller="Dashboard"
-           asp-action="Index"
-           class="dashboard-nav-link">
-            <i class="bi bi-grid"></i>
+    <hr />
+    <nav class="space-y-1">
+       @*  <span class="mb-2 block px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Menu</span> *@
+        <a asp-controller="Dashboard" asp-action="Index" class="@link">
+            <i class="bi bi-grid text-lg"></i>
             <span>Dashboard</span>
         </a>
 
         <div x-data="{ peerMenu: true }">
-            <button type="button"
-                    class="dashboard-nav-link dashboard-nav-link--button"
-                    :class="{ 'is-active': peerMenu }"
-                @@click="peerMenu = !peerMenu">
-                <i class="bi bi-people-fill"></i>
+            <button type="button" @@click="peerMenu = !peerMenu"
+                    class="@link w-full"
+                    :class="{ 'bg-blue-50 text-[#114fa2] dark:bg-blue-950/40 dark:text-blue-300': peerMenu }">
+                <i class="bi bi-people-fill text-lg"></i>
                 <span>Peer Discovery</span>
-                <i class="bi bi-chevron-down ml-auto text-xs"
-                   :class="{ 'rotate-180': peerMenu }"></i>
+                <i class="bi bi-chevron-down ml-auto text-xs transition-transform" :class="{ 'rotate-180': peerMenu }"></i>
             </button>
 
-            <div x-show="peerMenu" x-cloak class="dashboard-subnav">
-                <a asp-controller="PeerDiscovery"
-                   asp-action="Add"
-                   class="dashboard-subnav__link @(currentPage == "add-peer" ? "is-active" : "")">
-                    Add Your Peer
-                </a>
-
-                <a asp-controller="PeerDiscovery"
-                   asp-action="Manage"
-                   class="dashboard-subnav__link @(currentPage == "manage-peers" ? "is-active" : "")">
-                    Manage Peers
-                </a>
-
-                <a asp-controller="PeerDiscovery"
-                   asp-action="Groups"
-                   class="dashboard-subnav__link @(currentPage == "peer-groups" ? "is-active" : "")">
-                    Manage Peer Groups
-                </a>
+            <div x-show="peerMenu" x-cloak class="mt-1 space-y-1 pl-9">
+                <a asp-controller="PeerDiscovery" asp-action="AddPeer"
+                   class="@sub @(currentPage == "add-peer" ? subActive : "")">Add Your Peer</a>
+                <a asp-controller="PeerDiscovery" asp-action="Manage"
+                   class="@sub @(currentPage == "manage-peers" ? subActive : "")">Manage Peers</a>
+                <a asp-controller="PeerDiscovery" asp-action="Groups"
+                   class="@sub @(currentPage == "peer-groups" ? subActive : "")">Manage Peer Groups</a>
             </div>
         </div>
 
-        <a href="#" class="dashboard-nav-link">
-            <i class="bi bi-calendar3"></i>
+        <a href="#" class="@link">
+            <i class="bi bi-calendar3 text-lg"></i>
             <span>Calendar</span>
         </a>
 
-        <a href="#" class="dashboard-nav-link">
-            <i class="bi bi-person-circle"></i>
+        <a href="#" class="@link">
+            <i class="bi bi-person-circle text-lg"></i>
             <span>User Profile</span>
         </a>
     </nav>
 </aside>
 
-<div x-show="sidebarOpen"
-     x-cloak
-    @@click="sidebarOpen = false"
-     class="fixed inset-0 z-40 bg-slate-950/50 lg:hidden">
-</div>
+<div x-show="sidebarOpen" x-cloak @@click="sidebarOpen = false"
+     class="fixed inset-0 z-40 bg-slate-950/50 lg:hidden"></div>

@@ -109,13 +109,6 @@
                         <label id="identifierLabel" asp-for="Identifier">
                             Email address
                         </label>
-
-                    @*     <a id="forgotIdentifierLink"
-                           href="https://www.instafinancials.com/accounts/ForgotEmail.aspx"
-                           target="_blank"
-                           rel="noopener noreferrer">
-                            Forgot email?
-                        </a> *@
                     </div>
 
                     <div class="login-input">
@@ -196,8 +189,9 @@
     })
 
     <script>
-        window.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("loginPopup")?.showModal();
+        window.addEventListener("DOMContentLoaded", function () {
+            var popup = document.getElementById("loginPopup");
+            if (popup && !popup.open) popup.showModal();
         });
     </script>
 }
@@ -214,9 +208,7 @@
             password.type = isVisible ? "password" : "text";
             icon.className = isVisible ? "bi bi-eye" : "bi bi-eye-slash";
 
-            button.setAttribute(
-                "aria-label",
-                isVisible ? "Show password" : "Hide password");
+            button.setAttribute("aria-label", isVisible ? "Show password" : "Hide password");
         }
 
         function setLoginMode(mode) {
@@ -227,7 +219,6 @@
             const input = document.getElementById("loginIdentifier");
             const label = document.getElementById("identifierLabel");
             const icon = document.getElementById("identifierIcon");
-            const forgotLink = document.getElementById("forgotIdentifierLink");
 
             emailTab.classList.toggle("is-active", !isMobile);
             mobileTab.classList.toggle("is-active", isMobile);
@@ -236,25 +227,10 @@
             input.type = isMobile ? "tel" : "email";
             input.inputMode = isMobile ? "numeric" : "email";
             input.maxLength = isMobile ? 10 : 254;
-            input.placeholder = isMobile
-                ? "Enter 10-digit mobile number"
-                : "name@example.com";
+            input.placeholder = isMobile ? "Enter 10-digit mobile number" : "name@example.com";
 
-            label.textContent = isMobile
-                ? "Mobile number"
-                : "Email address";
-
-            icon.className = isMobile
-                ? "bi bi-phone"
-                : "bi bi-envelope";
-
-            forgotLink.textContent = isMobile
-                ? "Forgot mobile?"
-                : "Forgot email?";
-
-            forgotLink.href = isMobile
-                ? "https://www.instafinancials.com/accounts/ForgotPassword.aspx"
-                : "https://www.instafinancials.com/accounts/ForgotEmail.aspx";
+            label.textContent = isMobile ? "Mobile number" : "Email address";
+            icon.className = isMobile ? "bi bi-phone" : "bi bi-envelope";
         }
     </script>
 }

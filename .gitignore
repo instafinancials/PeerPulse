@@ -10,3 +10,6 @@
 
 # Publish output
 publish/
+
+#node modules
+node_modules/

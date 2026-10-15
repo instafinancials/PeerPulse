@@ -2,7 +2,10 @@
 
 <dialog id="@Model.Id"
         class="pp-modal pp-modal--@Model.Theme"
-        aria-labelledby="@Model.Id-title">
+        style="margin:auto"
+        aria-labelledby="@Model.Id-title"
+        aria-describedby="@Model.Id-message"
+        onclick="if (event.target === this) this.close()">
 
     <section class="pp-modal__content">
         <button type="button"
@@ -18,7 +21,7 @@
 
         <h2 id="@Model.Id-title">@Model.Title</h2>
 
-        <p class="pp-modal__message">@Model.Message</p>
+        <p id="@Model.Id-message" class="pp-modal__message">@Model.Message</p>
 
         <div class="pp-modal__actions">
             @if (!string.IsNullOrWhiteSpace(Model.SecondaryText))
@@ -43,7 +46,8 @@
             @if (!string.IsNullOrWhiteSpace(Model.PrimaryUrl))
             {
                 <a class="pp-modal__button pp-modal__button--primary"
-                   href="@Model.PrimaryUrl">
+                   href="@Model.PrimaryUrl"
+                   autofocus>
                     @Model.PrimaryText
                 </a>
             }
@@ -51,6 +55,7 @@
             {
                 <button type="button"
                         class="pp-modal__button pp-modal__button--primary"
+                        autofocus
                         onclick="document.getElementById('@Model.Id').close()">
                     @Model.PrimaryText
                 </button>

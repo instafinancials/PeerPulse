@@ -1,0 +1,15 @@
+﻿@import "tailwindcss";
+
+@source "../Views";
+@source "../wwwroot/js";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-inter: "Inter", sans-serif;
+    --color-brand-primary-blue: #114fa2;
+    --color-brand-primary-green: #0f9b48;
+    --text-title-sm: 30px;
+    --text-title-sm--line-height: 38px;
+    --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}

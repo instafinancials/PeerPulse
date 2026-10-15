@@ -6,7 +6,7 @@ using PeerPulse.Web.Models.InstaUsers;
 
 namespace PeerPulse.Web.Services;
 
-public sealed class InstaUserLoginRepository
+public sealed class InstaUserLoginRepository : IInstaUserLoginRepository
 {
     private readonly InstaUsersDbContext _db;
 
