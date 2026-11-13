@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
@@ -7,17 +8,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using PeerPulse.Web.Data;
+using PeerPulse.Web.Models.Reports;
 using PeerPulse.Web.Services;
 using Serilog;
 using Serilog.Events;
+using System.Globalization;
 using System.Net;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false,reloadOnChange: false);
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false,reloadOnChange: false);
+
+    builder.Configuration.AddUserSecrets<Program>(optional: true);
+}
+
+builder.Configuration.AddEnvironmentVariables().AddCommandLine(args);
 const string PeerPulseScheme = "PeerPulse";
 const string ExternalScheme = "PeerPulse.External";
+const string SessionStartedKey = "PeerPulse.SessionStartedUnix";
+var ticketLifetime = TimeSpan.FromMinutes(20);
+var absoluteLifetime = TimeSpan.FromHours(8);
 
 builder.Logging.ClearProviders();
 
@@ -54,33 +69,25 @@ builder.Host.UseSerilog((context, services, logger) =>
     }
 });
 
-var instaUsersConnection = builder.Configuration
-    .GetConnectionString("InstaUsersConnection")
-    ?? throw new InvalidOperationException(
-        "Connection string 'InstaUsersConnection' is missing.");
+var instaUsersConnection = builder.Configuration.GetConnectionString("InstaUsersConnection")
+    ?? throw new InvalidOperationException("Connection string 'InstaUsersConnection' is missing.");
 
-var peerPulseConnection = builder.Configuration
-    .GetConnectionString("PeerPulseConnection")
-    ?? throw new InvalidOperationException(
-        "Connection string 'PeerPulseConnection' is missing.");
+var peerPulseConnection = builder.Configuration.GetConnectionString("PeerPulseConnection")
+    ?? throw new InvalidOperationException("Connection string 'PeerPulseConnection' is missing.");
 
-builder.Services.AddDbContext<InstaUsersDbContext>(options =>
-    options.UseSqlServer(instaUsersConnection));
+builder.Services.AddDbContext<InstaUsersDbContext>(options =>options.UseSqlServer(instaUsersConnection));
 
-builder.Services.AddDbContext<PeerPulseDbContext>(options =>
-    options.UseSqlServer(peerPulseConnection));
+builder.Services.AddDbContext<PeerPulseDbContext>(options =>options.UseSqlServer(peerPulseConnection));
 
 builder.Services
     .AddControllersWithViews(options =>
     {
         // Validate antiforgery tokens on POST, PUT, PATCH and DELETE.
-        options.Filters.Add(
-            new AutoValidateAntiforgeryTokenAttribute());
+        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
     })
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.PropertyNamingPolicy =
-            JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.PropertyNamingPolicy =JsonNamingPolicy.CamelCase;
     });
 
 builder.Services.AddAntiforgery(options =>
@@ -95,18 +102,55 @@ builder.Services.AddAntiforgery(options =>
 });
 
 // Keep this name stable across deployments.
-builder.Services
-    .AddDataProtection()
-    .SetApplicationName("PeerPulse.Web");
+var dataProtection=builder.Services.AddDataProtection().SetApplicationName("PeerPulse.Web");
 
-builder.Services.AddScoped<
-    IInstaUserLoginRepository,
-    InstaUserLoginRepository>();
+if (!builder.Environment.IsDevelopment())
+{
+    var keyPath = builder.Configuration["Security:DataProtection:KeyRingPath"];
+    var protectionMode = builder.Configuration["Security:DataProtection:ProtectionMode"];
+
+    if (string.IsNullOrWhiteSpace(keyPath) || !Path.IsPathFullyQualified(keyPath))
+        throw new InvalidOperationException(
+            "Set Security:DataProtection:KeyRingPath to an absolute persistent directory outside wwwroot and the deployment folder.");
+
+    dataProtection.PersistKeysToFileSystem(Directory.CreateDirectory(keyPath));
+
+    if (string.Equals(protectionMode, "WindowsDpapiSingleMachine", StringComparison.OrdinalIgnoreCase))
+    {
+        if (!OperatingSystem.IsWindows())
+            throw new InvalidOperationException("WindowsDpapiSingleMachine requires a single Windows server.");
+
+        dataProtection.ProtectKeysWithDpapi(protectToLocalMachine: true);
+    }
+    else if (string.Equals(protectionMode, "Certificate", StringComparison.OrdinalIgnoreCase))
+    {
+        var thumbprint = builder.Configuration["Security:DataProtection:CertificateThumbprint"];
+        if (string.IsNullOrWhiteSpace(thumbprint))
+            throw new InvalidOperationException("Configure the Data Protection certificate thumbprint.");
+
+        dataProtection.ProtectKeysWithCertificate(thumbprint);
+    }
+    else
+    {
+        throw new InvalidOperationException(
+            "Set Security:DataProtection:ProtectionMode to WindowsDpapiSingleMachine for one Windows server, or Certificate for a shared repository.");
+    }
+}
+
+builder.Services.AddScoped<IInstaUserLoginRepository,InstaUserLoginRepository>();
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IPeerSearchService, PeerSearchService>();
-
+builder.Services.AddScoped<IReportSettingsStore,ReportSettingsStore>();
+builder.Services.AddOptions<PeerComparisonOptions>().Bind(builder.Configuration.GetSection(PeerComparisonOptions.SectionName)).Validate(
+        options =>
+            !string.IsNullOrWhiteSpace(options.SelectionProcedure) &&
+            !string.IsNullOrWhiteSpace(options.DispatchProcedure),
+        "Comparison stored procedure names are required.")
+    .ValidateOnStart();
+builder.Services.AddScoped<IPeerComparisonService,PeerComparisonService>();
+builder.Services.AddScoped<ReportResultLoggingFilter>();
 var trustedProxyIps = builder.Configuration
     .GetSection("Security:TrustedProxyIps")
     .Get<string[]>()
@@ -160,6 +204,21 @@ builder.Services.AddRateLimiter(options =>
                 AutoReplenishment = true
             });
     });
+    options.AddPolicy("report-settings", httpContext =>
+    {
+        var userId = httpContext.User.FindFirst("InstaUserId")?.Value;
+
+        var partitionKey = !string.IsNullOrWhiteSpace(userId)? $"user:{userId}": $"ip:{httpContext.Connection.RemoteIpAddress}";
+
+        return RateLimitPartition.GetFixedWindowLimiter(partitionKey: partitionKey,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 120,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
 });
 
 builder.Services
@@ -182,27 +241,53 @@ builder.Services
 
         // Default when "Keep me signed in" is unchecked:
         // five minutes without a server request.
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        options.ExpireTimeSpan = ticketLifetime;
         options.SlidingExpiration = true;
 
         options.Events = new CookieAuthenticationEvents
         {
+            OnSigningIn = context =>
+            {
+                var now = DateTimeOffset.UtcNow;
+                context.Properties.Items[SessionStartedKey] = now.ToUnixTimeSeconds()
+                    .ToString(CultureInfo.InvariantCulture);
+                context.Properties.IssuedUtc = now;
+                context.Properties.ExpiresUtc = now.Add(ticketLifetime);
+                context.Properties.AllowRefresh = true;
+                // Preserve the login form's IsPersistent choice. It does not
+                // bypass the ticket lifetime or the absolute eight-hour limit.
+                return Task.CompletedTask;
+            },
+            OnValidatePrincipal = async context =>
+            {
+                var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                var valid = context.Properties.Items.TryGetValue(SessionStartedKey, out var text)
+                    && long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var started)
+                    && started <= now + 60
+                    && now - started < (long)absoluteLifetime.TotalSeconds;
+                if (!valid)
+                {
+                    context.RejectPrincipal();
+                    await context.HttpContext.SignOutAsync(PeerPulseScheme);
+                }
+            },
+            OnRedirectToAccessDenied = async context =>
+            {
+                if (ExpectsJson(context.Request))
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    await context.Response.WriteAsJsonAsync(
+                        new { message = "You do not have access to this resource." },
+                        cancellationToken: context.HttpContext.RequestAborted);
+                    return;
+                }
+                context.Response.Redirect(context.RedirectUri);
+            },
             OnRedirectToLogin = context =>
             {
                 var request = context.Request;
 
-                var expectsJson =
-                    request.Path.StartsWithSegments("/api") ||
-                    request.Headers.Accept.Any(value =>
-                        value?.Contains(
-                            "application/json",
-                            StringComparison.OrdinalIgnoreCase) == true) ||
-                    string.Equals(
-                        request.Headers["X-Requested-With"],
-                        "XMLHttpRequest",
-                        StringComparison.OrdinalIgnoreCase);
-
-                if (expectsJson)
+                if (ExpectsJson(request))
                 {
                     context.Response.StatusCode =
                         StatusCodes.Status401Unauthorized;
@@ -269,7 +354,14 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
-
+if (!app.Environment.IsDevelopment())
+{
+    var protector = app.Services.GetRequiredService<IDataProtectionProvider>()
+        .CreateProtector("PeerPulse.StartupProbe.v1");
+    var probe = Guid.NewGuid().ToString("N");
+    if (protector.Unprotect(protector.Protect(probe)) != probe)
+        throw new InvalidOperationException("Data Protection startup verification failed.");
+}
 if (useForwardedHeaders)
 {
     // Must run before HTTPS redirection and authentication.
@@ -304,3 +396,11 @@ app.MapControllerRoute(name: "default",pattern: "{controller=Home}/{action=Index
 app.MapGet("/Identity/Account/Login", () =>Results.Redirect("/Account/Login")).AllowAnonymous();
 
 app.Run();
+static bool ExpectsJson(HttpRequest request)
+{
+    return request.Path.StartsWithSegments("/api") ||
+        request.Headers.Accept.Any(value => value?.Contains(
+            "application/json", StringComparison.OrdinalIgnoreCase) == true) ||
+        string.Equals(request.Headers["X-Requested-With"].ToString(),
+            "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
+}

@@ -1,0 +1,53 @@
+@model StaticComparisonViewModel
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Comparison Report";
+    ViewData["DashboardPage"] = "peer-compare";
+}
+<link rel="stylesheet" href="~/css/peer-compare.css" asp-append-version="true" />
+<div class="static-peer-report flex-1 pb-24 font-inter">
+    @await Html.PartialAsync("_StaticReportHeader", Model)
+
+    @foreach (var item in Model.Source.Items.Where(i => i.Report is null))
+    {
+        <div class="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300" role="status">
+            <strong>@item.Label</strong><p>@item.Error</p>
+        </div>
+    }
+
+    <p class="mb-5 text-xs text-gray-500 dark:text-gray-400 no-print">
+        Displaying @Model.selectedPeers.Count of @Model.Source.TotalPeers selected peers.
+        Comparison bars are relative to the peers on this page.
+    </p>
+
+    @if (Model.selectedPeers.Count > 0)
+    {
+        @await Html.PartialAsync("_ProfileMatrix", Model)
+        @await Html.PartialAsync("_WebSocialSection", Model)
+        @await Html.PartialAsync("_DirectorSection", Model)
+        @await Html.PartialAsync("_ChargesSection", Model)
+        @await Html.PartialAsync("_EmploymentSection", Model)
+        @await Html.PartialAsync("_FinancialMatrix", Model)
+    }
+
+    @if (string.IsNullOrWhiteSpace(Model.Source.SearchInput))
+    {
+        <nav class="no-print flex items-center justify-center gap-4 py-6 text-sm" aria-label="Comparison pages">
+            @if (Model.Source.Page > 1)
+            {
+                <a asp-action="Index" asp-route-draftId="@Model.Source.DraftId"
+                   asp-route-page="@(Model.Source.Page - 1)" asp-route-financialYear="@Model.selectedFinancialYear"
+                   data-report-navigation
+                   class="rounded-xl border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">Previous</a>
+            }
+            <span class="text-gray-500 dark:text-gray-400">Page @Model.Source.Page of @Model.Source.TotalPages</span>
+            @if (Model.Source.Page < Model.Source.TotalPages)
+            {
+                <a asp-action="Index" asp-route-draftId="@Model.Source.DraftId"
+                   asp-route-page="@(Model.Source.Page + 1)" asp-route-financialYear="@Model.selectedFinancialYear"
+                   data-report-navigation class="rounded-xl bg-brand-primary-blue px-4 py-2 font-semibold text-white">Next</a>
+            }
+        </nav>
+    }
+    <p id="report-action-status" class="text-xs text-gray-500 dark:text-gray-400 no-print" role="status" aria-live="polite"></p>
+</div>

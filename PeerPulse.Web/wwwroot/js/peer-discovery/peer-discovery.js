@@ -15,7 +15,7 @@
     };
 
     const esc = value => String(value ?? "").replace(/[&<>"']/g, c =>
-        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
     const fmtDate = value => value
         ? new Date(value).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
@@ -74,6 +74,9 @@
     let confirmAction = null;
 
     const selected = new Set();
+    const selectedPeerIds = new Set();
+    let peerView = "table";
+    let sortAscending = true;
 
     // ------------------------------------------------------------------ messages (pp-msg)
     const KIND_BY_STATUS = {
@@ -219,17 +222,29 @@
             }
         } finally {
             if (button && !ownLoader) window.ppLoader?.button(button, false);
-            if (button) button.disabled = false;
+            if (button) button.disabled = button.id === "pp-search-button" && !$("pp-identifier").value.trim();
         }
     }
 
     // ------------------------------------------------------------------ workspace data
     function applyWorkspace(data) {
+        // console.log("Workspace response:", data);
+
+        // console.table((data.peers ?? []).map(peer => ({
+        //     peerId: peer.peerId,
+        //     name: peer.name,
+        //     createdAtUtc: peer.createdAtUtc,
+        //     CreatedAtUtc: peer.CreatedAtUtc,
+        //     displayedDate: peerDate(peer)
+        // })));
         data.groups = Array.isArray(data.groups) ? data.groups : [];
         data.peers = (Array.isArray(data.peers) ? data.peers : [])
             .map(peer => ({ ...peer, groups: Array.isArray(peer.groups) ? peer.groups : [] }));
 
         workspace = data;
+        root.querySelectorAll("[data-total-peers]").forEach(n => {
+            n.textContent = data.peers.length;
+        });
 
         root.querySelectorAll("[data-peer-count]").forEach(node => {
             node.textContent = `${data.peerCount ?? 0}/${data.peerLimit ?? 0}`;
@@ -238,7 +253,10 @@
         if (page === "manage") {
             $("pp-total").textContent = data.peerCount ?? 0;
             $("pp-balance").textContent = Math.max(0, (data.peerLimit ?? 0) - (data.peerCount ?? 0));
-            $("pp-cap").textContent = `of ${data.peerLimit ?? 0} · ${data.planName || "No active plan"}`;
+            $("pp-subscription-limit").textContent = data.peerLimit ?? 0;
+            root.querySelectorAll("[data-peer-cap]").forEach(n => {
+                n.textContent = `of ${data.peerLimit ?? 0}`;
+            });
             $("pp-group-total").textContent = data.groups.length;
 
             const filter = $("pp-group-filter");
@@ -273,6 +291,7 @@
         $("pp-remaining").textContent = quota.remaining;
         $("pp-progress").max = Math.max(quota.dailyLimit, 1);
         $("pp-progress").value = quota.used;
+        $("pp-progress").style.width = `${Math.min(100, Math.max(0, Number(quota.used) / Math.max(1, Number(quota.dailyLimit)) * 100))}%`;
     }
 
     async function loadWorkspace() {
@@ -334,7 +353,7 @@
 
             for (let i = 0; i < 5; i++) {
                 const row = el("tr", "animate-pulse");
-                for (let c = 0; c < 6; c++) {
+                for (let c = 0; c < 8; c++) {
                     const cell = el("td");
                     cell.append(el("div", "h-4 rounded bg-gray-200 dark:bg-gray-700"));
                     row.append(cell);
@@ -343,6 +362,7 @@
             }
 
             const empty = $("pp-peer-empty");
+            empty.hidden = false;
             empty.replaceChildren(document.createTextNode("Loading peers…"));
             empty.classList.remove("hidden");
         } else if (page === "groups") {
@@ -358,13 +378,14 @@
     function showLoadError(text) {
         if (page === "add") return;
 
-        const retry = el("button", "ml-2 rounded-lg bg-[#114fa2] px-4 py-2 text-xs font-semibold text-white hover:bg-[#114fa2]/90", "Try again");
+        const retry = el("button", "ml-2 rounded-lg bg-brand-primary-blue px-4 py-2 text-xs font-semibold text-white hover:bg-brand-primary-blue/90", "Try again");
         retry.type = "button";
         retry.addEventListener("click", loadWorkspace);
 
         if (page === "manage") {
             $("pp-peer-rows").replaceChildren();
             const empty = $("pp-peer-empty");
+            empty.hidden = false;
             empty.classList.remove("hidden");
             empty.replaceChildren(document.createTextNode(text), retry);
         } else {
@@ -395,12 +416,13 @@
 
         const label = button.querySelector("[data-label]");
         if (label) label.textContent = on ? "Verifying & Fetching Registry Data..." : "Verify & Search Peer Database";
+        button.disabled = on || !$("pp-identifier").value.trim();
     }
 
     function showLoader() {
         $("pp-results").innerHTML = `
           <div role="status" aria-live="polite"
-               class="animate-pulse rounded-2xl border border-gray-200 border-t-2 border-t-[#114fa2] bg-white p-6 shadow-sm dark:border-gray-800 dark:border-t-[#114fa2] dark:bg-gray-800/90">
+               class="animate-pulse rounded-2xl border border-gray-200 border-t-2 border-t-[#114fa2] bg-white p-6 shadow-xs dark:border-gray-800 dark:border-t-[#114fa2] dark:bg-gray-800/90">
             <div class="flex items-center gap-2.5">
               <span class="h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-700"></span>
               <span class="h-4 w-40 rounded bg-gray-200 dark:bg-gray-700"></span>
@@ -440,7 +462,7 @@
         const target = $("pp-results");
         target.replaceChildren();
 
-        const box = el("div", "rounded-2xl border border-gray-200 border-t-2 border-t-[#0f9b48] bg-white p-5 shadow-sm dark:border-gray-800 dark:border-t-[#0f9b48] dark:bg-gray-800/90");
+        const box = el("div", "rounded-2xl border border-gray-200 border-t-2 border-t-[#0f9b48] bg-white p-5 shadow-xs dark:border-gray-800 dark:border-t-[#0f9b48] dark:bg-gray-800/90");
         box.append(el("h3", "text-base font-semibold text-gray-900 dark:text-white",
             `${records.length} matches found. Select one to review.`));
 
@@ -517,7 +539,7 @@
         }
 
         $("pp-results").innerHTML = `
-        <div class="rounded-2xl border border-gray-200 border-t-2 border-t-[#0f9b48] bg-white shadow-sm dark:border-gray-800 dark:border-t-[#0f9b48] dark:bg-gray-800/90">
+        <div class="rounded-2xl border border-gray-200 border-t-2 border-t-[#0f9b48] bg-white shadow-xs dark:border-gray-800 dark:border-t-[#0f9b48] dark:bg-gray-800/90">
 
           <div class="border-b border-gray-100 p-5 sm:p-6 dark:border-gray-700">
             <div class="flex flex-wrap items-center justify-between gap-3">
@@ -536,13 +558,13 @@
             <div class="flex items-start justify-between gap-4">
               <div class="min-w-0">
                 <div class="flex items-center gap-2 text-xs">
-                  <span class="font-semibold uppercase tracking-wider text-[#114fa2] dark:text-blue-400">${esc(isLlp ? "LLP" : "Company")}</span>
+                  <span class="font-semibold uppercase tracking-wider text-brand-primary-blue dark:text-blue-400">${esc(isLlp ? "LLP" : "Company")}</span>
                   <span class="h-1 w-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
                   <span class="text-gray-500 dark:text-gray-400">${esc(record.roc || "RoC unavailable")}</span>
                 </div>
                 <h2 class="mt-1 text-xl font-bold text-gray-900 dark:text-white">${esc(record.name)}</h2>
               </div>
-              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#114fa2] text-lg font-bold text-white shadow-sm">${esc((record.name || "P").charAt(0))}</span>
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-primary-blue text-lg font-bold text-white shadow-sm">${esc((record.name || "P").charAt(0))}</span>
             </div>
 
             <div class="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -576,7 +598,7 @@
             <div class="mt-3 flex items-center justify-between gap-2 rounded-xl border border-gray-200/80 bg-white p-3 dark:border-gray-700 dark:bg-gray-800">
               <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Website</span>
               ${site
-                ? `<a href="${esc(site)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-[#114fa2] hover:underline dark:text-blue-400">${esc(site.replace(/^https?:\/\//, ""))}</a>`
+                ? `<a href="${esc(site)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-brand-primary-blue hover:underline dark:text-blue-400">${esc(site.replace(/^https?:\/\//, ""))}</a>`
                 : `<span class="text-xs text-gray-500 dark:text-gray-400">Not available</span>`}
             </div>
           </div>
@@ -588,7 +610,7 @@
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Assign to Peer Groups <span class="text-red-500">*</span></label>
                   <span id="pp-selected-count" class="inline-flex items-center rounded-full bg-blue-100/80 px-2 py-0.5 text-[10px] font-bold text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">0 Selected</span>
                 </div>
-                <button type="button" id="pp-inline-new-group" class="text-xs font-semibold text-[#114fa2] hover:underline dark:text-blue-400">+ Create New Group</button>
+                <button type="button" id="pp-inline-new-group" class="text-xs font-semibold text-brand-primary-blue hover:underline dark:text-blue-400">+ Create New Group</button>
               </div>
               <div id="pp-inline-groups" class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
               <p class="mt-1.5 text-[11px] text-gray-500 dark:text-gray-400">A peer must belong to at least one group. It can belong to several.</p>
@@ -745,16 +767,18 @@
         gray: "inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200"
     };
 
-    const LINK_BLUE = "text-xs font-semibold text-[#114fa2] hover:underline dark:text-blue-400";
+    const LINK_BLUE = "text-xs font-semibold text-brand-primary-blue hover:underline dark:text-blue-400";
     const LINK_RED = "text-xs font-semibold text-red-600 hover:underline dark:text-red-400";
     const LINK_GREEN = "text-xs font-semibold text-emerald-700 hover:underline dark:text-emerald-400";
-
+    function peerDate(peer) {
+        return peer.createdAtUtc ?? null;
+    }
     function visiblePeers() {
         const term = ($("pp-filter")?.value || "").toLowerCase();
         const groupId = Number($("pp-group-filter")?.value || 0);
         const activity = $("pp-status-filter")?.value || "active";
 
-        return (workspace?.peers || []).filter(peer => {
+        const result = (workspace?.peers || []).filter(peer => {
             const matchesActivity =
                 activity === "all" || (activity === "active" ? peer.isActive : !peer.isActive);
 
@@ -767,127 +791,239 @@
 
             return matchesActivity && matchesGroup && matchesText;
         });
+        const sort = $("pp-sort")?.value || "dateAdded";
+        const dateValue = p => peerDate(p) ?? "";
+        const sortValue = p => ({
+            legalName: p.name || "",
+            groupName: p.groups.map(g => g.name).join(", "),
+            state: p.state || "",
+            dateAdded: dateValue(p)
+        })[sort];
+        return result.sort((a, b) => {
+            const left = sortValue(a), right = sortValue(b);
+            const cmp = sort === "dateAdded"
+                ? (Date.parse(left) || 0) - (Date.parse(right) || 0)
+                : String(left).localeCompare(String(right), undefined, { sensitivity: "base" });
+            return sortAscending ? cmp : -cmp;
+        });
+    }
+
+    const GROUP_BADGE = "inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800";
+    const ACTION_BUTTON = "rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200";
+
+    function peerDate(peer) {
+        return peer.createdAt || peer.dateAdded || peer.addedOn || peer.createdOn || null;
+    }
+
+    function showPeerDetail(peer) {
+        const content = $("pp-detail-content");
+        content.replaceChildren();
+        content.append(el("h4", "text-base font-bold text-gray-900 dark:text-white", peer.name));
+        for (const [label, value] of [
+            ["PAN", peer.pan], ["CIN / LLPIN", peer.registrationNumber],
+            ["Entity type", peer.entityType], ["State", peer.state],
+            ["Activity", peer.isActive ? "Active" : "Inactive"],
+            ["Groups", peer.groups.map(g => g.name).join(", ")],
+            ["Notes", peer.notes], ["Date added", fmtDate(peerDate(peer))]
+        ]) {
+            const line = el("div", "mt-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700");
+            line.append(el("span", "block text-[10px] font-semibold uppercase text-gray-500 dark:text-gray-400", label),
+                el("p", "mt-1 break-words text-xs text-gray-800 dark:text-gray-200", value || "—"));
+            content.append(line);
+        }
+        $("pp-detail-dialog").showModal();
+    }
+
+    function peerActions(peer) {
+        const actions = el("div", "flex items-center justify-end gap-1.5");
+        const view = el("button", ACTION_BUTTON, "View");
+        const edit = el("button", ACTION_BUTTON, "Edit");
+        const toggle = el("button", peer.isActive
+            ? "rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400"
+            : "rounded-lg border border-emerald-200 px-2.5 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400",
+            peer.isActive ? "Deactivate" : "Reactivate");
+        for (const b of [view, edit, toggle]) b.type = "button";
+        view.addEventListener("click", () => showPeerDetail(peer));
+        edit.addEventListener("click", () => openSelection(peer));
+        toggle.addEventListener("click", () => askConfirm(
+            `${peer.isActive ? "Deactivate" : "Reactivate"} ${peer.name}? Notes and group assignments are kept.`,
+            async () => {
+                const data = await api(peer.isActive ? endpoint("deactivatePeer") : endpoint("reactivatePeer"), { PeerId: peer.peerId });
+                applyWorkspace(data);
+                notify(data.message, "success");
+            }));
+        actions.append(view, edit, toggle);
+        return actions;
+    }
+
+    function updatePeerSelection(peers = visiblePeers()) {
+        $("pp-selection-count").textContent = `${selectedPeerIds.size} selected`;
+        const all = $("pp-select-all");
+        const count = peers.filter(p => selectedPeerIds.has(p.peerId)).length;
+        all.checked = peers.length > 0 && count === peers.length;
+        all.indeterminate = count > 0 && count < peers.length;
+    }
+
+    function identifierCell(value, className) {
+        const td = el("td", className);
+        const row = el("div", "flex items-center gap-1.5 group");
+        row.append(el("span", "truncate max-w-[150px]", value || "—"));
+        if (value) {
+            const copy = el("button", "text-gray-400 hover:text-brand-primary-blue p-0.5", "⧉");
+            copy.type = "button";
+            copy.title = "Copy identifier";
+            copy.setAttribute("aria-label", "Copy identifier");
+            copy.addEventListener("click", async () => {
+                try { await navigator.clipboard.writeText(value); notify("Copied", "success"); }
+                catch { notify("Could not copy. Select and copy the identifier manually.", "warning"); }
+            });
+            row.append(copy);
+        }
+        td.append(row);
+        return td;
     }
 
     function renderPeers() {
         const body = $("pp-peer-rows");
+        const grid = $("pp-peer-grid");
         body.replaceChildren();
-
+        grid.replaceChildren();
         const peers = visiblePeers();
-        const empty = $("pp-peer-empty");
-
-        empty.replaceChildren(document.createTextNode(peers.length ? "" : "No peers match your filters."));
-        empty.classList.toggle("hidden", peers.length > 0);
-
+        // Discard selections that no longer match the current visible list.
+        const visibleIds = new Set(peers.map(p => p.peerId));
+        for (const id of selectedPeerIds) if (!visibleIds.has(id)) selectedPeerIds.delete(id);
+        $("pp-peer-empty").textContent = peers.length ? "" : "No peers match your filters.";
+        $("pp-peer-empty").hidden = peers.length > 0;
+        $("pp-peer-empty").classList.toggle("hidden", peers.length > 0);
+        $("pp-table-view").hidden = peerView !== "table";
+        grid.hidden = peerView !== "grid";
+        for (const button of root.querySelectorAll("[data-view]")) {
+            const active = button.dataset.view === peerView;
+            button.setAttribute("aria-pressed", String(active));
+            button.className = "rounded-md p-1.5 transition " + (active
+                ? "bg-white text-gray-900 shadow-xs dark:bg-gray-800 dark:text-white"
+                : "text-gray-500 hover:text-gray-700 dark:text-gray-400");
+        }
         peers.forEach(peer => {
-            const row = el("tr");
+            const row = el("tr", "transition hover:bg-blue-50/30 dark:hover:bg-gray-700/30");
+            const select = el("td", "p-4");
+            const checkbox = el("input", "h-4 w-4 rounded border-gray-300 text-brand-primary-blue focus:ring-brand-primary-blue/20 dark:border-gray-700 dark:bg-gray-800");
+            checkbox.type = "checkbox";
+            checkbox.checked = selectedPeerIds.has(peer.peerId);
+            checkbox.setAttribute("aria-label", `Select ${peer.name}`);
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) selectedPeerIds.add(peer.peerId); else selectedPeerIds.delete(peer.peerId);
+                updatePeerSelection(peers);
+            });
+            select.append(checkbox);
+            const name = el("td", "py-3 px-4");
+            const nameRow = el("div", "flex items-center gap-3");
+            nameRow.append(el("div", "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-primary-blue/10 text-brand-primary-blue dark:bg-blue-900/40 dark:text-blue-300 font-bold text-sm", (peer.name || "P").charAt(0)));
+            const nameText = el("div");
+            const nameButton = el("button", "text-left font-semibold text-gray-900 hover:text-brand-primary-blue dark:text-white dark:hover:text-blue-400", peer.name);
+            nameButton.type = "button";
+            nameButton.addEventListener("click", () => showPeerDetail(peer));
+            nameText.append(nameButton, el("div", "text-[11px] text-gray-500 dark:text-gray-400 mt-0.5", `${peer.entityType} · ${peer.state || "State unavailable"}`));
+            if (!peer.isActive) nameText.append(el("span", BADGE.gray, "Inactive"));
+            nameRow.append(nameText); name.append(nameRow);
+            const groups = el("td", "py-3 px-4");
+            const badges = el("div", "flex flex-wrap gap-1 max-w-[190px]");
+            peer.groups.forEach(g => badges.append(el("span", GROUP_BADGE, g.name)));
+            groups.append(badges);
+            const notes = el("td", "py-3 px-4 min-w-[280px]");
+            if (peer.notes) {
+                const box = el("div", "rounded-lg bg-gray-50/90 p-2.5 border border-gray-200/80 dark:bg-gray-900/50 dark:border-gray-700");
+                box.append(el("p", "text-xs text-gray-700 dark:text-gray-200 leading-relaxed break-words line-clamp-2", peer.notes));
+                const editNote = el("button", "mt-1 text-[10px] font-semibold text-brand-primary-blue hover:underline dark:text-blue-400", "Edit note");
+                editNote.type = "button"; editNote.addEventListener("click", () => openSelection(peer));
+                box.append(editNote); notes.append(box);
+            } else {
+                const addNote = el("button", "text-[11px] text-gray-400 hover:text-brand-primary-blue border border-dashed border-gray-300 dark:border-gray-700 rounded-lg px-2.5 py-1.5", "+ Add note…");
+                addNote.type = "button"; addNote.addEventListener("click", () => openSelection(peer)); notes.append(addNote);
+            }
+            const rawCreatedAt = peer.createdAtUtc;
+            const parsedCreatedAt = rawCreatedAt? new Date(rawCreatedAt): null;
 
-            const name = el("td");
-            name.append(
-                el("div", "font-semibold text-gray-900 dark:text-white", peer.name),
-                el("div", "text-xs text-gray-500 dark:text-gray-400",
-                    `${peer.entityType} · ${peer.state || "State unavailable"}`));
+            const dateText =parsedCreatedAt && !Number.isNaN(parsedCreatedAt.getTime())? parsedCreatedAt.toLocaleDateString("en-GB", {day: "2-digit",month: "short",year: "numeric"}): "—";
 
-            const identifiers = el("td");
-            identifiers.append(
-                el("div", "font-mono text-xs", peer.registrationNumber || "—"),
-                el("div", "font-mono text-xs text-gray-500 dark:text-gray-400", peer.pan || "PAN unavailable"));
+            const date = el("td","py-3 px-4 text-gray-500 dark:text-gray-400 font-mono text-[11px]",dateText);
 
-            const groups = el("td", "space-x-1 space-y-1");
-            peer.groups.forEach(group => groups.append(el("span", BADGE.blue, group.name)));
-
-            const activity = el("td");
-            activity.append(el("span", peer.isActive ? BADGE.green : BADGE.gray, peer.isActive ? "Active" : "Inactive"));
-
-            const notes = el("td", "max-w-xs text-xs text-gray-600 dark:text-gray-300", peer.notes || "—");
-
-            const actions = el("td", "space-x-3 whitespace-nowrap flex items-center gap-3");
-            const edit = el("button", LINK_BLUE, "Edit");
-            const toggle = el("button", peer.isActive ? LINK_RED : LINK_GREEN, peer.isActive ? "Deactivate" : "Reactivate");
-
-            edit.type = "button";
-            toggle.type = "button";
-
-            edit.addEventListener("click", () => openSelection(peer));
-
-            toggle.addEventListener("click", () => askConfirm(
-                `${peer.isActive ? "Deactivate" : "Reactivate"} ${peer.name}? Notes and group assignments are kept.`,
-                async () => {
-                    const data = await api(
-                        peer.isActive ? endpoint("deactivatePeer") : endpoint("reactivatePeer"),
-                        { PeerId: peer.peerId });
-
-                    applyWorkspace(data);
-                    notify(data.message, "success");
-                }));
-
-            actions.append(edit, toggle);
-            row.append(name, identifiers, groups, activity, notes, actions);
+        
+            const actions = el("td", "py-3 px-4"); actions.append(peerActions(peer));
+            row.append(select, name,
+                identifierCell(peer.pan, "py-3 px-4 font-mono font-medium text-gray-800 dark:text-gray-200"),
+                identifierCell(peer.registrationNumber, "py-3 px-4 font-mono text-[11px] font-medium text-gray-700 dark:text-gray-300"),
+                groups, notes, date, actions);
             body.append(row);
+            const card = el("article", "rounded-2xl border border-gray-200 border-t-2 border-t-[#114fa2] bg-white p-5 shadow-xs dark:border-gray-800 dark:bg-gray-800 flex flex-col justify-between");
+            card.append(el("h3", "font-bold text-base text-gray-900 dark:text-white", peer.name),
+                el("p", "mt-1 text-[11px] text-gray-500 dark:text-gray-400", `${peer.entityType} · ${peer.state || "—"} · ${peer.isActive ? "Active" : "Inactive"}`),
+                el("p", "mt-3 font-mono text-xs text-gray-700 dark:text-gray-300", `PAN: ${peer.pan || "—"}`),
+                el("p", "mt-1 font-mono text-[11px] text-gray-600 dark:text-gray-400", peer.registrationNumber || "—"));
+            const cardBadges = el("div", "mt-3 flex flex-wrap gap-1");
+            peer.groups.forEach(g => cardBadges.append(el("span", GROUP_BADGE, g.name)));
+            card.append(cardBadges, el("p", "mt-3 text-xs text-gray-600 dark:text-gray-300 break-words line-clamp-2", peer.notes || "No notes added."));
+            const footer = el("div","mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-3 dark:border-gray-700");
+            const createdAt = peer.createdAtUtc? new Date(peer.createdAtUtc): null;
+            const addedDate =createdAt && !Number.isNaN(createdAt.getTime())? createdAt.toLocaleDateString("en-GB", {day: "2-digit",month: "short",year: "numeric"}): "—";
+            footer.append(el("span", "text-[11px] text-gray-500 dark:text-gray-400",`${addedDate}`),peerActions(peer));
+            card.append(footer);
+            grid.append(card);
         });
+        if (!peers.length) grid.append(el("p", "text-sm text-gray-500 dark:text-gray-400", "No peers match your filters."));
+        updatePeerSelection(peers);
     }
 
-    // ------------------------------------------------------------------ groups page
     function renderGroups() {
         const grid = $("pp-group-grid");
         grid.replaceChildren();
-
         const term = ($("pp-filter")?.value || "").toLowerCase();
-
-        const groups = workspace.groups.filter(group =>
-            !term || [group.name, group.vertical, group.description]
-                .some(value => (value || "").toLowerCase().includes(term)));
-
+        const groups = workspace.groups.filter(group => !term || [group.name, group.vertical, group.description]
+            .some(v => String(v || "").toLowerCase().includes(term)));
+        if ($("pp-visible-groups")) $("pp-visible-groups").textContent = groups.length;
         groups.forEach(group => {
-            const card = el("article", "flex flex-col rounded-2xl border border-gray-200 border-t-2 border-t-[#114fa2] bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-800/90");
-
-            card.append(
-                el("h3", "text-base font-bold text-gray-900 dark:text-white", group.name),
-                el("p", "text-xs text-gray-500 dark:text-gray-400", group.vertical || "General Vertical"));
-
-            const badgeRow = el("div", "mt-2");
-            badgeRow.append(el("span", BADGE.blue, `${group.peerCount} Active Peers`));
-            card.append(badgeRow);
-
-            card.append(el("p", "mt-3 text-sm text-gray-600 dark:text-gray-300", group.description || "No description provided."));
-
-            workspace.peers
-                .filter(peer => peer.groups.some(link => link.groupId === group.groupId))
-                .slice(0, 3)
-                .forEach(peer => card.append(el("p", "mt-1 text-xs text-gray-500 dark:text-gray-400",
-                    `• ${peer.name}${peer.isActive ? "" : " (inactive)"}`)));
-
-            const actions = el("div", "mt-4 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-3 dark:border-gray-700");
-
-            const view = el("a", LINK_BLUE, "View List");
-            view.href = `${endpoint("manage")}?groupId=${group.groupId}`;
-
-            const edit = el("button", LINK_BLUE, "Edit");
-            const remove = el("button", LINK_RED, "Delete Group");
-
-            edit.type = "button";
-            remove.type = "button";
-
-            edit.addEventListener("click", () => openGroup(group));
-
-            remove.addEventListener("click", () => askConfirm(
-                `Delete group ${group.name}? Reassign all linked peers, including inactive ones, first.`,
-                async () => {
-                    const data = await api(endpoint("deleteGroup"), { GroupId: group.groupId });
-                    applyWorkspace(data);
-                    notify(data.message, "success");
-                }));
-
-            actions.append(view, edit, remove);
-            card.append(actions);
-            grid.append(card);
+            const assigned = workspace.peers.filter(p => p.groups.some(g => g.groupId === group.groupId));
+            const card = el("article", "rounded-2xl border border-gray-200 border-t-2 border-t-[#7c3aed] bg-white p-5 shadow-xs transition hover:shadow-md dark:border-gray-800 dark:border-t-[#7c3aed] dark:bg-gray-800 flex flex-col justify-between");
+            const top = el("div");
+            const head = el("div", "flex items-start justify-between gap-3");
+            const brand = el("div", "flex items-center gap-3");
+            brand.append(el("div", "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-primary-blue text-white shadow-sm font-bold text-base", (group.name || "G").charAt(0)));
+            const title = el("div");
+            title.append(el("h3", "font-bold text-base text-gray-900 dark:text-white line-clamp-1", group.name),
+                el("span", "inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300 mt-0.5", group.vertical || "General Vertical"));
+            brand.append(title); head.append(brand, el("span", "rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-brand-primary-blue border border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800", `${assigned.length} Peers`));
+            top.append(head, el("p", "mt-3.5 text-xs text-gray-600 dark:text-gray-300 leading-relaxed min-h-[36px] line-clamp-2", group.description || "No description provided."));
+            const box = el("div", "mt-4 rounded-xl bg-gray-50/70 p-3 border border-gray-100 dark:bg-gray-900/40 dark:border-gray-700");
+            const label = el("div", "flex items-center justify-between text-[11px] font-medium text-gray-500 dark:text-gray-400 mb-2");
+            const listLink = el("a", "text-brand-primary-blue hover:underline font-semibold dark:text-blue-400", "View List");
+            listLink.href = `${endpoint("manage")}?groupId=${encodeURIComponent(group.groupId)}`;
+            label.append(el("span", "", "Assigned Companies"), listLink); box.append(label);
+            const previews = el("div", "flex flex-wrap gap-1.5");
+            assigned.slice(0, 3).forEach(p => {
+                const chip = el("span", "inline-flex items-center gap-1 rounded bg-white px-2 py-1 text-[11px] font-medium text-gray-800 shadow-2xs border border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700");
+                chip.append(el("span", p.isActive ? "h-1.5 w-1.5 rounded-full bg-emerald-500" : "h-1.5 w-1.5 rounded-full bg-gray-400"),
+                    el("span", "truncate max-w-[120px]", `${p.name}${p.isActive ? "" : " (inactive)"}`)); previews.append(chip);
+            });
+            if (assigned.length > 3) previews.append(el("span", "inline-flex items-center rounded bg-gray-200 px-2 py-1 text-[11px] font-bold text-gray-700 dark:bg-gray-700 dark:text-gray-300", `+${assigned.length - 3} more`));
+            if (!assigned.length) previews.append(el("span", "italic text-gray-400 text-[11px]", "No peers assigned yet."));
+            box.append(previews); top.append(box); card.append(top);
+            const footer = el("div", "mt-5 pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs");
+            footer.append(el("span", "text-[11px] text-gray-400 font-mono", group.createdAt ? `Created ${fmtDate(group.createdAt)}` : ""));
+            const actions = el("div", "flex items-center gap-1.5");
+            const view = el("a", "rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-brand-primary-blue hover:bg-blue-100 dark:bg-blue-900/40 dark:text-blue-300", "View Peers"); view.href = listLink.href;
+            const edit = el("button", ACTION_BUTTON, "Edit"); edit.type = "button"; edit.addEventListener("click", () => openGroup(group));
+            const remove = el("button", "rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400", "Delete"); remove.type = "button";
+            remove.addEventListener("click", () => askConfirm(`Delete group ${group.name}? Reassign all linked peers, including inactive ones, first.`, async () => {
+                const data = await api(endpoint("deleteGroup"), { GroupId: group.groupId }); applyWorkspace(data); notify(data.message, "success");
+            }));
+            actions.append(view, edit, remove); footer.append(actions); card.append(footer); grid.append(card);
         });
-
-        if (!groups.length) {
-            grid.append(el("div",
-                "col-span-full rounded-2xl border-2 border-dashed border-gray-300 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400",
-                "No groups found. Create your first peer group."));
-        }
+        const quick = el("button", "flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 border-t-2 border-t-[#7c3aed] p-8 text-center transition hover:border-brand-primary-blue hover:bg-blue-50/30 dark:border-gray-700 dark:border-t-[#7c3aed] dark:hover:border-blue-500 dark:hover:bg-gray-800/50");
+        quick.type = "button";
+        quick.append(el("span", "flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary-blue/10 text-brand-primary-blue dark:bg-blue-900/30 dark:text-blue-300 mb-3 text-2xl", "+"),
+            el("h4", "font-bold text-sm text-gray-800 dark:text-gray-200", "+ Add Business Vertical / Group"),
+            el("p", "mt-1 text-xs text-gray-500 dark:text-gray-400 max-w-xs", "Create a specialized cohort for a new business line, market geography, or tier classification."));
+        quick.addEventListener("click", () => openGroup()); grid.append(quick);
     }
 
     // ------------------------------------------------------------------ dialog wiring
@@ -954,12 +1090,24 @@
 
     // ------------------------------------------------------------------ add page: search form
     if (page === "add") {
+        const syncSearchInput = () => {
+            const value = $("pp-identifier").value;
+            $("pp-search-button").disabled = !value.trim() || $("pp-search-button").getAttribute("aria-busy") === "true";
+            if ($("pp-character-count")) {
+                $("pp-character-count").textContent = value.length;
+                $("pp-character-count").parentElement.hidden = value.length === 0;
+            }
+            if ($("pp-clear-identifier")) $("pp-clear-identifier").hidden = value.length === 0;
+            if ($("pp-validation")) { $("pp-validation").hidden = true; $("pp-validation").textContent = ""; }
+        };
         root.querySelectorAll("[data-type]").forEach(button => {
             button.addEventListener("click", () => {
                 root.querySelectorAll("[data-type]").forEach(node => {
                     node.setAttribute("aria-pressed", String(node === button));
+                    node.className = `${node.dataset.baseClass} ${node === button ? node.dataset.classActive : node.dataset.classInactive}${node.disabled ? " opacity-50 cursor-not-allowed" : ""}`;
                 });
 
+                if (button.disabled) return;
                 root.querySelector('input[name="IdentifierType"]').value = button.dataset.type;
 
                 $("pp-identifier").placeholder = {
@@ -975,8 +1123,31 @@
         $("pp-identifier").addEventListener("input", () => {
             $("pp-identifier").value = $("pp-identifier").value.toUpperCase();
             retrySearch = null;
+            syncSearchInput();
         });
 
+        $("pp-clear-identifier")?.addEventListener("click", () => {
+            $("pp-identifier").value = "";
+            retrySearch = null;
+            syncSearchInput();
+            emptyCard(EMPTY_TITLE, EMPTY_TEXT);
+        });
+        root.querySelectorAll("[data-sample]").forEach(button => {
+            button.addEventListener("click", () => {
+                if (button.disabled) return;
+                root.querySelector(`[data-type="${button.dataset.sampleType}"]`)?.click();
+                $("pp-identifier").value = button.dataset.sample;
+                syncSearchInput();
+                // Samples fill the field; a paid/quota-consuming search requires Verify.
+                $("pp-identifier").focus();
+            });
+        });
+        updateQuota({
+            used: Number($("pp-used").textContent) || 0,
+            dailyLimit: Number($("pp-limit").textContent) || 0,
+            remaining: Number($("pp-remaining").textContent) || 0
+        });
+        syncSearchInput();
         $("pp-search-form").addEventListener("submit", event => {
             event.preventDefault();
 
@@ -990,7 +1161,11 @@
                     LLPIN: /^[A-Z]{3}-[0-9]{4}$/
                 };
 
-                if (!patterns[type].test(identifier)) {
+                if (!patterns[type] || !patterns[type].test(identifier)) {
+                    if ($("pp-validation")) {
+                        $("pp-validation").hidden = false;
+                        $("pp-validation").textContent = `Enter a valid ${type}. Invalid input does not use a search.`;
+                    }
                     notify(`Enter a valid ${type}. Invalid input does not use a search.`, "warning");
                     return;
                 }
@@ -1026,6 +1201,24 @@
         });
     }
 
+    $("pp-sort")?.addEventListener("change", () => { if (workspace) renderPeers(); });
+    $("pp-sort-direction")?.addEventListener("click", event => {
+        sortAscending = !sortAscending;
+        event.currentTarget.textContent = sortAscending ? "↑" : "↓";
+        if (workspace) renderPeers();
+    });
+    root.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => {
+        peerView = button.dataset.view;
+        if (workspace) renderPeers();
+    }));
+    $("pp-select-all")?.addEventListener("change", event => {
+        if (!workspace) return;
+        visiblePeers().forEach(peer => {
+            if (event.currentTarget.checked) selectedPeerIds.add(peer.peerId); else selectedPeerIds.delete(peer.peerId);
+        });
+        renderPeers();
+    });
+
     // ------------------------------------------------------------------ filters and export
     $("pp-filter")?.addEventListener("input", () => {
         if (!workspace) return;
@@ -1048,7 +1241,7 @@
 
         const rows = [
             ["Name", "Type", "Registration", "PAN", "Groups", "Activity", "Notes"],
-            ...visiblePeers().map(peer => [
+            ...visiblePeers().filter(peer => !selectedPeerIds.size || selectedPeerIds.has(peer.peerId)).map(peer => [
                 peer.name, peer.entityType, peer.registrationNumber, peer.pan,
                 peer.groups.map(group => group.name).join("; "),
                 peer.isActive ? "Active" : "Inactive", peer.notes

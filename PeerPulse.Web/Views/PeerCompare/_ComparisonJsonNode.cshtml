@@ -1,0 +1,53 @@
+@model ComparisonNodeViewModel
+@if (Model.Depth > 12)
+{
+    <span class="pc-muted">Nested detail limit reached.</span>
+}
+else if (Model.Node.ValueKind == JsonValueKind.Object)
+{
+    <dl class="pc-key-values">
+        @foreach (var property in Model.Node.EnumerateObject())
+        {
+            <div><dt>@ComparisonDisplay.Label(property.Name)</dt><dd>
+                @await Html.PartialAsync("_ComparisonJsonNode", new ComparisonNodeViewModel(property.Value, Model.Depth + 1))
+            </dd></div>
+        }
+    </dl>
+}
+else if (Model.Node.ValueKind == JsonValueKind.Array)
+{
+    var rows = Model.Node.EnumerateArray().ToArray();
+    if (rows.Length == 0)
+    {
+        <span class="pc-muted">No records</span>
+    }
+    else if (rows.All(row => row.ValueKind == JsonValueKind.Object))
+    {
+        var columns = rows.SelectMany(row => row.EnumerateObject().Select(p => p.Name))
+            .Distinct(StringComparer.Ordinal).ToArray();
+        <div class="pc-table-scroll"><table class="pc-table pc-detail-table">
+            <thead><tr>@foreach (var column in columns) { <th scope="col">@ComparisonDisplay.Label(column)</th> }</tr></thead>
+            <tbody>
+            @foreach (var row in rows)
+            {
+                <tr>@foreach (var column in columns)
+                {
+                    <td>@await Html.PartialAsync("_ComparisonJsonNode",
+                        new ComparisonNodeViewModel(ComparisonDisplay.Property(row, column), Model.Depth + 1))</td>
+                }</tr>
+            }
+            </tbody>
+        </table></div>
+    }
+    else
+    {
+        <ul>@foreach (var row in rows)
+        {
+            <li>@await Html.PartialAsync("_ComparisonJsonNode", new ComparisonNodeViewModel(row, Model.Depth + 1))</li>
+        }</ul>
+    }
+}
+else
+{
+    <span>@ComparisonDisplay.Text(Model.Node)</span>
+}

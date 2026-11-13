@@ -1,0 +1,1623 @@
+@model StaticComparisonViewModel
+<details id="section-master" class="mb-14 scroll-mt-24 report-native-section" open="open">
+
+            
+    <summary class="mb-6 rounded-2xl bg-gradient-to-r from-brand-primary-blue/10 via-blue-50/50 to-indigo-50/40 p-5 border border-brand-primary-blue/20 dark:from-blue-950/40 dark:via-gray-800 dark:to-gray-800 dark:border-blue-900/40 report-native-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-primary-blue text-white shadow-sm shadow-blue-500/30">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="rounded bg-brand-primary-blue/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-primary-blue dark:bg-brand-primary-blue/30 dark:text-blue-300">
+                            Primary Category
+                        </span>
+                        <span class="text-xs text-gray-500 font-mono">@($"{Model.selectedPeers.Count} Peers Selected")</span>
+                    </div>
+                    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white mt-0.5">
+                        Section 1: Company Master
+                    </h2>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">
+                        Unified corporate profile encompassing statutory registration, industrial classifications,
+                        physical jurisdictions, and statutory filings.
+                    </p>
+                </div>
+            </div>
+
+                
+            <span class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/90 px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-white dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                <span><span class="report-expand-label">Expand Company Master</span><span class="report-collapse-label">Collapse Company Master</span></span>
+                <svg class="h-4 w-4 transition-transform duration-200 report-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+            </span>
+        </div>
+    </summary>
+
+            
+    <div class="space-y-10">
+
+              
+              
+              
+        <section id="section-registration" class="mb-10 scroll-mt-24">
+
+                
+            <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-brand-primary-blue font-bold text-sm dark:bg-blue-900/40 dark:text-blue-300">
+                        1.1
+                    </span>
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            Registration
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Statutory corporate identity, legal entity classifications, capital structure, and compliance
+                            status from official MCA records.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-gray-500 font-mono hidden sm:inline">@($"{Model.selectedPeers.Count} entities compared")</span>
+                </div>
+            </div>
+
+                
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+
+                      
+                        <thead class="bg-gray-50/80 border-b border-gray-200 dark:bg-gray-900/50 dark:border-gray-700">
+                            <tr>
+                                <th scope="col" class="py-4 px-4 w-64 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-xs z-10">
+                                    Selected Companies
+                                </th>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <th scope="col" class="py-4 px-4 min-w-[280px] max-w-[340px] border-l border-gray-100 dark:border-gray-700">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <div class="flex items-center gap-2.5">
+                                                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-primary-blue/10 font-bold text-brand-primary-blue text-xs dark:bg-brand-primary-blue/20 dark:text-blue-400">
+                                                    <span>@(StaticComparisonViewModel.Or(p.tradeName, StaticComparisonViewModel.Or(p.company, "P")).Substring(0, 1))</span>
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-bold text-gray-900 dark:text-white text-xs leading-tight">@(p.company)</h4>
+                                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                                        <span class="font-mono text-[10px] text-gray-500 dark:text-gray-400">@(p.cin)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" title="Remove from comparison" class="text-gray-400 hover:text-red-500 no-print">
+                                                ✕
+                                            </button>
+                                        </div>
+                                    </th>
+
+                                }
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Company Name
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-bold text-gray-900 dark:text-white">@(p.company)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    CIN / LLPIN
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono font-semibold text-brand-primary-blue dark:text-blue-400">@(p.cin)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Company Status
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold @((((p.CompanyStatusID == "Active") == true) ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800" : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800"))">
+                                            <span class="h-1.5 w-1.5 rounded-full @((((p.CompanyStatusID == "Active") == true) ? "bg-emerald-500" : "bg-rose-500"))"></span>
+                                            <span>@(p.CompanyStatusID)</span>
+                                        </span>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Active Compliance Status
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <span class="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-xs font-semibold text-brand-primary-blue dark:bg-blue-900/40 dark:text-blue-300">@(p.ActiveCompliance)</span>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Listing Status
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold @((((p.whetherListedOrNot == "Listed") == true) ? "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800" : "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"))">
+
+                                            @if (((p.whetherListedOrNot == "Listed") == true))
+                                            {
+
+                                                <svg class="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                                    <polyline points="16 7 22 7 22 13"></polyline>
+                                                </svg>
+
+                                            }
+
+                                
+                                            @if (((p.whetherListedOrNot != "Listed") == true))
+                                            {
+
+                                                <svg class="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                </svg>
+
+                                            }
+
+                                            <span>@(p.whetherListedOrNot)</span>
+                                        </span>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Small Company Flag
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if (((p.companyType != "LLP") == true))
+                                        {
+
+                                            <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold @((((p.smallCompanyFlag == "True") == true) ? "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800" : "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"))">
+
+                                                @if (((p.smallCompanyFlag == "True") == true))
+                                                {
+
+                                                    <svg class="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                                        <polyline points="9 12 11 14 15 10"></polyline>
+                                                    </svg>
+
+                                                }
+
+                                  
+                                                @if (((p.smallCompanyFlag != "True") == true))
+                                                {
+
+                                                    <svg class="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                                                    </svg>
+
+                                                }
+
+                                                <span>@((((p.smallCompanyFlag == "True") == true) ? "Small Company" : StaticComparisonViewModel.Or(p.smallCompanyFlag, "False")))</span>
+                                            </span>
+
+                                        }
+
+                                        @if (((p.companyType == "LLP") == true))
+                                        {
+
+                                            <span class="text-gray-400 italic text-[11px]">N/A (LLP entity)</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Company Type
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200">@(p.companyType)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Class of Company
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200">@(p.classOfCompany)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Company Category
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200">@(p.companyCategory)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Company Subcategory
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200">@(p.companySubcategory)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Date of Incorporation
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono text-gray-800 dark:text-gray-200">@(p.dateOfIncorporation)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Age
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <span class="font-bold text-gray-900 dark:text-white">@(p.age)</span>
+                                                <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getAgePercent(p.age)}%")</span>
+                                            </div>
+                                            <div class="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                                                <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getAgePercent(p.age)))"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Date of Last AGM
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono text-gray-800 dark:text-gray-200">@(p.dateOfLastAGM)</td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Balance Sheet Date
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if (StaticComparisonViewModel.Truthy(Model.isLatestBSDate(p.balanceSheetDate)))
+                                        {
+
+                                            <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-mono text-xs font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                <span>@(p.balanceSheetDate)</span>
+                                                <span class="rounded bg-emerald-600/10 px-1 py-0.2 text-[9px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Latest</span>
+                                            </span>
+
+                                        }
+
+                                        @if (!(StaticComparisonViewModel.Truthy(Model.isLatestBSDate(p.balanceSheetDate))))
+                                        {
+
+                                            <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 font-mono text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">@(p.balanceSheetDate)</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-blue-50/20 dark:bg-blue-900/10">
+                                <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-blue-50/40 dark:bg-blue-900/30 z-10">
+                                    Authorised Capital
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <span class="font-mono font-bold text-brand-primary-blue text-sm dark:text-blue-400">@(Model.formatValue(p.authorisedCapital))</span>
+                                                <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getAuthorisedCapitalPercent(p.authorisedCapital)}%")</span>
+                                            </div>
+                                            <div class="h-2 w-full rounded-full bg-blue-100/70 dark:bg-blue-950/80 overflow-hidden">
+                                                <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-brand-primary-blue transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getAuthorisedCapitalPercent(p.authorisedCapital)))"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-emerald-50/20 dark:bg-emerald-900/10">
+                                <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-emerald-50/40 dark:bg-emerald-900/30 z-10">
+                                    Paid Up Capital
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <span class="font-mono font-bold text-emerald-700 text-sm dark:text-emerald-400">@(Model.formatValue(p.paidUpCapital))</span>
+                                                <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getPaidUpCapitalPercent(p.paidUpCapital)}%")</span>
+                                            </div>
+                                            <div class="h-2 w-full rounded-full bg-emerald-100/70 dark:bg-emerald-950/80 overflow-hidden">
+                                                <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getPaidUpCapitalPercent(p.paidUpCapital)))"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Paidup to Authorised Capital Ratio
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="font-mono font-bold text-gray-900 dark:text-white">@(p.paidUpRatio)</span>
+                                            <div class="h-2 flex-grow-1 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                                <div class="h-full bg-brand-primary-blue rounded-full" style="@(StaticComparisonViewModel.Width(Math.Min(100, StaticComparisonViewModel.Number(p.paidUpRatio))))"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+              
+              
+              
+        <section id="section-kyc" class="mb-10 scroll-mt-24">
+
+                
+            <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 font-bold text-sm dark:bg-emerald-950 dark:text-emerald-300">
+                        1.2
+                    </span>
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white">
+                            KYC &amp; Statutory Identifiers
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Official corporate identities, tax registrations, labor identity numbers, startup, and MSME
+                            registrations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-50/80 border-b border-gray-200 dark:bg-gray-900/60 dark:border-gray-700">
+                            <tr>
+                                <th scope="col" class="py-3 px-4 font-bold text-gray-700 dark:text-gray-300 w-64 min-w-[200px] sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 z-20">
+                                    Identifier / Registration
+                                </th>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <th scope="col" class="py-3 px-4 font-bold text-gray-900 dark:text-white min-w-[240px] border-l border-gray-200 dark:border-gray-700">
+                                        <span class="truncate block">@(p.company)</span>
+                                        <span class="text-[10px] font-mono text-gray-400 font-normal block">@(p.cin)</span>
+                                    </th>
+
+                                }
+
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Corporate Identity Number (CIN)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-brand-primary-blue border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800">@(Model.getKycInfo(p).cin)</span>
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Permanent Account Number (PAN)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getKycInfo(p).pan) && ((Model.getKycInfo(p).pan != "-") == true)))
+                                        {
+
+                                            <span class="inline-flex items-center rounded-md bg-emerald-50 px-2.5 py-0.5 font-mono text-xs font-bold text-emerald-800 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">@(Model.getKycInfo(p).pan)</span>
+
+                                        }
+
+                                        @if ((!(StaticComparisonViewModel.Truthy(Model.getKycInfo(p).pan)) || ((Model.getKycInfo(p).pan == "-") == true)))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Tax Deduction Account Number (TAN)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getKycInfo(p).tan) && ((Model.getKycInfo(p).tan != "-") == true)))
+                                        {
+
+                                            <span class="inline-flex items-center rounded-md bg-amber-50 px-2.5 py-0.5 font-mono text-xs font-bold text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">@(Model.getKycInfo(p).tan)</span>
+
+                                        }
+
+                                        @if ((!(StaticComparisonViewModel.Truthy(Model.getKycInfo(p).tan)) || ((Model.getKycInfo(p).tan == "-") == true)))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Goods &amp; Services Tax Identification (GSTINs)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if (((Model.getKycInfo(p).gstins.Count > 0) == true))
+                                        {
+
+                                            <div class="flex flex-wrap gap-1.5">
+                                                @foreach (var gst in Model.getKycInfo(p).gstins)
+                                                {
+
+                                                    <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-0.5 font-mono text-xs font-bold text-indigo-700 border border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800">@(gst)</span>
+
+                                                }
+
+                                            </div>
+
+                                        }
+
+                                        @if (((Model.getKycInfo(p).gstins.Count == 0) == true))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Establishment Nos (EPFO)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if (((Model.getKycInfo(p).establishmentNos.Count > 0) == true))
+                                        {
+
+                                            <div class="flex flex-wrap gap-1.5">
+                                                @foreach (var estCode in Model.getKycInfo(p).establishmentNos)
+                                                {
+
+                                                    <span class="inline-flex items-center rounded-md bg-teal-50 px-2 py-0.5 font-mono text-xs font-bold text-teal-800 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800">@(estCode)</span>
+
+                                                }
+
+                                            </div>
+
+                                        }
+
+                                        @if (((Model.getKycInfo(p).establishmentNos.Count == 0) == true))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Employees' State Insurance (ESIC)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getKycInfo(p).esic) && ((Model.getKycInfo(p).esic != "-") == true) && ((Model.getKycInfo(p).esic != "NA") == true)))
+                                        {
+
+                                            <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-0.5 font-mono text-xs font-bold text-purple-700 border border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800">@(Model.getKycInfo(p).esic)</span>
+
+                                        }
+
+                                        @if (((Model.getKycInfo(p).esic == "NA") == true))
+                                        {
+
+                                            <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 font-mono text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                                                NA
+                                            </span>
+
+                                        }
+
+                                        @if ((!(StaticComparisonViewModel.Truthy(Model.getKycInfo(p).esic)) || ((Model.getKycInfo(p).esic == "-") == true)))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Labour Identification Number (LIN)
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getKycInfo(p).lin) && ((Model.getKycInfo(p).lin != "-") == true)))
+                                        {
+
+                                            <span class="inline-flex items-center rounded-md bg-sky-50 px-2 py-0.5 font-mono text-xs font-bold text-sky-800 border border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800">@(Model.getKycInfo(p).lin)</span>
+
+                                        }
+
+                                        @if ((!(StaticComparisonViewModel.Truthy(Model.getKycInfo(p).lin)) || ((Model.getKycInfo(p).lin == "-") == true)))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    Startup Registration No
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getKycInfo(p).startupRegNo) && ((Model.getKycInfo(p).startupRegNo != "-") == true)))
+                                        {
+
+                                            <span class="inline-flex items-center rounded-md bg-amber-50 px-2.5 py-0.5 font-mono text-xs font-bold text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">@(Model.getKycInfo(p).startupRegNo)</span>
+
+                                        }
+
+                                        @if ((!(StaticComparisonViewModel.Truthy(Model.getKycInfo(p).startupRegNo)) || ((Model.getKycInfo(p).startupRegNo == "-") == true)))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        
+                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                <td class="py-3.5 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                    MSME Registration No
+                                </td>
+                                @foreach (var p in Model.selectedPeers)
+                                {
+
+                                    <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getKycInfo(p).msmeRegNo) && ((Model.getKycInfo(p).msmeRegNo != "-") == true)))
+                                        {
+
+                                            <span class="inline-flex items-center rounded-md bg-violet-50 px-2.5 py-0.5 font-mono text-xs font-bold text-violet-800 border border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800">@(Model.getKycInfo(p).msmeRegNo)</span>
+
+                                        }
+
+                                        @if ((!(StaticComparisonViewModel.Truthy(Model.getKycInfo(p).msmeRegNo)) || ((Model.getKycInfo(p).msmeRegNo == "-") == true)))
+                                        {
+
+                                            <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+              
+              
+              
+        <section id="section-industry" class="mb-10 scroll-mt-24">
+
+                
+            <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700 font-bold text-sm dark:bg-purple-900/40 dark:text-purple-300">
+                        1.3
+                    </span>
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white">
+                            Industry &amp; Principle Productions and Services
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Industrial DNA classifications according to MCA National Industrial Classification (NIC), Indian
+                            Trade Classification (ITC), and GSTIN HSN/SAC codes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+                
+            <div class="space-y-6">
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+                            1.3.1. Based on NIC Code from MCA
+                        </h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Main Division
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 min-w-[280px] border-l border-gray-100 dark:border-gray-700 font-medium text-gray-900 dark:text-white">
+                                            <div class="flex items-center gap-2">
+                                                <span class="rounded bg-blue-100 px-1.5 py-0.5 font-mono text-[11px] font-bold text-brand-primary-blue dark:bg-blue-900/40 dark:text-blue-300">@(p.nic.mainDivision)</span>
+                                                <span>@(p.nic.mainDivisionDescription)</span>
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Main Group
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">@(p.nic.mainGroupDescription)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Industry Group
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">@(p.nic.industryGroupDescription)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Industry Description
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">@(p.nic.industryDescription)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Detailed Description
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">@(p.nic.detailedDescription)</td>
+
+                                    }
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+                            1.3.2 Based on ITC Code from MCA
+                        </h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        ITC 8 Digit Code
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 min-w-[280px] border-l border-gray-100 dark:border-gray-700 font-mono font-bold text-brand-primary-blue dark:text-blue-400">@(p.itc.itcCode)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Description
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">@(p.itc.description)</td>
+
+                                    }
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+                            1.3.3. Based on HSN/SAC Codes from GSTIN
+                        </h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        NATURE OF CORE BUSINESS ACTIVITY
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 min-w-[280px] border-l border-gray-100 dark:border-gray-700 font-semibold text-gray-900 dark:text-white">@(p.gstin_industry.natureOfCoreBusinessActivity)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        NATURE OF BUSINESS ACTIVITIES
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                            <div class="flex flex-wrap gap-1.5">
+                                                @foreach (var act in p.gstin_industry.natureOfBusinessActivities)
+                                                {
+
+                                                    <span class="rounded bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-brand-primary-blue dark:bg-blue-900/30 dark:text-blue-300">@(act.activity)</span>
+
+                                                }
+
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30 align-top">
+                                        SAC / HSN CODES &amp; DESCRIPTIONS
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 align-top">
+                                            <div class="space-y-2">
+                                                @foreach (var c in p.gstin_industry.sacHsnCodes)
+                                                {
+
+                                                    <div class="rounded-lg bg-gray-50 p-2 text-[11px] dark:bg-gray-900 border border-gray-100 dark:border-gray-700">
+                                                        <span class="font-mono font-bold text-brand-primary-blue dark:text-blue-400">@(c.code)</span>
+                                                        <span class="text-gray-400 mx-1">-</span>
+                                                        <span class="text-gray-700 dark:text-gray-300">@(c.description)</span>
+                                                    </div>
+
+                                                }
+
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+              
+              
+              
+        <section id="section-addresses" class="mb-10 scroll-mt-24">
+
+                
+            <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700 font-bold text-sm dark:bg-amber-900/40 dark:text-amber-300">
+                        1.4
+                    </span>
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white">
+                            Addresses
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            MCA registered office records compared side-by-side with GST principal place of business
+                            registrations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+                            1.4.1 MCA Registered Address
+                        </h4>
+                        <span class="rounded bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-brand-primary-blue dark:bg-blue-900/40 dark:text-blue-300">
+                            Statutory
+                            Head Office
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        CIN / LLPIN
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 min-w-[280px] border-l border-gray-100 dark:border-gray-700 font-mono font-bold text-brand-primary-blue dark:text-blue-400">@(p.mcaAddress.cin)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Address Type &amp; Active
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-gray-800 dark:text-gray-200 font-medium">@(p.mcaAddress.addressType)</span>
+                                                <span class="rounded bg-emerald-50 px-1.5 py-0.2 text-[10px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">Active</span>
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Street
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 leading-relaxed">@(p.mcaAddress.streetAddress)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Location Breakdown
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                            <div class="space-y-1 text-gray-700 dark:text-gray-300">
+                                                <div>City: <strong class="text-gray-900 dark:text-white">@(p.mcaAddress.city)</strong></div>
+                                                <div>State: <strong class="text-gray-900 dark:text-white">@(p.mcaAddress.state)</strong></div>
+                                                <div>PIN Code: <strong class="font-mono text-gray-900 dark:text-white">@(p.mcaAddress.pinCode)</strong></div>
+                                                <div>Country: <strong class="text-gray-900 dark:text-white">@(p.mcaAddress.country)</strong></div>
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+                            1.4.2 GST Registered Address
+                        </h4>
+                        <span class="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                            GST
+                            Portal Records
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        GST No (GSTIN)
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 min-w-[280px] border-l border-gray-100 dark:border-gray-700 font-mono font-bold text-emerald-700 dark:text-emerald-400">@(p.gstAddress.gstn)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Address Type &amp; Active
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-gray-800 dark:text-gray-200 font-medium">@(p.gstAddress.addressType)</span>
+                                                <span class="rounded bg-emerald-50 px-1.5 py-0.2 text-[10px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">Active</span>
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Street
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 leading-relaxed">@(p.gstAddress.streetAddress)</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Location Breakdown
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                            <div class="space-y-1 text-gray-700 dark:text-gray-300">
+                                                <div>City: <strong class="text-gray-900 dark:text-white">@(p.gstAddress.city)</strong></div>
+                                                <div>State: <strong class="text-gray-900 dark:text-white">@(p.gstAddress.state)</strong></div>
+                                                <div>PIN Code: <strong class="font-mono text-gray-900 dark:text-white">@(p.gstAddress.pinCode)</strong></div>
+                                                <div>Country: <strong class="text-gray-900 dark:text-white">@(p.gstAddress.country)</strong></div>
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                  
+                <div id="subsection-establishment-address-epf" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-5 w-5 items-center justify-center rounded-md bg-blue-100 text-blue-800 font-bold text-[11px] dark:bg-blue-950 dark:text-blue-300">
+                                1.4.3
+                            </span>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-200">
+                                Establishment Address from EPF
+                            </h4>
+                        </div>
+                        <span class="rounded-full bg-blue-50 border border-blue-200 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                            EPFO Portal Records
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Establishment Code
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 min-w-[280px] border-l border-gray-100 dark:border-gray-700 font-mono font-bold text-blue-700 dark:text-blue-400">
+                                            @if (StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.code))
+                                            {
+
+                                                <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800">@(Model.getPrimaryEstablishment(p)!.code)</span>
+
+                                            }
+
+                                            @if (!(StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.code)))
+                                            {
+
+                                                <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                            }
+
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Establishment Name
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-medium">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.name, "-"))</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Establishment Address
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 leading-relaxed">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.address, "-"))</td>
+
+                                    }
+
+                                </tr>
+
+                          
+                                <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                                    <td class="py-3 px-4 w-64 font-semibold text-gray-700 dark:text-gray-300 bg-gray-50/50 dark:bg-gray-900/30">
+                                        Location Breakdown
+                                    </td>
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                            <div class="space-y-1 text-gray-700 dark:text-gray-300">
+                                                <div>City: <strong class="text-gray-900 dark:text-white">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.city, "-"))</strong></div>
+                                                <div>District: <strong class="text-gray-900 dark:text-white">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.district, "-"))</strong></div>
+                                                <div>State: <strong class="text-gray-900 dark:text-white">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.state, "-"))</strong></div>
+                                                <div>PIN Code: <strong class="font-mono text-gray-900 dark:text-white">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.pin, "-"))</strong></div>
+                                                <div>Country: <strong class="text-gray-900 dark:text-white">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.country, "-"))</strong></div>
+                                            </div>
+                                        </td>
+
+                                    }
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+              
+              
+              
+        <section id="section-filings" class="mb-10 scroll-mt-24">
+
+                
+            <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 font-bold text-sm dark:bg-emerald-900/40 dark:text-emerald-300">
+                        1.5
+                    </span>
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white">
+                            Filing &amp; Compliance Status
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Chronological audit of compliance filings sorted from recent to oldest. Financial Year column
+                            kept first followed by Date of Filing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+                
+            <div class="grid grid-cols-1 gap-8">
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-100 text-emerald-800 font-bold text-xs dark:bg-emerald-950 dark:text-emerald-300">
+                                1.5.1
+                            </span>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                                Balance Sheet Filings- (AOC-4/AOC-4 XBRL)
+                            </h4>
+                        </div>
+                        <span class="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                            MCA Filing
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50/90 border-b border-gray-200 dark:bg-gray-900/60 dark:border-gray-700">
+                                <tr>
+
+                                    <th scope="col" class="py-3.5 px-4 w-48 text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-xs z-10">
+                                        Financial Year
+                                    </th>
+
+                            
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <th scope="col" class="py-3.5 px-4 min-w-[240px] max-w-[300px] border-l border-gray-200 dark:border-gray-700">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div>
+                                                    <h5 class="font-bold text-gray-900 dark:text-white text-xs leading-snug">@(p.company)</h5>
+                                                    <div class="font-mono text-[10px] text-gray-500 mt-0.5">@(p.cin)</div>
+                                                </div>
+                                                <span class="shrink-0 inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 font-mono text-[11px] font-bold text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 shadow-2xs">@(Model.getFilingSummary(p, "balanceSheetFilings"))</span>
+                                            </div>
+                                        </th>
+
+                                    }
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                @foreach (var fy in Model.getDistinctFinancialYears("balanceSheetFilings"))
+                                {
+
+                                    <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-750/50">
+
+                                        <td class="py-3 px-4 font-mono font-bold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-100 dark:border-gray-700/60">@(fy)</td>
+
+                              
+                                        @foreach (var p in Model.selectedPeers)
+                                        {
+
+                                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+
+                                                @if (((Model.getFilingCell(p, fy, "balanceSheetFilings").status == "filed") == true))
+                                                {
+
+                                                    <div class="flex items-center gap-1.5 font-mono text-gray-800 dark:text-gray-200 font-medium">
+                                                        <svg class="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                                        </svg>
+                                                        <span>@(Model.getFilingCell(p, fy, "balanceSheetFilings").label)</span>
+                                                    </div>
+
+                                                }
+
+
+                                  
+                                                @if (((Model.getFilingCell(p, fy, "balanceSheetFilings").status == "na") == true))
+                                                {
+
+                                                    <span class="font-mono text-xs font-semibold text-gray-400 dark:text-gray-500">
+                                                        NA
+                                                    </span>
+
+                                                }
+
+
+                                  
+                                                @if (((Model.getFilingCell(p, fy, "balanceSheetFilings").status == "not_filed") == true))
+                                                {
+
+                                                    <span class="inline-flex items-center gap-1 rounded-md bg-rose-50 border border-rose-200 px-2 py-0.5 text-[10px] font-bold text-rose-700 uppercase tracking-wider dark:bg-rose-950/60 dark:border-rose-900/60 dark:text-rose-300">
+                                                        <svg class="h-3 w-3 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                        NOT FILED
+                                                    </span>
+
+                                                }
+
+                                                @if (((Model.getFilingCell(p, fy, "balanceSheetFilings").status == "unknown") == true))
+                                                {
+                                                    <span class="text-xs font-medium text-gray-400 dark:text-gray-500">Unavailable</span>
+                                                }
+                                            </td>
+
+                                        }
+
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                  
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                    <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-100 text-brand-primary-blue font-bold text-xs dark:bg-blue-950 dark:text-blue-300">
+                                1.5.2
+                            </span>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                                Annual Return Filings (MGT - 7)
+                            </h4>
+                        </div>
+                        <span class="rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-semibold text-brand-primary-blue dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                            MCA Filing
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50/90 border-b border-gray-200 dark:bg-gray-900/60 dark:border-gray-700">
+                                <tr>
+
+                                    <th scope="col" class="py-3.5 px-4 w-48 text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300 sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-xs z-10">
+                                        Financial Year
+                                    </th>
+
+                            
+                                    @foreach (var p in Model.selectedPeers)
+                                    {
+
+                                        <th scope="col" class="py-3.5 px-4 min-w-[240px] max-w-[300px] border-l border-gray-200 dark:border-gray-700">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div>
+                                                    <h5 class="font-bold text-gray-900 dark:text-white text-xs leading-snug">@(p.company)</h5>
+                                                    <div class="font-mono text-[10px] text-gray-500 mt-0.5">@(p.cin)</div>
+                                                </div>
+                                                <span class="shrink-0 inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 font-mono text-[11px] font-bold text-brand-primary-blue border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800 shadow-2xs">@(Model.getFilingSummary(p, "annualReturnFilings"))</span>
+                                            </div>
+                                        </th>
+
+                                    }
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                @foreach (var fy in Model.getDistinctFinancialYears("annualReturnFilings"))
+                                {
+
+                                    <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-750/50">
+
+                                        <td class="py-3 px-4 font-mono font-bold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-100 dark:border-gray-700/60">@(fy)</td>
+
+                              
+                                        @foreach (var p in Model.selectedPeers)
+                                        {
+
+                                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+
+                                                @if (((Model.getFilingCell(p, fy, "annualReturnFilings").status == "filed") == true))
+                                                {
+
+                                                    <div class="flex items-center gap-1.5 font-mono text-gray-800 dark:text-gray-200 font-medium">
+                                                        <svg class="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                                        </svg>
+                                                        <span>@(Model.getFilingCell(p, fy, "annualReturnFilings").label)</span>
+                                                    </div>
+
+                                                }
+
+
+                                  
+                                                @if (((Model.getFilingCell(p, fy, "annualReturnFilings").status == "na") == true))
+                                                {
+
+                                                    <span class="font-mono text-xs font-semibold text-gray-400 dark:text-gray-500">
+                                                        NA
+                                                    </span>
+
+                                                }
+
+
+                                  
+                                                @if (((Model.getFilingCell(p, fy, "annualReturnFilings").status == "not_filed") == true))
+                                                {
+
+                                                    <span class="inline-flex items-center gap-1 rounded-md bg-rose-50 border border-rose-200 px-2 py-0.5 text-[10px] font-bold text-rose-700 uppercase tracking-wider dark:bg-rose-950/60 dark:border-rose-900/60 dark:text-rose-300">
+                                                        <svg class="h-3 w-3 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                        </svg>
+                                                        NOT FILED
+                                                    </span>
+
+                                                }
+
+                                                @if (((Model.getFilingCell(p, fy, "annualReturnFilings").status == "unknown") == true))
+                                                {
+                                                    <span class="text-xs font-medium text-gray-400 dark:text-gray-500">Unavailable</span>
+                                                }
+                                            </td>
+
+                                        }
+
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+</details>

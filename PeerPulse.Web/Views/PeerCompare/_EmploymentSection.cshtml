@@ -1,0 +1,895 @@
+@model StaticComparisonViewModel
+<details id="section-employees" class="mb-14 scroll-mt-24 report-native-section" open="open">
+
+            
+    <summary class="mb-6 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-50/50 to-green-50/40 p-5 border border-emerald-500/20 dark:from-emerald-950/40 dark:via-gray-800 dark:to-gray-800 dark:border-emerald-900/40 report-native-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm shadow-emerald-500/30">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+                            Workforce &amp; Productivity
+                        </span>
+                        <span class="text-xs text-gray-500 font-mono">@($"{Model.selectedPeers.Count} Peers Benchmarked")</span>
+                    </div>
+                    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white mt-0.5">
+                        Section 5: Employee Master
+                    </h2>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">
+                        EPFO monthly workforce headcounts, Provident Fund contributions, staffing trends, and human
+                        capital productivity (Revenue per Employee).
+                    </p>
+                </div>
+            </div>
+
+                
+            <span class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/90 px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-white dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                <span><span class="report-expand-label">Expand Employee Master</span><span class="report-collapse-label">Collapse Employee Master</span></span>
+                <svg class="h-4 w-4 transition-transform duration-200 report-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+            </span>
+        </div>
+    </summary>
+
+            
+    <div class="space-y-8">
+
+              
+        <div id="subsection-employees-kpi" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-100 text-emerald-800 font-bold text-xs dark:bg-emerald-950 dark:text-emerald-300">5.1</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                        Workforce KPIs &amp; Productivity Metrics
+                    </h4>
+                </div>
+                <span class="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                    EPFO &amp; Revenue Benchmarking
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-50/50 border-b border-gray-200 dark:bg-gray-900/30 dark:border-gray-700">
+                        <tr>
+                            <th scope="col" class="py-3 px-4 font-bold text-gray-700 dark:text-gray-300 w-64 min-w-[200px] sticky left-0 bg-gray-50/90 dark:bg-gray-900/90 z-20">
+                                Metric / KPI
+                            </th>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <th scope="col" class="py-3 px-4 font-bold text-gray-900 dark:text-white min-w-[240px] border-l border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center gap-2">
+                                        <span class="truncate">@(p.company)</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-gray-400 font-normal block">@(p.cin)</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-blue-50/20 dark:bg-blue-900/10">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-blue-50/40 dark:bg-blue-900/30 z-10">
+                                <div class="flex items-center gap-2">
+                                    <span class="flex h-5 w-5 items-center justify-center rounded-md bg-blue-100 text-brand-primary-blue font-bold text-xs dark:bg-blue-950 dark:text-blue-300">
+                                        ₹
+                                    </span>
+                                    <span>Revenue Per Employee</span>
+                                </div>
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="font-mono font-bold text-brand-primary-blue dark:text-blue-400 text-sm">@((((Model.getRevenuePerEmployee(p) > 0) == true) ? Model.formatValue(Model.getRevenuePerEmployee(p)) : "-"))</span>
+                                            @if (((Model.getRevenuePerEmployee(p) > 0) == true))
+                                            {
+                                                <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getRevenuePerEmployeePercent(Model.getRevenuePerEmployee(p))}%")</span>
+                                            }
+
+                                        </div>
+                                        @if (((Model.getRevenuePerEmployee(p) > 0) == true))
+                                        {
+                                            <div class="h-2 w-full rounded-full bg-blue-100/70 dark:bg-blue-950/80 overflow-hidden">
+                                                <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getRevenuePerEmployeePercent(Model.getRevenuePerEmployee(p))))"></div>
+                                            </div>
+                                        }
+
+                                        @if (((Model.getRevenuePerEmployee(p) > 0) == true))
+                                        {
+                                            <div class="text-[10px] text-gray-400 font-mono">
+                                                Annual Rev / Headcount
+                                            </div>
+                                        }
+
+                                    </div>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-emerald-50/20 dark:bg-emerald-900/10">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-emerald-50/40 dark:bg-emerald-900/30 z-10">
+                                <div class="flex items-center gap-2">
+                                    <span class="flex h-5 w-5 items-center justify-center rounded-md bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                        </svg>
+                                    </span>
+                                    <span>Count of Employees (EPFO Active)</span>
+                                </div>
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="font-mono font-bold text-emerald-800 dark:text-emerald-300 text-sm">@((((Model.getLatestEmployeeCount(p) > 0) == true) ? $"{Model.getLatestEmployeeCount(p)} Employees" : (((Model.getLatestEmployeeRecord(p)?.employeeCount == 0) == true) ? "0 reported employees" : "Unavailable")))</span>
+                                            @if (((Model.getLatestEmployeeCount(p) > 0) == true))
+                                            {
+                                                <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getEmployeeCountPercent(Model.getLatestEmployeeCount(p))}%")</span>
+                                            }
+
+                                        </div>
+                                        @if (((Model.getLatestEmployeeCount(p) > 0) == true))
+                                        {
+                                            <div class="h-2 w-full rounded-full bg-emerald-100/70 dark:bg-emerald-950/80 overflow-hidden">
+                                                <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getEmployeeCountPercent(Model.getLatestEmployeeCount(p))))"></div>
+                                            </div>
+                                        }
+
+                                        @if (StaticComparisonViewModel.Truthy(Model.getLatestEmployeeRecord(p)))
+                                        {
+                                            <div class="text-[10px] text-gray-400 font-mono">
+                                                Latest: <span>@(Model.getLatestEmployeeRecord(p)?.month)</span>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Latest Monthly PF Remitted
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <span class="font-mono font-semibold text-gray-900 dark:text-white text-xs">@((StaticComparisonViewModel.Truthy(Model.getLatestEmployeeRecord(p)?.pfAmount) ? Model.formatValue(Model.getLatestEmployeeRecord(p)!.pfAmount) : "-"))</span>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Avg Monthly PF per Employee
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <span class="font-mono text-gray-700 dark:text-gray-300 text-xs font-semibold">@((((Model.getAvgMonthlyPf(p) > 0) == true) ? Model.formatValue(Model.getAvgMonthlyPf(p)) : "-"))</span>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-teal-50/20 dark:bg-teal-900/10">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-teal-50/40 dark:bg-teal-900/30 z-10">
+                                <div class="flex items-center gap-2">
+                                    <span class="flex h-5 w-5 items-center justify-center rounded-md bg-teal-100 text-teal-800 font-bold text-xs dark:bg-teal-950 dark:text-teal-300">
+                                        ₹
+                                    </span>
+                                    <div>
+                                        <span>Avg. Monthly Salary</span>
+                                        <span class="block text-[10px] text-gray-400 font-normal font-mono">
+                                            (Back-calc: PF @@
+                                            6%)
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (((Model.getAvgMonthlySalary(p) > 0) == true))
+                                    {
+
+                                        <div class="space-y-1">
+                                            <span class="font-mono font-bold text-teal-700 dark:text-teal-300 text-sm block">@(Model.formatValue(Model.getAvgMonthlySalary(p)))</span>
+                                            <span class="text-[10px] text-gray-400 font-mono block">
+                                                Est. Monthly CTC / Emp
+                                            </span>
+                                        </div>
+
+                                    }
+
+                                    @if ((!(StaticComparisonViewModel.Truthy(Model.getAvgMonthlySalary(p))) || ((Model.getAvgMonthlySalary(p) <= 0) == true)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono text-xs">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+              
+        <div id="subsection-employees-table" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-teal-100 text-teal-800 font-bold text-xs dark:bg-teal-950 dark:text-teal-300">5.2</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                        Monthly EPFO Filing Trend (Employees &amp; PF Amount)
+                    </h4>
+                </div>
+                <div class="flex items-center gap-2 text-[11px] text-gray-500">
+                    <span class="inline-flex items-center gap-1 font-mono">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Count of Employees
+                    </span>
+                    <span class="inline-flex items-center gap-1 font-mono ml-2">
+                        <span class="h-2 w-2 rounded-full bg-blue-500"></span> PF Amount Paid
+                    </span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-gray-50/80 border-b border-gray-200 dark:bg-gray-900/60 dark:border-gray-700">
+
+                        <tr>
+                            <th rowspan="2" scope="col" class="py-3 px-4 font-bold text-gray-700 dark:text-gray-300 w-36 min-w-[130px] sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 z-20 border-r border-gray-200 dark:border-gray-700">
+                                Wages Month
+                            </th>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <th colspan="2" scope="col" class="py-2.5 px-3 font-bold text-center text-gray-900 dark:text-white border-l border-gray-200 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-800/60">
+                                    <span class="truncate block max-w-[240px] mx-auto text-xs">@(p.company)</span>
+                                    <span class="text-[10px] font-mono text-gray-400 font-normal">@(p.cin)</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                        <tr class="border-t border-gray-200 dark:border-gray-700 bg-gray-50/40 dark:bg-gray-900/40">
+                            @foreach (var col in Model.getEmployeeColumns())
+                            {
+
+                                <th scope="col" class="py-1.5 px-2 text-[11px] font-semibold text-center @((((col.type == "count") == true) ? "text-emerald-800 dark:text-emerald-300 min-w-[75px] border-l border-gray-200 dark:border-gray-700" : "text-blue-800 dark:text-blue-300 min-w-[100px] border-l border-gray-100 dark:border-gray-800"))">
+                                    <span>@((((col.type == "count") == true) ? "Employees" : $"PF Amount ({(((Model.preferences.currency == "USD") == true) ? "$" : "₹")})"))</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        @if (((Model.getEmployeeMonths().Count == 0) == true))
+                        {
+
+                            <tr>
+                                <td colspan="@(1 + Model.getEmployeeColumns().Count)" class="py-8 text-center text-gray-400 italic">
+                                    No EPFO employee trend records available for the selected peers.
+                                </td>
+                            </tr>
+
+                        }
+
+
+                      
+                        @foreach (var m in Model.getEmployeeMonths())
+                        {
+
+                            <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-800/50 transition-colors">
+                                <td class="py-2.5 px-4 font-mono font-bold text-gray-900 dark:text-white sticky left-0 bg-white dark:bg-gray-800 z-10 border-r border-gray-200 dark:border-gray-700">
+                                    <span class="inline-flex items-center gap-1.5">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                        <span>@(m)</span>
+                                    </span>
+                                </td>
+
+                          
+                                @foreach (var col in Model.getEmployeeColumns())
+                                {
+
+                                    <td class="py-2.5 px-2.5 @((((col.type == "count") == true) ? "text-center border-l border-gray-100 dark:border-gray-700 font-mono" : "text-right border-l border-gray-50 dark:border-gray-800 font-mono"))">
+
+                                        @if (((col.type == "count") == true))
+                                        {
+
+                                            <div>
+                                                @if (StaticComparisonViewModel.Truthy(Model.getEmployeeMonthRecord(col.peer, m)))
+                                                {
+
+                                                    <span class="inline-flex items-center justify-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">@(Model.getEmployeeMonthRecord(col.peer, m)!.employeeCount)</span>
+
+                                                }
+
+                                                @if (!(StaticComparisonViewModel.Truthy(Model.getEmployeeMonthRecord(col.peer, m))))
+                                                {
+
+                                                    <span class="text-gray-300 dark:text-gray-600">-</span>
+
+                                                }
+
+                                            </div>
+
+                                        }
+
+                              
+                                        @if (((col.type == "pf") == true))
+                                        {
+
+                                            <div>
+                                                @if (StaticComparisonViewModel.Truthy(Model.getEmployeeMonthRecord(col.peer, m)))
+                                                {
+
+                                                    <span class="text-xs font-semibold text-gray-900 dark:text-gray-200">@(Model.formatValue(Model.getEmployeeMonthRecord(col.peer, m)!.pfAmount))</span>
+
+                                                }
+
+                                                @if (!(StaticComparisonViewModel.Truthy(Model.getEmployeeMonthRecord(col.peer, m))))
+                                                {
+
+                                                    <span class="text-gray-300 dark:text-gray-600 pr-3">-</span>
+
+                                                }
+
+                                            </div>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+              
+        <div id="subsection-establishment-details" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-100 text-blue-800 font-bold text-xs dark:bg-blue-950 dark:text-blue-300">5.3</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                        Establishment Details
+                    </h4>
+                </div>
+                <span class="rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-semibold text-blue-800 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                    EPFO Office &amp; Location Master
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-50/50 border-b border-gray-200 dark:bg-gray-900/30 dark:border-gray-700">
+                        <tr>
+                            <th scope="col" class="py-3 px-4 font-bold text-gray-700 dark:text-gray-300 w-64 min-w-[200px] sticky left-0 bg-gray-50/90 dark:bg-gray-900/90 z-20">
+                                Field Name
+                            </th>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <th scope="col" class="py-3 px-4 font-bold text-gray-900 dark:text-white min-w-[240px] border-l border-gray-200 dark:border-gray-700">
+                                    <span class="truncate block">@(p.company)</span>
+                                    <span class="text-[10px] font-mono text-gray-400 font-normal block">@(p.cin)</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Establishment Code
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.code))
+                                    {
+
+                                        <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800">@(Model.getPrimaryEstablishment(p)!.code)</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.code)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Establishment Name
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-medium">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.name, "-"))</td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Primary Business Activity
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.primaryBusinessActivity))
+                                    {
+
+                                        <span class="inline-flex items-center rounded-full bg-purple-50 px-2.5 py-0.5 text-[11px] font-semibold text-purple-700 border border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800">@(Model.getPrimaryEstablishment(p)!.primaryBusinessActivity)</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.primaryBusinessActivity)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Ownership Type
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-300">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.ownershipType, "-"))</td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Date of Setup
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono text-gray-800 dark:text-gray-200">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.dateOfSetup, "-"))</td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Establishment Status Remarks
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <span class="text-[11px] text-gray-600 dark:text-gray-400 block">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.status, "-"))</span>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Registration Status Remarks
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <span class="text-[11px] text-gray-600 dark:text-gray-400 block">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.regStatus, "-"))</span>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Address
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">@(StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)?.address, "-"))</td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                City / District / PIN
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.city))
+                                    {
+
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">@($"{StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)!.city, "")}{(StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)!.district) ? " (" + Model.getPrimaryEstablishment(p)!.district + ")" : "")} - {StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)!.pin, "")}")</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.city)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                State &amp; Country
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200">@((StaticComparisonViewModel.Truthy(Model.getPrimaryEstablishment(p)?.state) ? $"{Model.getPrimaryEstablishment(p)!.state}, {StaticComparisonViewModel.Or(Model.getPrimaryEstablishment(p)!.country, "India")}" : "-"))</td>
+
+                            }
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+              
+        <div id="subsection-establishment-status" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-100 text-emerald-800 font-bold text-xs dark:bg-emerald-950 dark:text-emerald-300">5.4</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                        Establishment Status &amp; Compliance Flags
+                    </h4>
+                </div>
+                <span class="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                    Live Operational &amp; Statutory Verification
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-50/50 border-b border-gray-200 dark:bg-gray-900/30 dark:border-gray-700">
+                        <tr>
+                            <th scope="col" class="py-3 px-4 font-bold text-gray-700 dark:text-gray-300 w-64 min-w-[200px] sticky left-0 bg-gray-50/90 dark:bg-gray-900/90 z-20">
+                                Status Attribute
+                            </th>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <th scope="col" class="py-3 px-4 font-bold text-gray-900 dark:text-white min-w-[240px] border-l border-gray-200 dark:border-gray-700">
+                                    <span class="truncate block">@(p.company)</span>
+                                    <span class="text-[10px] font-mono text-gray-400 font-normal block">@(p.cin)</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Working Status
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.workingStatus))
+                                    {
+
+                                        <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold @((StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)!.workingStatus.ToLowerInvariant().Contains("live")) ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800" : "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800"))">
+                                            <span class="h-1.5 w-1.5 rounded-full @((StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)!.workingStatus.ToLowerInvariant().Contains("live")) ? "bg-emerald-500 animate-pulse" : "bg-amber-500"))"></span>
+                                            <span>@(Model.getEstablishmentStatusRecord(p)!.workingStatus)</span>
+                                        </span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.workingStatus)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Actionable Status
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.actionableStatus))
+                                    {
+
+                                        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-bold font-mono @((StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)!.actionableStatus.ToLowerInvariant().Contains("actionable")) ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800" : "bg-gray-100 text-gray-700 border border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"))">@(Model.getEstablishmentStatusRecord(p)!.actionableStatus)</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.actionableStatus)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                PAN Status
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.panStatus))
+                                    {
+
+                                        <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold @((StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)!.panStatus.ToLowerInvariant().Contains("verified")) ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800" : "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800"))">
+                                            @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)!.panStatus.ToLowerInvariant().Contains("verified")))
+                                            {
+                                                <svg class="h-3 w-3 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            }
+
+                                            <span>@(Model.getEstablishmentStatusRecord(p)!.panStatus)</span>
+                                        </span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.panStatus)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                PF Exemption Status
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.pfExemptionStatus))
+                                    {
+
+                                        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold @((((Model.getEstablishmentStatusRecord(p)!.pfExemptionStatus == "UNEXEMPTED") == true) ? "bg-teal-50 text-teal-800 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800" : "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800"))">@(Model.getEstablishmentStatusRecord(p)!.pfExemptionStatus)</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.pfExemptionStatus)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Pension Exemption Status
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.pensionExemptionStatus))
+                                    {
+
+                                        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold @((((Model.getEstablishmentStatusRecord(p)!.pensionExemptionStatus == "UNEXEMPTED") == true) ? "bg-teal-50 text-teal-800 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800" : "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800"))">@(Model.getEstablishmentStatusRecord(p)!.pensionExemptionStatus)</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.pensionExemptionStatus)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                EDLI Exemption Status
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.edliExemptionStatus))
+                                    {
+
+                                        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold @((((Model.getEstablishmentStatusRecord(p)!.edliExemptionStatus == "UNEXEMPTED") == true) ? "bg-teal-50 text-teal-800 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800" : "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800"))">@(Model.getEstablishmentStatusRecord(p)!.edliExemptionStatus)</span>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.edliExemptionStatus)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Coverage Section &amp; Type
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.coverageSection))
+                                    {
+
+                                        <div class="space-y-1">
+                                            <span class="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 font-mono text-xs font-bold text-gray-800 dark:bg-gray-800 dark:text-gray-200">@(Model.getEstablishmentStatusRecord(p)!.coverageSection)</span>
+                                            <span class="text-[11px] text-gray-600 dark:text-gray-400 block leading-tight">@(StaticComparisonViewModel.Or(Model.getEstablishmentStatusRecord(p)!.sectionDescription, ""))</span>
+                                        </div>
+
+                                    }
+
+                                    @if (!(StaticComparisonViewModel.Truthy(Model.getEstablishmentStatusRecord(p)?.coverageSection)))
+                                    {
+
+                                        <span class="text-gray-300 dark:text-gray-600 font-mono">-</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Date of Coverage
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono text-gray-800 dark:text-gray-200">@(StaticComparisonViewModel.Or(Model.getEstablishmentStatusRecord(p)?.dateOfCoverage, "-"))</td>
+
+                            }
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</details>

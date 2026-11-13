@@ -1,0 +1,18 @@
+@model System.Text.Json.JsonElement
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Comparison Selection Saved";
+    ViewData["DashboardPage"] = "peer-compare-report";
+    var peerCount = Model.GetProperty("peers").GetArrayLength();
+}
+<div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-800">
+    <h1 class="text-title-sm font-bold text-gray-900 dark:text-white">Comparison selection saved</h1>
+    <p class="mt-3 text-sm text-gray-600 dark:text-gray-300">
+        @peerCount peers are saved with your currency, scale, and exchange-rate settings.
+        The comparison report renderer is the next integration step.
+    </p>
+    <a asp-controller="ReportSettings" asp-action="SelectPeer"
+       class="mt-4 inline-flex rounded-lg bg-brand-primary-blue px-4 py-2 text-sm font-semibold text-white">
+        Edit selected peers
+    </a>
+</div>

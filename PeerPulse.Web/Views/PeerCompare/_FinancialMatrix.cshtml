@@ -1,0 +1,336 @@
+@model StaticComparisonViewModel
+<details id="section-financials" class="mb-14 scroll-mt-24 report-native-section" open="open">
+
+            
+    <summary class="mb-6 rounded-2xl bg-gradient-to-r from-blue-600/10 via-indigo-50/50 to-sky-50/40 p-5 border border-blue-500/20 dark:from-blue-950/40 dark:via-gray-800 dark:to-gray-800 dark:border-blue-900/40 report-native-heading">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-primary-blue text-white shadow-sm shadow-blue-500/30">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                        <line x1="2" y1="20" x2="22" y2="20"></line>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="rounded bg-brand-primary-blue/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-primary-blue dark:bg-brand-primary-blue/30 dark:text-blue-300">
+                            Financial Intelligence
+                        </span>
+                        <span class="text-xs text-gray-500 font-mono">@($"Comparing FY {Model.selectedFinancialYear}")</span>
+                    </div>
+                    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white mt-0.5">
+                        Section 6: Financial Summary
+                    </h2>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">
+                        Standardized financial health infographics comparing Paid Up Capital, Net Worth, Revenue,
+                        Expenses, PBT, Taxes, and Net Profits.
+                    </p>
+                </div>
+            </div>
+
+                
+            <div class="flex items-center gap-3 flex-wrap">
+
+                <form class="flex items-center gap-2 rounded-xl bg-white p-1.5 shadow-2xs border border-gray-300 dark:bg-gray-900 dark:border-gray-700" method="get" asp-action="Index" data-report-navigation="" data-report-year-form="">
+                    <input type="hidden" name="draftId" value="@Model.Source.DraftId"><input type="hidden" name="page" value="@Model.Source.Page"><span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-2">
+                    Financial
+                    Year:
+                </span>
+                <select class="rounded-lg bg-gray-50 px-3 py-1.5 text-xs font-bold text-brand-primary-blue border border-gray-200 focus:outline-none focus:ring-1 focus:ring-brand-primary-blue dark:bg-gray-800 dark:border-gray-600 dark:text-blue-400 cursor-pointer" name="financialYear">
+                    @foreach (var yr in Model.getAvailableFinancialYears())
+                    {
+
+                        <option value="@(yr)" selected="@(((yr == Model.selectedFinancialYear) == true))">@($"FY {yr}")</option>
+
+                    }
+
+                </select>
+                <noscript><button type="submit" class="rounded-lg border border-gray-300 px-3 py-2 text-xs">Apply year</button></noscript>
+            </form>
+
+                  
+            <span class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/90 px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-white dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                <span><span class="report-expand-label">Expand Financials</span><span class="report-collapse-label">Collapse Financials</span></span>
+                <svg class="h-4 w-4 transition-transform duration-200 report-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+            </span>
+        </div>
+    </div>
+</summary>
+
+            
+<div class="space-y-8">
+
+              
+    <div id="subsection-financials-table" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+        <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span class="flex h-6 w-6 items-center justify-center rounded-md bg-brand-primary-blue text-white font-bold text-xs">6.1</span>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                    Comparative Financial Statement - Financial Year <span class="text-brand-primary-blue dark:text-blue-400 font-extrabold">@(Model.selectedFinancialYear)</span>
+                </h4>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-500 font-mono">
+                    Scale: <strong class="text-gray-800 dark:text-gray-200 capitalize">@(Model.preferences.financialFormat)</strong> • Currency: <strong class="text-gray-800 dark:text-gray-200">@(Model.preferences.currency)</strong>
+                </span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+
+                <thead class="bg-gray-50/80 border-b border-gray-200 dark:bg-gray-900/50 dark:border-gray-700">
+                    <tr>
+                        <th scope="col" class="py-3 px-4 font-bold text-gray-700 dark:text-gray-300 w-72 min-w-[220px] sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 z-20">
+                            Financial Field Name
+                        </th>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <th scope="col" class="py-3 px-4 font-bold text-gray-900 dark:text-white min-w-[210px] border-l border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center justify-between gap-1.5">
+                                    <span class="truncate block font-bold text-xs">@(p.company)</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[10px] font-mono text-gray-400 font-normal">@(p.cin)</span>
+                                    <span class="rounded bg-gray-100 px-1.5 py-0.2 text-[9px] font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">@($"FY {Model.selectedFinancialYear}")</span>
+                                </div>
+                            </th>
+
+                        }
+
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                      
+                    <tr class="bg-gray-100/60 dark:bg-gray-800/80">
+                        <td colspan="@(1 + Model.selectedPeers.Count)" class="py-2 px-4 font-bold text-[11px] uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                            1. Equity &amp; Net Worth
+                        </td>
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                        <td class="py-3 px-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                                <span>Paid Up Capital</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono font-bold text-gray-900 dark:text-white">
+                                <span>@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.paidUpCapital) : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-emerald-50/15 dark:bg-emerald-950/10">
+                        <td class="py-3 px-4 font-bold text-gray-900 dark:text-white sticky left-0 bg-emerald-50/30 dark:bg-emerald-950/20 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                <span>Net Worth</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono font-bold text-emerald-700 dark:text-emerald-300 text-sm">
+                                <span>@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.netWorth) : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="bg-gray-100/60 dark:bg-gray-800/80">
+                        <td colspan="@(1 + Model.selectedPeers.Count)" class="py-2 px-4 font-bold text-[11px] uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                            2. Profit &amp; Loss Statement (P&amp;L)
+                        </td>
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-blue-50/20 dark:bg-blue-900/10">
+                        <td class="py-3 px-4 font-bold text-brand-primary-blue dark:text-blue-400 sticky left-0 bg-blue-50/40 dark:bg-blue-900/30 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-blue-600"></span>
+                                <span>Total Income / Revenue</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700">
+                                <div class="space-y-1.5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="font-mono font-bold text-brand-primary-blue dark:text-blue-300 text-sm">@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.totalIncome) : "-"))</span>
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) && ((Model.getFinancialDataForYear(p)!.totalIncome > 0) == true)))
+                                        {
+                                            <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getTotalIncomePercent(p)}%")</span>
+                                        }
+
+                                    </div>
+                                    @if ((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) && ((Model.getFinancialDataForYear(p)!.totalIncome > 0) == true)))
+                                    {
+                                        <div class="h-2 w-full rounded-full bg-blue-100/70 dark:bg-blue-950/80 overflow-hidden">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getTotalIncomePercent(p)))"></div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                        <td class="py-3 px-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-orange-400"></span>
+                                <span>Total Expense</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono text-gray-700 dark:text-gray-300">
+                                <span>@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.totalExpense) : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                        <td class="py-3 px-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+                                <span>Profit Before Tax (PBT)</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono font-bold @(((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) && ((Model.getFinancialDataForYear(p)!.profitBeforeTax < 0) == true)) ? "text-red-500" : "text-gray-900 dark:text-white"))">
+                                <span>@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.profitBeforeTax) : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                        <td class="py-3 px-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2 w-2 rounded-full bg-gray-400"></span>
+                                <span>Income Tax / (Tax Expense)</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono text-gray-700 dark:text-gray-300">
+                                <span>@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.incomeTax) : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-teal-50/20 dark:bg-teal-950/20">
+                        <td class="py-3.5 px-4 font-extrabold text-gray-900 dark:text-white sticky left-0 bg-teal-50/40 dark:bg-teal-950/30 z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="h-2.5 w-2.5 rounded-full bg-teal-500"></span>
+                                <span>Profit After Tax (PAT) / Net Profit</span>
+                            </div>
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                <div class="space-y-1.5">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="font-mono font-extrabold text-sm @(((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) && ((Model.getFinancialDataForYear(p)!.profitAfterTax < 0) == true)) ? "text-red-600 dark:text-red-400" : "text-emerald-700 dark:text-emerald-300"))">@((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) ? Model.formatValue(Model.getFinancialDataForYear(p)!.profitAfterTax) : "-"))</span>
+                                        @if ((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) && ((Model.getFinancialDataForYear(p)!.profitAfterTax != null) == true) && ((Model.getFinancialDataForYear(p)!.profitAfterTax != null) == true)))
+                                        {
+                                            <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getNetProfitPercent(p)}%")</span>
+                                        }
+
+                                    </div>
+                                    @if ((StaticComparisonViewModel.Truthy(Model.getFinancialDataForYear(p)) && ((Model.getFinancialDataForYear(p)!.profitAfterTax != null) == true) && ((Model.getFinancialDataForYear(p)!.profitAfterTax != null) == true) && ((Math.Abs(Model.getFinancialDataForYear(p)?.profitAfterTax ?? 0m) > 0) == true)))
+                                    {
+                                        <div class="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-700/80 overflow-hidden">
+                                            <div class="h-full rounded-full transition-all duration-300 @((((Model.getFinancialDataForYear(p)!.profitAfterTax >= 0) == true) ? "bg-gradient-to-r from-emerald-500 to-teal-600" : "bg-gradient-to-r from-rose-500 to-red-600"))" style="@(StaticComparisonViewModel.Width(Model.getNetProfitPercent(p)))"></div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="bg-gray-100/60 dark:bg-gray-800/80">
+                        <td colspan="@(1 + Model.selectedPeers.Count)" class="py-2 px-4 font-bold text-[11px] uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                            3. Analytical Margins &amp; Efficiency Ratios
+                        </td>
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                        <td class="py-3 px-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                            Net Profit Margin (%)
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono font-bold @(((StaticComparisonViewModel.Truthy(Model.getNetProfitMargin(p)) && ((StaticComparisonViewModel.Number(Model.getNetProfitMargin(p)) < 0) == true)) ? "text-red-500" : "text-emerald-600 dark:text-emerald-400"))">
+                                <span>@((((Model.getNetProfitMargin(p) != null) == true) ? $"{Model.getNetProfitMargin(p)}%" : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                      
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                        <td class="py-3 px-4 font-semibold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                            Return on Equity (ROE / RONW %)
+                        </td>
+                        @foreach (var p in Model.selectedPeers)
+                        {
+
+                            <td class="py-3 px-4 border-l border-gray-100 dark:border-gray-700 font-mono font-bold @(((StaticComparisonViewModel.Truthy(Model.getReturnOnEquity(p)) && ((StaticComparisonViewModel.Number(Model.getReturnOnEquity(p)) < 0) == true)) ? "text-red-500" : "text-blue-600 dark:text-blue-400"))">
+                                <span>@((((Model.getReturnOnEquity(p) != null) == true) ? $"{Model.getReturnOnEquity(p)}%" : "-"))</span>
+                            </td>
+
+                        }
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</details>

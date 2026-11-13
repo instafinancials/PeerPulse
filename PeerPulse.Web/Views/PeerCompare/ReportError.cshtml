@@ -1,0 +1,12 @@
+@model ComparisonErrorDto
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Report unavailable";
+}
+<section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs dark:border-gray-800 dark:bg-gray-800" role="alert">
+    <h1 class="mb-3 text-title-sm font-bold text-gray-900 dark:text-white">Unable to load the report</h1>
+    <p class="mb-3 text-sm text-gray-600 dark:text-gray-300">@Model.Message</p>
+    <p class="mb-5 text-xs text-gray-500 dark:text-gray-400">Reference: @Model.TraceId</p>
+    <a asp-controller="ReportSettings" asp-action="SelectPeer"
+       class="inline-flex rounded-xl bg-brand-primary-blue px-4 py-2 text-sm font-semibold text-white">Return to peer selection</a>
+</section>

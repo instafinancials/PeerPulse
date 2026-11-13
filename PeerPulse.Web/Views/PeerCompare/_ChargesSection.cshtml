@@ -1,0 +1,309 @@
+@model StaticComparisonViewModel
+<details id="section-charges" class="mb-14 scroll-mt-24 report-native-section" open="open">
+
+            
+    <summary class="mb-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-orange-50/50 to-amber-50/40 p-5 border border-amber-500/20 dark:from-amber-950/40 dark:via-gray-800 dark:to-gray-800 dark:border-amber-900/40 report-native-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-600 text-white shadow-sm shadow-amber-500/30">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                            Debt &amp; Credit Exposure
+                        </span>
+                        <span class="text-xs text-gray-500 font-mono">@($"{Model.selectedPeers.Count} Companies Audited")</span>
+                    </div>
+                    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white mt-0.5">
+                        Section 4: Charges Master
+                    </h2>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">
+                        Index of registered secured borrowing, hypothecations, mortgage charges, lending institution
+                        commitments, and satisfaction audits from MCA records.
+                    </p>
+                </div>
+            </div>
+
+                
+            <span class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-bold text-gray-700 shadow-2xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
+                <span><span class="report-expand-label">Expand Charges Master</span><span class="report-collapse-label">Collapse Charges Master</span></span>
+                <svg class="h-4 w-4 transition-transform duration-200 report-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+            </span>
+        </div>
+    </summary>
+
+            
+    <div class="space-y-8">
+
+              
+        <div id="subsection-charges-summary" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-amber-100 text-amber-800 font-bold text-xs dark:bg-amber-950 dark:text-amber-300">4.1</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                        Summary of Charges (Open Borrowings Comparison)
+                    </h4>
+                </div>
+                <span class="rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                    Comparative Debt Audit
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-50/80 border-b border-gray-200 dark:bg-gray-900/50 dark:border-gray-700">
+                        <tr>
+                            <th class="py-3 px-4 w-64 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 z-10">
+                                Charge Parameter
+                            </th>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <th class="py-3 px-4 min-w-[260px] border-l border-gray-100 dark:border-gray-700">
+                                    <span class="font-bold text-gray-900 dark:text-white">@(p.company)</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Count of Open Charges
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold font-mono @((((Model.getChargeStats(p).openCount > 0) == true) ? "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800" : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"))">
+                                        <span class="h-1.5 w-1.5 rounded-full @((((Model.getChargeStats(p).openCount > 0) == true) ? "bg-amber-500" : "bg-gray-400"))"></span>
+                                        <span>@($"{Model.getChargeStats(p).openCount} Open Charges")</span>
+                                    </span>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 bg-amber-50/20 dark:bg-amber-900/10">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-amber-50/40 dark:bg-amber-900/30 z-10">
+                                Total Charge Amount (Open)
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="font-mono font-bold text-amber-800 dark:text-amber-300 text-sm">@(Model.formatValue(Model.getChargeStats(p).totalOpenAmount))</span>
+                                            <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getTotalChargePercent(Model.getChargeStats(p).totalOpenAmount)}%")</span>
+                                        </div>
+                                        <div class="h-2 w-full rounded-full bg-amber-100/70 dark:bg-amber-950/80 overflow-hidden">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getTotalChargePercent(Model.getChargeStats(p).totalOpenAmount)))"></div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Average Charge Amount
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="font-mono font-bold text-gray-900 dark:text-white text-xs">@(Model.formatValue(Model.getChargeStats(p).avgOpenAmount))</span>
+                                            <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getAvgChargePercent(Model.getChargeStats(p).avgOpenAmount)}%")</span>
+                                        </div>
+                                        <div class="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-yellow-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getAvgChargePercent(Model.getChargeStats(p).avgOpenAmount)))"></div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            }
+
+                        </tr>
+
+                      
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Average Age
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    @if (((Model.getChargeStats(p).openCount > 0) == true))
+                                    {
+
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <span class="font-bold text-gray-900 dark:text-white">@($"{Model.getChargeStats(p).avgAgeYears} years")</span>
+                                                <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getChargeAgePercent(Model.getChargeStats(p).avgAgeYears)}%")</span>
+                                            </div>
+                                            <div class="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                                                <div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-amber-500" style="@(StaticComparisonViewModel.Width(Model.getChargeAgePercent(Model.getChargeStats(p).avgAgeYears)))"></div>
+                                            </div>
+                                        </div>
+
+                                    }
+
+                                    @if (((Model.getChargeStats(p).openCount == 0) == true))
+                                    {
+
+                                        <span class="text-gray-400 italic text-[11px]">No Open Charges</span>
+
+                                    }
+
+                                </td>
+
+                            }
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+              
+              
+        <div id="subsection-charges-list" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-amber-100 text-amber-800 font-bold text-xs dark:bg-amber-950 dark:text-amber-300">4.2</span>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                            List of Charges (Registered Borrowings &amp; Hypothecations)
+                        </h4>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400">
+                            Itemized breakdown of charge amount, charge holder financial institution, status, and creation
+                            date.
+                        </p>
+                    </div>
+                </div>
+                <span class="rounded bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+                    MCA Index of Charges
+                </span>
+            </div>
+
+                
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                @foreach (var p in Model.selectedPeers)
+                {
+
+                    <div class="flex flex-col rounded-xl border border-gray-200 bg-gray-50/40 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+
+                      
+                        <div class="flex items-center justify-between border-b border-gray-200 pb-3 mb-4 dark:border-gray-700">
+                            <div class="flex items-center gap-2.5">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 font-bold text-amber-700 text-xs dark:bg-amber-900/40 dark:text-amber-300">
+                                    <span>@(StaticComparisonViewModel.Or(p.tradeName, StaticComparisonViewModel.Or(p.company, "P")).Substring(0, 1))</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-gray-900 dark:text-white text-xs leading-snug">@(p.company)</h5>
+                                    <span class="font-mono text-[10px] text-gray-500">@(p.cin)</span>
+                                </div>
+                            </div>
+                            <span class="rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800">@($"{Model.getOpenCharges(p).Count} Open Recorded")</span>
+                        </div>
+
+                      
+                        <div class="space-y-3 overflow-y-auto max-h-[580px] pr-1">
+
+                        
+                            @if (((Model.getOpenCharges(p).Count == 0) == true))
+                            {
+
+                                <div class="rounded-xl border border-dashed border-gray-200 bg-white p-6 text-center dark:border-gray-700 dark:bg-gray-800">
+                                    <svg class="h-8 w-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                                    </svg>
+                                    <p class="text-xs font-semibold text-gray-700 dark:text-gray-300">No Open Charges Registered</p>
+                                    <p class="text-[11px] text-gray-400 mt-0.5">
+                                        Company has zero active/open secured borrowing records filed
+                                        on MCA.
+                                    </p>
+                                </div>
+
+                            }
+
+
+                        
+                            @foreach (var ch in Model.getOpenCharges(p))
+                            {
+
+                                <div class="rounded-xl border border-gray-200 bg-white p-3.5 shadow-2xs dark:border-gray-700 dark:bg-gray-800 hover:border-amber-300 dark:hover:border-amber-600 transition-colors">
+
+                            
+                                    <div class="flex items-start justify-between gap-2 mb-2">
+                                        <div>
+                                            <h6 class="font-bold text-gray-900 dark:text-white text-xs leading-snug">@(ch.holderName)</h6>
+                                            <div class="flex items-center gap-1.5 mt-0.5">
+                                                <span class="font-mono text-[10px] text-gray-500">ID:</span>
+                                                <span class="font-mono text-[10px] font-bold text-gray-700 dark:text-gray-300">@(ch.chargeId)</span>
+                                            </div>
+                                        </div>
+                                        <span class="shrink-0 inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-bold @((((ch.status == "Open") == true) ? "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300" : "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-300"))">
+                                            <span class="h-1.5 w-1.5 rounded-full @((((ch.status == "Open") == true) ? "bg-amber-500" : "bg-slate-400"))"></span>
+                                            <span>@(ch.status)</span>
+                                        </span>
+                                    </div>
+
+                            
+                                    <div class="my-2.5 rounded-lg bg-amber-50/60 p-2.5 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/40">
+                                        <span class="text-[10px] text-gray-500 dark:text-gray-400 block mb-0.5">
+                                            Charge
+                                            Amount
+                                        </span>
+                                        <div class="font-mono text-base font-extrabold text-amber-900 dark:text-amber-300">@(Model.formatValue(ch.amount))</div>
+                                    </div>
+
+                            
+                                    <div class="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-gray-100 dark:border-gray-700/60">
+                                        <div>
+                                            <span class="text-[10px] text-gray-400 block">Creation Date</span>
+                                            <span class="font-mono font-bold text-gray-800 dark:text-gray-200 text-[11px]">@(ch.creationDate)</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-[10px] text-gray-400 block">Age of Charge</span>
+                                            <span class="font-bold text-gray-700 dark:text-gray-300 text-[11px]">@($"{ch.ageYears} yrs")</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            }
+
+
+                        </div>
+
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+</details>

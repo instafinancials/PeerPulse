@@ -1,0 +1,238 @@
+@model StaticComparisonViewModel
+<details id="section-directors" class="mb-14 scroll-mt-24 report-native-section" open="open">
+
+            
+    <summary class="mb-6 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-50/50 to-blue-50/40 p-5 border border-indigo-500/20 dark:from-indigo-950/40 dark:via-gray-800 dark:to-gray-800 dark:border-indigo-900/40 report-native-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-500/30">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="rounded bg-indigo-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                            Corporate Governance
+                        </span>
+                        <span class="text-xs text-gray-500 font-mono">@($"{Model.selectedPeers.Count} Companies Compared")</span>
+                    </div>
+                    <h2 class="text-lg font-extrabold text-gray-900 dark:text-white mt-0.5">
+                        Section 3: Directors Master
+                    </h2>
+                    <p class="text-xs text-gray-600 dark:text-gray-300">
+                        Board composition, signatory management hierarchy, association tenures, past/current directorship
+                        portfolios, and MCA compliance disqualification audit.
+                    </p>
+                </div>
+            </div>
+
+                
+            <span class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-bold text-gray-700 shadow-2xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors">
+                <span><span class="report-expand-label">Expand Directors Master</span><span class="report-collapse-label">Collapse Directors Master</span></span>
+                <svg class="h-4 w-4 transition-transform duration-200 report-toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+            </span>
+        </div>
+    </summary>
+
+            
+    <div class="space-y-8">
+
+              
+        <div id="subsection-director-count" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-100 text-indigo-700 font-bold text-xs dark:bg-indigo-950 dark:text-indigo-300">3.1</span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                        Count of Directors (Board Size Comparison)
+                    </h4>
+                </div>
+                <span class="rounded-full bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 text-[11px] font-semibold text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300">
+                    Proportional Board Benchmark
+                </span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-50/80 border-b border-gray-200 dark:bg-gray-900/50 dark:border-gray-700">
+                        <tr>
+                            <th class="py-3 px-4 w-64 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 sticky left-0 bg-gray-50/95 dark:bg-gray-900/95 z-10">
+                                Metric
+                            </th>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <th class="py-3 px-4 min-w-[260px] border-l border-gray-100 dark:border-gray-700">
+                                    <span class="font-bold text-gray-900 dark:text-white">@(p.company)</span>
+                                </th>
+
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50">
+                            <td class="py-3.5 px-4 font-bold text-gray-800 dark:text-gray-200 sticky left-0 bg-white dark:bg-gray-800 z-10">
+                                Total Active Directors
+                            </td>
+                            @foreach (var p in Model.selectedPeers)
+                            {
+
+                                <td class="py-3.5 px-4 border-l border-gray-100 dark:border-gray-700">
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-mono text-base font-extrabold text-indigo-600 dark:text-indigo-400">@(p.directors.Count)</span>
+                                                <span class="text-[11px] text-gray-500">Directors</span>
+                                            </div>
+                                            <span class="text-[10px] text-gray-400 font-mono">@($"{Model.getDirectorCountPercent(p.directors.Count)}%")</span>
+                                        </div>
+                                        <div class="h-2 w-full rounded-full bg-indigo-50 dark:bg-indigo-950/80 overflow-hidden">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-300" style="@(StaticComparisonViewModel.Width(Model.getDirectorCountPercent(p.directors.Count)))"></div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            }
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+              
+              
+        <div id="subsection-directors-list" class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+            <div class="bg-gray-50 px-4 py-3.5 border-b border-gray-200 dark:bg-gray-900/80 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-100 text-indigo-700 font-bold text-xs dark:bg-indigo-950 dark:text-indigo-300">3.2</span>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-100">
+                            List of Active Directors (Ordered by Governance Hierarchy)
+                        </h4>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400">
+                            Order: Chairman → CEO → Managing Director → Directors → Other Directors
+                        </p>
+                    </div>
+                </div>
+                <span class="rounded bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800">
+                    Detailed Directorship Cards
+                </span>
+            </div>
+
+                
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                @foreach (var p in Model.selectedPeers)
+                {
+
+                    <div class="flex flex-col rounded-xl border border-gray-200 bg-gray-50/40 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+
+                      
+                        <div class="flex items-center justify-between border-b border-gray-200 pb-3 mb-4 dark:border-gray-700">
+                            <div class="flex items-center gap-2.5">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 font-bold text-indigo-600 text-xs dark:bg-indigo-900/40 dark:text-indigo-300">
+                                    <span>@(StaticComparisonViewModel.Or(p.tradeName, StaticComparisonViewModel.Or(p.company, "P")).Substring(0, 1))</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-gray-900 dark:text-white text-xs leading-snug">@(p.company)</h5>
+                                    <span class="font-mono text-[10px] text-gray-500">@(p.cin)</span>
+                                </div>
+                            </div>
+                            <span class="rounded-full bg-indigo-50 px-2.5 py-0.5 text-[11px] font-bold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">@($"{Model.getSortedActiveDirectors(p.directors).Count} Active")</span>
+                        </div>
+
+                      
+                        <div class="space-y-3 overflow-y-auto max-h-[580px] pr-1">
+                            @foreach (var dir in Model.getSortedActiveDirectors(p.directors))
+                            {
+
+                                <div class="rounded-xl border border-gray-200 bg-white p-3.5 shadow-2xs dark:border-gray-700 dark:bg-gray-800 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors">
+
+                            
+                                    <div class="flex items-start justify-between gap-2 mb-2">
+                                        <div>
+                                            <h6 class="font-bold text-gray-900 dark:text-white text-xs leading-tight">@(dir.name)</h6>
+                                            <div class="flex items-center gap-1.5 mt-0.5">
+                                                <span class="font-mono text-[10px] text-gray-500 dark:text-gray-400">DIN:</span>
+                                                <span class="font-mono text-[10px] font-bold text-brand-primary-blue dark:text-blue-400">@(dir.din)</span>
+                                            </div>
+                                        </div>
+                                        <span class="shrink-0 inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-bold @((StaticComparisonViewModel.Truthy(dir.designation.ToLowerInvariant().Contains("managing")) ? "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300" : "bg-blue-50 text-brand-primary-blue border-blue-200 dark:bg-blue-950/60 dark:text-blue-300"))">@(dir.designation)</span>
+                                    </div>
+
+                            
+                                    <div class="my-2.5 rounded-lg bg-gray-50 p-2.5 dark:bg-gray-900/60 border border-gray-100 dark:border-gray-700/60">
+                                        <div class="flex items-center justify-between text-[11px] mb-1">
+                                            <span class="text-gray-500 dark:text-gray-400">Appointment Date:</span>
+                                            <span class="font-mono font-bold text-gray-800 dark:text-gray-200">@(dir.appointmentDate)</span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-[11px] mb-1.5">
+                                            <span class="text-gray-500 dark:text-gray-400">Duration of Association:</span>
+                                            <span class="font-bold text-indigo-600 dark:text-indigo-400">@($"{dir.durationYears} yrs")</span>
+                                        </div>
+
+                                        <div class="h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600" style="@(StaticComparisonViewModel.Width(Model.getDurationPercent(dir.durationYears)))"></div>
+                                        </div>
+                                    </div>
+
+                            
+                                    <div class="grid grid-cols-2 gap-2 my-2 text-center text-xs">
+                                        <div class="rounded-lg border border-gray-100 bg-gray-50/70 p-2 dark:border-gray-700 dark:bg-gray-900/40">
+                                            <span class="text-[10px] text-gray-500 block">Current Directorships</span>
+                                            <span class="font-mono font-extrabold text-gray-900 dark:text-white text-sm">@(dir.currentDirectorships)</span>
+                                        </div>
+                                        <div class="rounded-lg border border-gray-100 bg-gray-50/70 p-2 dark:border-gray-700 dark:bg-gray-900/40">
+                                            <span class="text-[10px] text-gray-500 block">Past Directorships</span>
+                                            <span class="font-mono font-extrabold text-gray-700 dark:text-gray-300 text-sm">@(dir.pastDirectorships)</span>
+                                        </div>
+                                    </div>
+
+                            
+                                    <div class="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700/60 mt-2.5">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+
+                                            <span class="inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-bold @((StaticComparisonViewModel.Truthy(dir.isDisqualified) ? "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300" : "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300"))">
+                                                <span class="h-1.5 w-1.5 rounded-full @((StaticComparisonViewModel.Truthy(dir.isDisqualified) ? "bg-rose-500" : "bg-emerald-500"))"></span>
+                                                <span>@(dir.disqualificationStatus)</span>
+                                            </span>
+
+                                
+                                            <span class="inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-bold @((StaticComparisonViewModel.Truthy(dir.isDeactivated) ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300" : "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300"))">
+                                                <span>@(dir.deactivationStatus)</span>
+                                            </span>
+                                        </div>
+
+                              
+                                        <a href="@(StaticComparisonViewModel.SafeUrl(dir.profileUrl))" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[11px] font-bold text-brand-primary-blue hover:underline dark:text-blue-400">
+                                            <span>Full Profile</span>
+                                            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                                <polyline points="15 3 21 3 21 9"></polyline>
+                                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                                            </svg>
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+</details>

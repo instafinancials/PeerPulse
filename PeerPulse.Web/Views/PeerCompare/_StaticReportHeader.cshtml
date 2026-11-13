@@ -1,0 +1,115 @@
+@model StaticComparisonViewModel
+<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between no-print">
+            <div>
+              <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+                <a class="hover:text-brand-primary-blue dark:hover:text-brand-300" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                <span>/</span>
+                <span class="text-gray-700 dark:text-gray-300">PeerCompare</span>
+                <span>/</span>
+                <span class="font-medium text-brand-primary-blue dark:text-brand-400">View Report</span>
+              </div>
+              <h2 class="text-title-sm font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary-blue/10 text-brand-primary-blue dark:bg-brand-primary-blue/20 dark:text-blue-400">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="3" x2="12" y2="21"></line>
+                    <path d="M4 7l8-4 8 4"></path>
+                    <path d="M6 18H2l3-7 3 7H6z"></path>
+                    <path d="M20 18h-4l3-7 3 7h-2z"></path>
+                  </svg>
+                </span>
+                PeerPulse Competitor Benchmarking Report
+              </h2>
+            </div>
+
+            
+            <div class="flex items-center gap-2 bg-gray-100 p-1.5 rounded-xl dark:bg-gray-800 text-xs font-semibold">
+              <a class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" asp-controller="ReportSettings" asp-action="Preferences">
+                Report Preferences
+              </a>
+              <a class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" asp-controller="ReportSettings" asp-action="SelectPeer">
+                Select Peers
+              </a>
+              <span class="flex items-center gap-1.5 rounded-lg bg-brand-primary-blue px-3 py-1.5 text-white shadow-xs">
+                View Report
+              </span>
+            </div>
+          </div><div class="mb-5 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-800 no-print">
+            <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+
+              
+              <div class="flex-1 max-w-md">
+                <form class="relative" method="get" asp-action="Index" data-report-navigation="">
+                  <input type="hidden" name="draftId" value="@Model.Source.DraftId"><span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                  </span>
+                  <input type="text" placeholder="Search a selected peer by CIN or LLPIN..." class="w-full rounded-xl border border-gray-300 pl-9 pr-8 py-2 text-xs font-medium text-gray-900 shadow-2xs focus:border-brand-primary-blue focus:ring-1 focus:ring-brand-primary-blue dark:border-gray-700 dark:bg-gray-900 dark:text-white" name="searchInput" value="@Model.Source.SearchInput" maxlength="21">
+                  <button type="submit" class="absolute inset-y-0 right-0 px-3 text-brand-primary-blue text-xs font-semibold">Go</button></form>
+              </div>
+
+              
+              <div class="flex items-center gap-2 flex-wrap">
+                <div class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                  <span>Currency: <strong class="text-gray-900 dark:text-white">@(Model.preferences.currency)</strong></span>
+                  <span>•</span>
+                  <span>Scale: <strong class="text-gray-900 dark:text-white capitalize">@(Model.preferences.financialFormat)</strong></span>
+                  @if (((Model.preferences.currency == "USD") == true))
+{
+<span>•</span>
+}
+
+                  @if (((Model.preferences.currency == "USD") == true))
+{
+<span>1 USD = <strong class="text-gray-900 dark:text-white">@(Model.preferences.exchangeRate)</strong> INR</span>
+}
+
+                  <a class="ml-1 text-brand-primary-blue hover:underline font-semibold dark:text-blue-400" asp-controller="ReportSettings" asp-action="Preferences">Edit</a>
+                </div>
+
+                <div class="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                  <span>Comparing: <strong class="text-brand-primary-blue dark:text-blue-400">@($"{Model.selectedPeers.Count} Peers")</strong></span>
+                  <a class="ml-1 text-brand-primary-blue hover:underline font-semibold dark:text-blue-400" asp-controller="ReportSettings" asp-action="SelectPeer">Change</a>
+                </div>
+              </div>
+
+              
+              <div class="flex items-center gap-2">
+                
+                <button type="button" title="Share Report" class="inline-flex items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 hover:text-brand-primary-blue dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors" data-report-share="">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                  <span>Share</span>
+                </button>
+
+                
+                <button type="button" title="Export to PDF" class="inline-flex items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 hover:text-red-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors" data-report-print="">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  <span>Export PDF</span>
+                </button>
+
+                
+                <a title="Export to Excel / CSV" class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 transition-colors" asp-action="ExportCsv" asp-route-draftId="@Model.Source.DraftId" asp-route-page="@Model.Source.Page" asp-route-financialYear="@Model.selectedFinancialYear">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Export Excel</span>
+                </a>
+              </div>
+
+            </div>
+          </div>

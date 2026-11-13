@@ -2,69 +2,99 @@
     Layout = "_DashboardLayout";
     ViewData["Title"] = "Manage Peer Groups";
     ViewData["DashboardPage"] = "peer-groups";
-
-    var input = "w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition focus:border-[#114fa2] focus:ring-2 focus:ring-[#114fa2]/20 dark:border-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400";
-    var btnPrimary = "inline-flex items-center justify-center gap-2 rounded-lg bg-[#114fa2] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#114fa2]/90";
-    var btnOutline = "inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700";
 }
 
-<div class="peer-ui"
-     data-peer-page="groups"
-     data-base="@Url.Action("Workspace", "PeerDiscovery")"
-     data-create-group="@Url.Action("CreateGroup", "PeerDiscovery")"
-     data-update-group="@Url.Action("UpdateGroup", "PeerDiscovery")"
-     data-delete-group="@Url.Action("DeleteGroup", "PeerDiscovery")"
-     data-manage="@Url.Action("Manage", "PeerDiscovery")">
-
+<div class="peer-ui" data-peer-page="groups"
+     data-base='@Url.Action("Workspace", "PeerDiscovery")'
+     data-search='@Url.Action("Search", "PeerDiscovery")'
+     data-add='@Url.Action("AddPeer", "PeerDiscovery")'
+     data-update-peer='@Url.Action("UpdatePeer", "PeerDiscovery")'
+     data-deactivate-peer='@Url.Action("DeactivatePeer", "PeerDiscovery")'
+     data-reactivate-peer='@Url.Action("ReactivatePeer", "PeerDiscovery")'
+     data-create-group='@Url.Action("CreateGroup", "PeerDiscovery")'
+     data-update-group='@Url.Action("UpdateGroup", "PeerDiscovery")'
+     data-delete-group='@Url.Action("DeleteGroup", "PeerDiscovery")'
+     data-manage='@Url.Action("Manage", "PeerDiscovery")'>
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-            <div class="mb-1 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <a asp-controller="Dashboard" asp-action="Index" class="hover:text-[#114fa2] dark:hover:text-blue-300">Dashboard</a>
-                <span>/</span>
+            <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
                 <span class="text-gray-700 dark:text-gray-300">Peer Discovery</span>
                 <span>/</span>
-                <span class="font-medium text-[#114fa2] dark:text-blue-400">Manage Peer Groups</span>
+                <span class="font-medium text-brand-primary-blue dark:text-brand-400">Manage Peer Groups</span>
             </div>
-            <h2 class="flex items-center gap-2.5 text-3xl font-bold text-gray-900 dark:text-white">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#114fa2]/10 text-[#114fa2] dark:bg-[#114fa2]/20 dark:text-blue-400">
-                    <i class="bi bi-collection text-lg"></i>
+            <h2 class="text-title-sm font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary-blue/10 text-brand-primary-blue dark:bg-brand-primary-blue/20 dark:text-blue-400">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
                 </span>
-                Manage Peer Groups
+                Manage Peer Groups &amp; Business Verticals
             </h2>
         </div>
 
         <div class="flex items-center gap-3">
-            <a asp-action="Manage" class="@btnOutline">View Manage Peers</a>
-            <button id="pp-new-group" type="button" class="@btnPrimary">+ Create New Group</button>
+            <a class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-xs font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300" asp-controller="PeerDiscovery" asp-action="Manage">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                View All Peers (<span data-total-peers="">—</span>)
+            </a>
+            <button type="button" class="inline-flex items-center gap-2 rounded-lg bg-brand-primary-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-brand-primary-blue/90" id="pp-new-group">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                + Create Peer Group
+            </button>
         </div>
     </div>
 
-    <div class="mb-6 rounded-xl border border-gray-200 border-t-2 border-t-[#114fa2] bg-gradient-to-r from-blue-50/70 via-white to-emerald-50/50 p-4 sm:p-5 dark:border-gray-800 dark:border-t-[#114fa2] dark:from-gray-800/80 dark:via-gray-800/50 dark:to-gray-800/80">
+          
+
+    <div class="mb-6 rounded-2xl border border-gray-200 border-t-2 border-t-[#7c3aed] bg-gradient-to-r from-purple-50/60 via-white to-blue-50/60 p-4 sm:p-5 dark:border-gray-800 dark:border-t-[#7c3aed] dark:from-gray-800/80 dark:via-gray-800/50 dark:to-gray-800/80">
         <div class="flex items-start gap-3.5">
-            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#114fa2] text-white shadow-sm">
-                <i class="bi bi-collection"></i>
+            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-600 text-white shadow-sm">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
             </div>
             <div class="grow">
                 <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Multi-Vertical Competitive Segmentation</h4>
-                <p class="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                    Create groups by business vertical or product line. Every peer must belong to at least one group.
+                <p class="mt-1 text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                    If your business operates across multiple product lines or strategic business units (e.g. <em>Fintech</em>, <em>EV Infrastructure</em>, <em>Enterprise Software</em>), create customized peer groups to evaluate tailored industry benchmarks, financial ratios, and market share per vertical.
                 </p>
             </div>
         </div>
     </div>
 
-@*     <p id="pp-message" class="pp-message mb-4 text-sm empty:hidden" role="status" aria-live="polite"></p>
- *@
-    <div class="mb-6 flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-gray-800 dark:bg-gray-800/90">
-        <input id="pp-filter" class="@input sm:max-w-md"
-               placeholder="Search group by name, vertical, or description"
-               aria-label="Filter groups" />
-        <span class="text-sm text-gray-600 dark:text-gray-300"><b data-peer-count>—</b> active peers</span>
+          
+
+    <div class="mb-6 rounded-2xl border border-gray-200 border-t-2 border-t-[#114fa2] bg-white p-4 shadow-xs dark:border-gray-800 dark:border-t-[#114fa2] dark:bg-gray-800">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class="relative flex-1 max-w-md">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" placeholder="Search group by name, business vertical, description..." class="w-full rounded-lg border border-gray-300 bg-transparent pl-10 pr-4 py-2 text-xs text-gray-800 placeholder-gray-400 shadow-theme-xs outline-none transition focus:border-brand-primary-blue focus:ring-2 focus:ring-brand-primary-blue/20 dark:border-gray-700 dark:text-white" id="pp-filter">
+            </div>
+
+            <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span>Showing <strong><span id="pp-visible-groups"></span></strong> groups (<span data-total-peers=""></span> total assigned peers)</span>
+            </div>
+        </div>
     </div>
 
-    <div id="pp-group-grid" class="pp-group-grid grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+          
 
-    <div class="pp-token">@Html.AntiForgeryToken()</div>
+    <div id="pp-group-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+
+    <div hidden>@Html.AntiForgeryToken()</div>
     @await Html.PartialAsync("_PeerUi")
 </div>
 
