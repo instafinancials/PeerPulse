@@ -1,57 +1,564 @@
 ﻿@{
-    string currentPage = ViewData["DashboardPage"]?.ToString() ?? "";
+    var currentPage = ViewData["DashboardPage"]?.ToString() ?? "";
 
-    string link = "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-[#114fa2] dark:text-slate-300 dark:hover:bg-slate-800";
-    string sub = "block rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-[#114fa2] dark:text-slate-300 dark:hover:bg-slate-800";
-    string subActive = "bg-blue-50 font-semibold text-[#114fa2] dark:bg-blue-950/40 dark:text-blue-300";
+    var controller =
+        ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    var action =
+        ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    var isDashboard = controller.Equals(
+        "Dashboard", StringComparison.OrdinalIgnoreCase);
+
+    var isPeerController = controller.Equals(
+        "PeerDiscovery", StringComparison.OrdinalIgnoreCase);
+
+    var isreportSettingsController = controller.Equals(
+    "ReportSettings", StringComparison.OrdinalIgnoreCase);
+
+    var isAddPeer =
+        currentPage == "add-peer" ||
+        (isPeerController && action.Equals(
+            "AddPeer", StringComparison.OrdinalIgnoreCase));
+
+    var isManagePeers =
+        currentPage == "manage-peers" ||
+        (isPeerController && action.Equals(
+            "Manage", StringComparison.OrdinalIgnoreCase));
+
+    var isGroups =
+        currentPage == "peer-groups" ||
+        (isPeerController && action.Equals(
+            "Groups", StringComparison.OrdinalIgnoreCase));
+
+    var isPeerActive =
+        isPeerController || isAddPeer || isManagePeers || isGroups;
+
+    var isReportperferences =
+   currentPage == "Report-Preferences" ||
+   (isreportSettingsController && action.Equals(
+       "Report Preferences", StringComparison.OrdinalIgnoreCase));
+
+    var isSelectPeers =
+        currentPage == "Select-Peers" ||
+        (isreportSettingsController && action.Equals(
+            "Select Peers", StringComparison.OrdinalIgnoreCase));
+
+    var isReportsettingActive = isreportSettingsController || isReportperferences || isSelectPeers;
+
+    var isCompareReport =
+       currentPage.Equals("peerCompareReport", StringComparison.OrdinalIgnoreCase) ||
+       currentPage.Equals("peer-compare-report", StringComparison.OrdinalIgnoreCase) ||
+       (isreportSettingsController && action.Equals(
+           "Report", StringComparison.OrdinalIgnoreCase));
+
+    var isProfile =
+        controller.Equals("Account", StringComparison.OrdinalIgnoreCase) &&
+        action.Equals("EditProfile", StringComparison.OrdinalIgnoreCase);
 }
 
-<aside class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-4 py-5 transition-transform duration-200 lg:static lg:translate-x-0 dark:border-slate-800 dark:bg-gray-900"
-       :class="{ 'translate-x-0': sidebarOpen }">
+<aside id="pp-sidebar"
+       x-bind:class="sidebarToggle
+    ? 'translate-x-0 lg:w-[90px]'
+    : '-translate-x-full'"
+       class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 dark:border-gray-800 dark:bg-black lg:static lg:translate-x-0">
 
-    <div class="mb-6 px-2">
+    <div x-bind:class="sidebarToggle ? 'justify-center' : 'justify-between'"
+         class="flex items-center gap-2 pt-8 sidebar-header pb-7">
+
         <a asp-controller="Dashboard" asp-action="Index">
-            <img src="~/images/logo/logo.svg" alt="InstaFinancials" class="h-12 w-auto" />
+            <span class="logo"
+                  x-bind:class="sidebarToggle ? 'hidden' : ''">
+                <img class="dark:hidden"
+                     src="~/images/logo/logo.svg"
+                     alt="InstaFinancials" />
+
+                <img class="hidden dark:block"
+                     src="~/images/logo/logo-dark.svg"
+                     alt="InstaFinancials" />
+            </span>
+
+            <img class="logo-icon"
+                 x-bind:class="sidebarToggle ? 'lg:block' : 'hidden'"
+                 src="~/images/logo/logo-icon.svg"
+                 alt="InstaFinancials" />
         </a>
     </div>
-    <hr />
-    <nav class="space-y-1">
-       @*  <span class="mb-2 block px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Menu</span> *@
-        <a asp-controller="Dashboard" asp-action="Index" class="@link">
-            <i class="bi bi-grid text-lg"></i>
-            <span>Dashboard</span>
-        </a>
 
-        <div x-data="{ peerMenu: true }">
-            <button type="button" @@click="peerMenu = !peerMenu"
-                    class="@link w-full"
-                    :class="{ 'bg-blue-50 text-[#114fa2] dark:bg-blue-950/40 dark:text-blue-300': peerMenu }">
-                <i class="bi bi-people-fill text-lg"></i>
-                <span>Peer Discovery</span>
-                <i class="bi bi-chevron-down ml-auto text-xs transition-transform" :class="{ 'rotate-180': peerMenu }"></i>
-            </button>
+    <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+        <nav>
+            <div>
+                <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
+                    <span class="menu-group-title"
+                          x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                        MENU
+                    </span>
 
-            <div x-show="peerMenu" x-cloak class="mt-1 space-y-1 pl-9">
-                <a asp-controller="PeerDiscovery" asp-action="AddPeer"
-                   class="@sub @(currentPage == "add-peer" ? subActive : "")">Add Your Peer</a>
-                <a asp-controller="PeerDiscovery" asp-action="Manage"
-                   class="@sub @(currentPage == "manage-peers" ? subActive : "")">Manage Peers</a>
-                <a asp-controller="PeerDiscovery" asp-action="Groups"
-                   class="@sub @(currentPage == "peer-groups" ? subActive : "")">Manage Peer Groups</a>
+                    <svg x-bind:class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
+                         class="mx-auto fill-current menu-group-icon"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <circle cx="6" cy="12" r="1.75" />
+                        <circle cx="12" cy="12" r="1.75" />
+                        <circle cx="18" cy="12" r="1.75" />
+                    </svg>
+                </h3>
+
+                <ul class="flex flex-col gap-4 mb-6">
+
+                    <!-- Dashboard -->
+                    <li>
+                        <a asp-controller="Dashboard"
+                           asp-action="Index"
+                           class="menu-item group @(isDashboard ? "menu-item-active" : "menu-item-inactive")"
+                           aria-current="@(isDashboard ? "page" : null)">
+
+                            <svg class="@(isDashboard ? "menu-item-icon-active" : "menu-item-icon-inactive")"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M5.5 3.25C4.25736 3.25 3.25 4.25736 3.25 5.5V8.99998C3.25 10.2426 4.25736 11.25 5.5 11.25H9C10.2426 11.25 11.25 10.2426 11.25 8.99998V5.5C11.25 4.25736 10.2426 3.25 9 3.25H5.5ZM4.75 5.5C4.75 5.08579 5.08579 4.75 5.5 4.75H9C9.41421 4.75 9.75 5.08579 9.75 5.5V8.99998C9.75 9.41419 9.41421 9.74998 9 9.74998H5.5C5.08579 9.74998 4.75 9.41419 4.75 8.99998V5.5ZM5.5 12.75C4.25736 12.75 3.25 13.7574 3.25 15V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H9C10.2426 20.75 11.25 19.7427 11.25 18.5V15C11.25 13.7574 10.2426 12.75 9 12.75H5.5ZM4.75 15C4.75 14.5858 5.08579 14.25 5.5 14.25H9C9.41421 14.25 9.75 14.5858 9.75 15V18.5C9.75 18.9142 9.41421 19.25 9 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V15ZM12.75 5.5C12.75 4.25736 13.7574 3.25 15 3.25H18.5C19.7426 3.25 20.75 4.25736 20.75 5.5V8.99998C20.75 10.2426 19.7426 11.25 18.5 11.25H15C13.7574 11.25 12.75 10.2426 12.75 8.99998V5.5ZM15 4.75C14.5858 4.75 14.25 5.08579 14.25 5.5V8.99998C14.25 9.41419 14.5858 9.74998 15 9.74998H18.5C18.9142 9.74998 19.25 9.41419 19.25 8.99998V5.5C19.25 5.08579 18.9142 4.75 18.5 4.75H15ZM15 12.75C13.7574 12.75 12.75 13.7574 12.75 15V18.5C12.75 19.7426 13.7574 20.75 15 20.75H18.5C19.7426 20.75 20.75 19.7427 20.75 18.5V15C20.75 13.7574 19.7426 12.75 18.5 12.75H15ZM14.25 15C14.25 14.5858 14.5858 14.25 15 14.25H18.5C18.9142 14.25 19.25 14.5858 19.25 15V18.5C19.25 18.9142 18.9142 19.25 18.5 19.25H15C14.5858 19.25 14.25 18.9142 14.25 18.5V15Z" />
+                            </svg>
+
+                            <span class="menu-item-text"
+                                  x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Peer Discovery: independent parent menu -->
+                    <li x-data="{ open: @(isPeerActive ? "true" : "false") }">
+                        <button type="button"
+                                x-on:click="open = !open"
+                                x-bind:aria-expanded="open"
+                                aria-controls="peer-discovery-menu"
+                                class="menu-item group w-full"
+                                x-bind:class="open || @(isPeerActive ? "true" : "false")
+                            ? 'menu-item-active'
+                            : 'menu-item-inactive'">
+
+                            <svg x-bind:class="open || @(isPeerActive ? "true" : "false")
+                                ? 'menu-item-icon-active'
+                                : 'menu-item-icon-inactive'"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 aria-hidden="true">
+                                <path d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89437 13 12 13C14.1056 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z"
+                                      stroke="currentColor"
+                                      stroke-width="1.8"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+                            </svg>
+
+                            <span class="menu-item-text"
+                                  x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                Peer Discovery
+                            </span>
+
+                            <svg class="menu-item-arrow"
+                                 x-bind:class="[
+                                open ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive',
+                                sidebarToggle ? 'lg:hidden' : ''
+                                ]"
+                                 width="20"
+                                 height="20"
+                                 viewBox="0 0 20 20"
+                                 fill="none"
+                                 aria-hidden="true">
+                                <path d="M4.79175 7.39584L10.0001 12.6042L15.2084 7.39585"
+                                      stroke="currentColor"
+                                      stroke-width="1.5"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+                            </svg>
+                        </button>
+
+                        <div id="peer-discovery-menu"
+                             x-show="open"
+                             x-cloak
+                             class="overflow-hidden transform translate">
+                            <ul x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'"
+                                class="flex flex-col gap-1 mt-2 menu-dropdown pl-9">
+                                <li>
+                                    <a asp-controller="PeerDiscovery"
+                                       asp-action="AddPeer"
+                                       class="menu-dropdown-item group @(isAddPeer ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive")"
+                                       aria-current="@(isAddPeer ? "page" : null)">
+                                        Add Your Peer
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a asp-controller="PeerDiscovery"
+                                       asp-action="Manage"
+                                       class="menu-dropdown-item group @(isManagePeers ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive")"
+                                       aria-current="@(isManagePeers ? "page" : null)">
+                                        Manage Peers
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a asp-controller="PeerDiscovery"
+                                       asp-action="Groups"
+                                       class="menu-dropdown-item group @(isGroups ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive")"
+                                       aria-current="@(isGroups ? "page" : null)">
+                                        Manage Peer Groups
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Menu Item ReportSettings  -->
+                    <li x-data="{ openSettings: @(isReportsettingActive ? "true" : "false") }">
+                        <button type="button" x-on:click="openSettings = !openSettings"
+                                x-bind:aria-expanded="openSettings" aria-controls="pp-report-settings-menu"
+                                class="menu-item group w-full"
+                                x-bind:class=" openSettings || @(isReportsettingActive ? "true" : "false") ? 'menu-item-active' : 'menu-item-inactive'">
+                            <svg x-bind:class="openSettings || @(isReportsettingActive ? "true" : "false") ? 'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                                 width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </svg>
+
+                            <span class="menu-item-text" x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                ReportSettings
+                            </span>
+
+                            <svg class="menu-item-arrow"
+                                 x-bind:class="[openSettings || @(isReportsettingActive ? "true" : "false") ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive', sidebarToggle ? 'lg:hidden' : '' ]"
+                                 width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4.79175 7.39584L10.0001 12.6042L15.2084 7.39585" stroke="currentColor" stroke-width="1.5"
+                                      stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu Start -->
+                        <div id="pp-report-settings-menu" x-show="openSettings" x-cloak
+                             class="overflow-hidden transform translate">
+                            <ul x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'" class="flex flex-col gap-1 mt-2 menu-dropdown pl-9">
+                                <li>
+                                    <a asp-controller="ReportSettings" asp-action="Preferences" class="menu-dropdown-item group"
+                                       x-bind:class="@(isReportperferences ? "true" : "false") ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'">
+                                        Report Preferences
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-controller="ReportSettings" asp-action="SelectPeer" class="menu-dropdown-item group"
+                                       x-bind:class="@(isSelectPeers ? "true" : "false") ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive'">
+                                        Select Peers
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Dropdown Menu End -->
+                    </li>
+
+                    <!-- Menu Item Peer Compare Report (Main Menu Item with Submenus) -->
+                    <li x-data="{ isReportMenuOpen: true, openCompanyMaster: true, openWebSocial: true, openDirectors: true, openCharges: true, openEmployees: true, openFinancials: true }">
+                        <button type="button"
+                                x-on:click="isReportMenuOpen = !isReportMenuOpen"
+                                x-bind:aria-expanded="isReportMenuOpen" aria-controls="pp-compare-report-menu"
+                                class="menu-item group w-full" x-bind:class="(@(isCompareReport ? "true" : "false") || isReportMenuOpen) ? 'menu-item-active' : 'menu-item-inactive'">
+                            <svg x-bind:class="(@(isCompareReport ? "true" : "false") || isReportMenuOpen) ? 'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                                 width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="3" x2="12" y2="21" />
+                                <path d="M4 7l8-4 8 4" />
+                                <path d="M6 18H2l3-7 3 7H6z" />
+                                <path d="M20 18h-4l3-7 3 7h-2z" />
+                            </svg>
+
+                            <span class="menu-item-text" x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                Peer Compare Report
+                            </span>
+
+                            <!-- Expand/Collapse arrow for Peer Compare Report menu -->
+                            <span class="ml-auto" x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                <svg class="menu-item-arrow"
+                                     x-bind:class="isReportMenuOpen ? 'menu-item-arrow-active' : 'menu-item-arrow-inactive'"
+                                     width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.79175 7.39584L10.0001 12.6042L15.2084 7.39585" stroke="currentColor" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </span>
+                        </button>
+
+                        <!-- Submenus for Peer Compare Report (One level up, direct submenus under Peer Compare Report) -->
+                        <div id="pp-compare-report-menu" x-show="isReportMenuOpen" x-cloak x-collapse
+                             class="overflow-hidden transform translate mt-1">
+                            <ul x-bind:class="sidebarToggle ? 'lg:hidden' : 'flex'" class="flex flex-col gap-1.5 mt-1 pl-6 pr-2">
+
+                                <!-- 1. Company Master (Submenu with collapsible sub-items) -->
+                                <li class="rounded-lg">
+                                    <div class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-300 transition-colors">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-registration" class="flex items-center gap-1.5 flex-grow-1">
+                                            <svg class="h-3.5 w-3.5 text-brand-primary-blue" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                                            </svg>
+                                            <span>1. Company Master</span>
+                                        </a>
+                                        <button type="button" x-on:click="openCompanyMaster = !openCompanyMaster"
+                                                x-bind:aria-expanded="openCompanyMaster" aria-label="Toggle Company Master"
+                                                class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                                            <svg class="h-3.5 w-3.5 transition-transform duration-200"
+                                                 x-bind:class="openCompanyMaster ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div x-show="openCompanyMaster" x-cloak x-collapse class="pl-4 pr-1 py-0.5 space-y-0.5">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-registration"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 1.1 Registration
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-kyc"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 1.2 KYC Identifiers
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-industry"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 1.3 Industry & Codes
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-addresses"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 1.4 Addresses
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-filings"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 1.5 Filing Status
+                                        </a>
+                                    </div>
+                                </li>
+
+                                <!-- 2. Web & Social Links (Submenu with collapsible sub-items) -->
+                                <li class="rounded-lg">
+                                    <div class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-300 transition-colors">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-websocial" class="flex items-center gap-1.5 flex-grow-1">
+                                            <svg class="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" viewBox="0 0 24 24" fill="none"
+                                                 stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                            </svg>
+                                            <span>2. Web & Social Links</span>
+                                        </a>
+                                        <button type="button" x-on:click="openWebSocial = !openWebSocial"
+                                                x-bind:aria-expanded="openWebSocial" aria-label="Toggle Web and Social Links"
+                                                class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                                            <svg class="h-3.5 w-3.5 transition-transform duration-200"
+                                                 x-bind:class="openWebSocial ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div x-show="openWebSocial" x-cloak x-collapse class="pl-4 pr-1 py-0.5 space-y-0.5">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-web-overview"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 2.1 Web Overview
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-web-table"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 2.2 Social Media Matrix
+                                        </a>
+                                    </div>
+                                </li>
+
+                                <!-- 3. Directors Master (Submenu with collapsible sub-items) -->
+                                <li class="rounded-lg">
+                                    <div class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-300 transition-colors">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-directors" class="flex items-center gap-1.5 flex-grow-1">
+                                            <svg class="h-3.5 w-3.5 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                            <span>3. Directors Master</span>
+                                        </a>
+                                        <button type="button" x-on:click="openDirectors = !openDirectors"
+                                                x-bind:aria-expanded="openDirectors" aria-label="Toggle Directors Master"
+                                                class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                                            <svg class="h-3.5 w-3.5 transition-transform duration-200"
+                                                 x-bind:class="openDirectors ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div x-show="openDirectors" x-cloak x-collapse class="pl-4 pr-1 py-0.5 space-y-0.5">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-director-count"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 3.1 Count of Directors
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-directors-list"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 3.2 List of Active Directors
+                                        </a>
+                                    </div>
+                                </li>
+
+                                <!-- 4. Charges Master (Submenu with collapsible sub-items) -->
+                                <li class="rounded-lg">
+                                    <div class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-300 transition-colors">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-charges" class="flex items-center gap-1.5 flex-grow-1">
+                                            <svg class="h-3.5 w-3.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                            </svg>
+                                            <span>4. Charges Master</span>
+                                        </a>
+                                        <button type="button" x-on:click="openCharges = !openCharges"
+                                                x-bind:aria-expanded="openCharges" aria-label="Toggle Charges Master"
+                                                class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                                            <svg class="h-3.5 w-3.5 transition-transform duration-200"
+                                                 x-bind:class="openCharges ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div x-show="openCharges" x-cloak x-collapse class="pl-4 pr-1 py-0.5 space-y-0.5">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-charges-summary"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 4.1 Summary of Charges
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-charges-list"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 4.2 List of Charges
+                                        </a>
+                                    </div>
+                                </li>
+
+                                <!-- 5. Employee Master (Submenu with collapsible sub-items) -->
+                                <li class="rounded-lg">
+                                    <div class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-300 transition-colors">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-employees" class="flex items-center gap-1.5 flex-grow-1">
+                                            <svg class="h-3.5 w-3.5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                            </svg>
+                                            <span>5. Employee Master</span>
+                                        </a>
+                                        <button type="button" x-on:click="openEmployees = !openEmployees"
+                                                x-bind:aria-expanded="openEmployees" aria-label="Toggle Employee Master"
+                                                class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                                            <svg class="h-3.5 w-3.5 transition-transform duration-200"
+                                                 x-bind:class="openEmployees ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div x-show="openEmployees" x-cloak x-collapse class="pl-4 pr-1 py-0.5 space-y-0.5">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-employees-kpi"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 5.1 Workforce KPIs
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-employees-table"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 5.2 Monthly Trend
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-establishment-details"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 5.3 Establishment Details
+                                        </a>
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="subsection-establishment-status"
+                                           class="block rounded-md px-2 py-1 text-[11px] text-gray-600 transition-colors hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-300">
+                                            • 5.4 Establishment Status
+                                        </a>
+                                    </div>
+                                </li>
+
+                                <!-- 6. Financial Summary (Submenu) -->
+                                <li class="rounded-lg">
+                                    <div class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:bg-gray-100 hover:text-brand-primary-blue dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-blue-300 transition-colors">
+                                        <a asp-controller="ReportSettings" asp-action="Report" asp-fragment="section-financials" class="flex items-center gap-1.5 flex-grow-1">
+                                            <svg class="h-3.5 w-3.5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                 stroke-width="2">
+                                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                                            </svg>
+                                            <span>6. Financial Summary</span>
+                                        </a>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- Calendar: retain your existing destination -->
+                    <li>
+                        <a href="#" class="menu-item group menu-item-inactive">
+                            <svg class="menu-item-icon-inactive"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M8 2C8.41421 2 8.75 2.33579 8.75 2.75V3.75H15.25V2.75C15.25 2.33579 15.5858 2 16 2C16.4142 2 16.75 2.33579 16.75 2.75V3.75H18.5C19.7426 3.75 20.75 4.75736 20.75 6V9V19C20.75 20.2426 19.7426 21.25 18.5 21.25H5.5C4.25736 21.25 3.25 20.2426 3.25 19V9V6C3.25 4.75736 4.25736 3.75 5.5 3.75H7.25V2.75C7.25 2.33579 7.58579 2 8 2ZM8 5.25H5.5C5.08579 5.25 4.75 5.58579 4.75 6V8.25H19.25V6C19.25 5.58579 18.9142 5.25 18.5 5.25H16H8ZM19.25 9.75H4.75V19C4.75 19.4142 5.08579 19.75 5.5 19.75H18.5C18.9142 19.75 19.25 19.4142 19.25 19V9.75Z" />
+                            </svg>
+
+                            <span class="menu-item-text"
+                                  x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                Calendar
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- User Profile -->
+                    <li>
+                        <a asp-controller="Account"
+                           asp-action="EditProfile"
+                           class="menu-item group @(isProfile ? "menu-item-active" : "menu-item-inactive")"
+                           aria-current="@(isProfile ? "page" : null)">
+
+                            <svg class="@(isProfile ? "menu-item-icon-active" : "menu-item-icon-inactive")"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M12 3.5C7.30558 3.5 3.5 7.30558 3.5 12C3.5 14.1526 4.3002 16.1184 5.61936 17.616C6.17279 15.3096 8.24852 13.5955 10.7246 13.5955H13.2746C15.7509 13.5955 17.8268 15.31 18.38 17.6167C19.6996 16.119 20.5 14.153 20.5 12C20.5 7.30558 16.6944 3.5 12 3.5ZM17.0246 18.8566V18.8455C17.0246 16.7744 15.3457 15.0955 13.2746 15.0955H10.7246C8.65354 15.0955 6.97461 16.7744 6.97461 18.8455V18.856C8.38223 19.8895 10.1198 20.5 12 20.5C13.8798 20.5 15.6171 19.8898 17.0246 18.8566ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM11.9991 7.25C10.8847 7.25 9.98126 8.15342 9.98126 9.26784C9.98126 10.3823 10.8847 11.2857 11.9991 11.2857C13.1135 11.2857 14.0169 10.3823 14.0169 9.26784C14.0169 8.15342 13.1135 7.25 11.9991 7.25ZM8.48126 9.26784C8.48126 7.32499 10.0563 5.75 11.9991 5.75C13.9419 5.75 15.5169 7.32499 15.5169 9.26784C15.5169 11.2107 13.9419 12.7857 11.9991 12.7857C10.0563 12.7857 8.48126 11.2107 8.48126 9.26784Z" />
+                            </svg>
+
+                            <span class="menu-item-text"
+                                  x-bind:class="sidebarToggle ? 'lg:hidden' : ''">
+                                User Profile
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Add future parent menus here. -->
+                </ul>
             </div>
-        </div>
-
-        <a href="#" class="@link">
-            <i class="bi bi-calendar3 text-lg"></i>
-            <span>Calendar</span>
-        </a>
-
-        <a href="#" class="@link">
-            <i class="bi bi-person-circle text-lg"></i>
-            <span>User Profile</span>
-        </a>
-    </nav>
+        </nav>
+    </div>
 </aside>
-
-<div x-show="sidebarOpen" x-cloak @@click="sidebarOpen = false"
-     class="fixed inset-0 z-40 bg-slate-950/50 lg:hidden"></div>

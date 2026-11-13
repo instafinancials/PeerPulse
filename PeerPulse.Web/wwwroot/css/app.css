@@ -1,0 +1,22 @@
+﻿[x-cloak] {
+    display: none !important;
+}
+/* Native dialogs use showModal(); no competing Alpine modal state. */
+.peer-ui dialog {
+    position: fixed;
+    inset: 0;
+    width: min(36rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    overflow-y: auto;
+}
+
+    .peer-ui dialog::backdrop {
+        background: rgb(0 0 0 / 50%);
+        backdrop-filter: blur(4px);
+    }
+
+/* Prevent display utilities from overriding the native hidden attribute. */
+.peer-ui [hidden] {
+    display: none !important;
+}

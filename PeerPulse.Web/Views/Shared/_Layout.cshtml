@@ -1,8 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="utf-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <title>@ViewData["Title"] - PeerPulse</title>
@@ -11,53 +17,52 @@
 
     <meta name="author" content="InstaFinancials" />
 
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="icon" type="image/x-icon" href="~/images/favicon.ico" />
 
-    <link rel="canonical" href="https://peerpulse.instafinancials.com" />
-
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-
-    <!-- Google font -->
+    <!-- Same font as the static project -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" />
+
+    <!-- Used by the account dropdown icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/@@alpinejs/collapse@3.14.9/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
-    <!-- Central stylesheet -->
+
+    <!-- Your copied build/style.css -->
     <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
+
+    <!-- Keep your application-specific styles -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/PeerPulse.Web.styles.css" asp-append-version="true" />
-    <!-- jQuery: load before views and other scripts -->
+
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <style>
-            [x-cloak] {
-                display: none !important
-            }
-    </style>
-    <script>
-            if (localStorage.getItem('peerpulse-dark-mode') === 'true') {
-                document.documentElement.classList.add('dark');
-            }
-    </script>
+
+    <!-- Register ppTheme before Alpine starts -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@@alpinejs/collapse@3.14.9/dist/cdn.min.js"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="~/css/pp-report-loader.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Head", required: false)
 </head>
 
-<body class="font-inter antialiased"
-      x-data="{ darkMode: localStorage.getItem('peerpulse-dark-mode') === 'true' }"
-      x-init="$watch('darkMode', v => localStorage.setItem('peerpulse-dark-mode', v))"
-      :class="{ 'dark': darkMode }">
-
+<body class="font-inter" x-data="ppTheme">
     @RenderBody()
+
     <partial name="_PpMsg" />
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <partial name="_PpReportLoader" />
+
     <script src="~/js/pp-msg.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     <script src="~/js/pp-loader.js" asp-append-version="true"></script>
+
+    <script defer src="~/js/pp-report-loader.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

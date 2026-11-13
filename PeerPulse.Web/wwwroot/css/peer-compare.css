@@ -1,0 +1,19 @@
+/* The uploaded compiled Tailwind CSS supplies all report colours, typography,
+   radii, shadows, spacing and table/card classes. No replacement theme here. */
+.static-peer-report{font-family:Inter,sans-serif;color:var(--color-gray-900);background:var(--color-gray-50);margin:-1rem;padding:1rem;min-width:0}
+.dark .static-peer-report{color:var(--color-gray-100);background:var(--color-gray-900)}
+.report-native-heading{display:block;list-style:none;cursor:pointer}.report-native-heading::-webkit-details-marker{display:none}
+.report-native-section>.report-native-heading .report-expand-label{display:none}.report-native-section:not([open])>.report-native-heading .report-expand-label{display:inline}
+.report-native-section:not([open])>.report-native-heading .report-collapse-label{display:none}
+.report-native-section:not([open])>.report-native-heading .report-toggle-chevron{transform:rotate(180deg)}
+@media(min-width:768px){.static-peer-report{margin:-1.5rem;padding:1.5rem}}
+@media(min-width:1024px){.static-peer-report{margin:-2rem;padding:2rem}}
+@media print{
+ body{background:white!important;color:black!important}
+ .sidebar,.sidebar-header,header,.no-print,nav,#sticky-section-nav{display:none!important}
+ main{padding:0!important;margin:0!important}
+ .static-peer-report{margin:0!important;padding:0!important;background:white!important}
+ .overflow-x-auto{overflow:visible!important}
+ .shadow-xs,.shadow-sm,.shadow-md,.shadow-xl{box-shadow:none!important}
+ .report-native-heading{break-after:avoid}
+}

@@ -1,0 +1,9 @@
+<div role="status" aria-live="polite" x-show="loading"
+     class="mb-4 rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+    Loading your saved settings…
+</div>
+<div role="alert" x-show="error" x-cloak
+     class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-gray-800 dark:text-red-400">
+    <span x-text="error"></span>
+    <button type="button" x-on:click="window.location.reload()" class="ml-2 font-semibold underline">Reload page</button>
+</div>

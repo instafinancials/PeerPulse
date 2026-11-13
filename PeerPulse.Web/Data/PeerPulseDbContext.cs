@@ -7,8 +7,7 @@ namespace PeerPulse.Web.Data;
 
 public partial class PeerPulseDbContext : DbContext
 {
-    public PeerPulseDbContext(DbContextOptions<PeerPulseDbContext> options)
-        : base(options)
+    public PeerPulseDbContext(DbContextOptions<PeerPulseDbContext> options): base(options)
     {
     }
 

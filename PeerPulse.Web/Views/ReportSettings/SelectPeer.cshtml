@@ -1,0 +1,254 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Select Peers";
+    ViewData["DashboardPage"] = "Select-Peers";
+}
+
+<section x-data="peerCompareSelectApp()"
+         data-load="@Url.Action("SelectionData", "ReportSettings")"
+         data-save="@Url.Action("SaveSelection", "ReportSettings")"
+         data-preference-save="@Url.Action("SavePreferences", "ReportSettings")"
+         data-select="@Url.Action("SelectPeer", "ReportSettings")" class="flex-1 pb-24">
+    @Html.AntiForgeryToken()
+    <partial name="_ReportSettingsStatus" />
+    <noscript>
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-300" role="status">
+            Enable JavaScript to select peers and save your report selection.
+        </p>
+    </noscript>
+    <fieldset x-bind:disabled="!ready || busy" class="min-w-0 border-0 p-0 m-0"
+              x-bind:aria-busy="loading || busy">
+
+        <div class="mx-auto w-full">
+
+            <!-- Breadcrumbs & Header -->
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+                        <span class="text-gray-700 dark:text-gray-300">PeerCompare</span>
+                        <span>/</span>
+                        <span class="font-medium text-brand-primary-blue dark:text-brand-400">Select Peers</span>
+                    </div>
+                    <h2 class="text-title-sm font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary-blue/10 text-brand-primary-blue dark:bg-brand-primary-blue/20 dark:text-blue-400">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </span>
+                        PeerCompare - Select Peers
+                    </h2>
+                </div>
+
+                <!-- Wizard Step Navigator -->
+                <div class="flex items-center gap-2 bg-gray-100 p-1.5 rounded-xl dark:bg-gray-800 text-xs font-semibold">
+                    <a asp-controller="ReportSettings" asp-action="Preferences" class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+                        Report Preferences
+                    </a>
+                    <span class="flex items-center gap-1.5 rounded-lg bg-brand-primary-blue px-3 py-1.5 text-white shadow-xs">
+                        Select Peers
+                    </span>
+                    <button type="button"
+                            x-on:click="proceedToReport()"
+                            x-bind:disabled="!ready || busy || selectedPeerIds.length === 0"
+                            class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-text="busy ? 'Saving selection…' : 'View Report'">View Report</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Controls Ribbon: Group Selector & Search & Bulk Actions -->
+            <div class="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs dark:border-gray-800 dark:bg-gray-800">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+                    <!-- Group Selector & Search -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+
+                        <!-- 1. Select Group Dropdown -->
+                        <div class="w-full sm:w-64 shrink-0">
+                            <label for="pp-select-group" class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                                Select Peer Group
+                            </label>
+                            <select id="pp-select-group" x-model="selectedGroupId"
+                                    class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-800 shadow-2xs focus:border-brand-primary-blue focus:ring-1 focus:ring-brand-primary-blue dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+                                <option value="all" x-text="`All Peer Groups (${allPeers.length} Peers)`"></option>
+                                <template x-for="grp in groups" x-bind:key="grp.id">
+                                    <option x-bind:value="grp.id" x-text="`${grp.name} (${allPeers.filter(p => p.groups.some(g => String(g.id) === String(grp.id))).length} Peers)`"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <!-- 2. Search Box by Name or CIN -->
+                        <div class="flex-1">
+                            <label for="pp-select-search" class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                                Search Peers
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                </span>
+                                <input id="pp-select-search" type="search" x-model.debounce.200ms="searchQuery"
+                                       placeholder="Search company name, CIN, LLPIN, or PAN..."
+                                       class="w-full rounded-xl border border-gray-300 pl-9 pr-8 py-2 text-xs font-medium text-gray-900 shadow-2xs focus:border-brand-primary-blue focus:ring-1 focus:ring-brand-primary-blue dark:border-gray-700 dark:bg-gray-900 dark:text-white" />
+                                <button type="button" x-cloak x-show="searchQuery" x-on:click="searchQuery = ''" aria-label="Clear peer search" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400 hover:text-gray-600">✕</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bulk Action Buttons & Counter -->
+                    <div class="flex items-center gap-2 pt-2 lg:pt-0 shrink-0">
+                        <button type="button" x-on:click="selectAll()"
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors">
+                            Select All
+                        </button>
+                        <button type="button" x-on:click="deselectAll()"
+                                class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors">
+                            Deselect All
+                        </button>
+                        <button type="button" x-on:click="selectGroupPeers(selectedGroupId)" x-bind:disabled="!ready || busy || selectedGroupId === 'all'"
+                                class="rounded-lg bg-blue-50 px-3 py-2 text-xs font-semibold text-brand-primary-blue hover:bg-blue-100 dark:bg-blue-900/40 dark:text-blue-300 transition-colors">
+                            <span x-text="selectedGroupLabel"></span>
+                        </button>
+                        <div class="ml-2 pl-3 border-l border-gray-200 dark:border-gray-700">
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span x-text="`${selectedPeerIds.length} Selected`"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Peers Tabular View -->
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-xs overflow-hidden dark:border-gray-800 dark:bg-gray-800">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-50/75 border-b border-gray-200 text-gray-500 dark:bg-gray-900/50 dark:border-gray-700 dark:text-gray-400 uppercase text-[11px] font-bold">
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 sm:pl-6 w-12 text-center">
+                                    <span class="sr-only">Select</span>
+                                </th>
+                                <th scope="col" class="py-3.5 px-3">Company Legal Name & Trade Name</th>
+                                <th scope="col" class="py-3.5 px-3">CIN / LLPIN</th>
+                                <th scope="col" class="py-3.5 px-3">Peer Group</th>
+                                <th scope="col" class="py-3.5 px-3">State</th>
+                                <th scope="col" class="py-3.5 px-3 text-right">Paid-Up Capital</th>
+                                <th scope="col" class="py-3.5 px-3 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                            <template x-for="peer in filteredPeers" x-bind:key="peer.peerId">
+                                <tr x-on:click="togglePeer(peer.peerId)"
+                                    x-bind:class="isSelected(peer.peerId) ? 'bg-blue-50/40 dark:bg-blue-900/20' : 'hover:bg-gray-50/60 dark:hover:bg-gray-800/60'"
+                                    class="cursor-pointer transition-colors">
+
+                                    <!-- Checkbox column -->
+                                    <td class="py-3.5 pl-4 pr-3 sm:pl-6 text-center" x-on:click.stop>
+                                        <input type="checkbox" x-bind:checked="isSelected(peer.peerId)" x-on:change="togglePeer(peer.peerId)"
+                                               x-bind:aria-label="'Select ' + (peer.company || peer.cin || 'peer')"
+                                               class="h-4 w-4 rounded border-gray-300 text-brand-primary-blue focus:ring-brand-primary-blue/30 dark:border-gray-600 dark:bg-gray-700" />
+                                    </td>
+
+                                    <!-- Company Name & Trade Name -->
+                                    <td class="py-3.5 px-3">
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-primary-blue/10 text-brand-primary-blue font-bold text-xs dark:bg-brand-primary-blue/20 dark:text-blue-400">
+                                                <span x-text="(peer.tradeName || peer.company || 'P').charAt(0)"></span>
+                                            </div>
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-bold text-gray-900 dark:text-white" x-text="peer.company"></span>
+                                                    <span x-show="peer.tradeName" class="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300" x-text="peer.tradeName"></span>
+                                                </div>
+                                                <span class="text-[11px] text-gray-500 dark:text-gray-400" x-text="peer.companySubcategory || peer.companyCategory || '—'"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- CIN / LLPIN -->
+                                    <td class="py-3.5 px-3 font-mono text-[11px] text-gray-700 dark:text-gray-300 font-semibold" x-text="peer.cin"></td>
+
+                                    <!-- Peer Group -->
+                                    <td class="py-3.5 px-3">
+                                        <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-brand-primary-blue dark:bg-blue-900/40 dark:text-blue-300" x-text="peer.groups.map(g => g.name).join(', ') || 'Ungrouped'"></span>
+                                    </td>
+
+                                    <!-- State / RoC -->
+                                    <td class="py-3.5 px-3 text-gray-600 dark:text-gray-300 font-medium" x-text="peer.state"></td>
+
+                                    <!-- Paid Up Capital -->
+                                    <td class="py-3.5 px-3 text-right font-mono font-bold text-gray-900 dark:text-white" x-text="formatCapital(peer.paidUpCapital)"></td>
+
+                                    <!-- Status -->
+                                    <td class="py-3.5 px-3 text-center">
+                                        <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                                              x-bind:class="peer.companyStatus && peer.companyStatus.toLowerCase() === 'active' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
+                                            <span x-text="peer.companyStatus || 'Not available'"></span>
+                                        </span>
+                                    </td>
+
+                                </tr>
+                            </template>
+
+                            <!-- Empty state -->
+                            <template x-if="ready && !loading && filteredPeers.length === 0">
+                                <tr>
+                                    <td colspan="7" class="py-12 text-center text-gray-500 dark:text-gray-400">
+                                        <p class="font-medium text-sm">No peers match the search or filter criteria.</p>
+                                        <button type="button" x-on:click="searchQuery = ''; selectedGroupId = 'all'" class="mt-2 text-xs text-brand-primary-blue hover:underline">
+                                            Clear search and filters
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bottom Floating Action Bar -->
+            <div class="sticky bottom-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 py-3.5 px-4 shadow-xl">
+                <div class="max-w-(--breakpoint-2xl) mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <a asp-controller="ReportSettings" asp-action="Preferences" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-brand-primary-blue dark:text-gray-400 dark:hover:text-blue-300">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            Edit Preferences
+                        </a>
+                        <span class="text-gray-300 dark:text-gray-700">|</span>
+                        <span class="text-xs font-medium text-gray-600 dark:text-gray-400">
+                            <strong class="text-gray-900 dark:text-white" x-text="selectedPeerIds.length"></strong> peers ready for report
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button type="button" x-on:click="proceedToReport()"
+                                x-bind:disabled="!ready || busy || selectedPeerIds.length === 0"
+                                class="inline-flex items-center gap-2 rounded-xl bg-brand-primary-blue px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-brand-primary-blue/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <span x-text="busy ? 'Saving selection…' : 'View Comparison Report'">View Comparison Report</span>
+                            <span class="rounded bg-white/20 px-1.5 py-0.5 text-[10px]" x-text="selectedPeerIds.length"></span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+</section>
+@section Scripts {
+    <script src="~/js/reportsettings/reportsettings.js" asp-append-version="true"></script>
+}

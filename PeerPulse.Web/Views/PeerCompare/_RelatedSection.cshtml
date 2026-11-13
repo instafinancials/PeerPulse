@@ -1,0 +1,13 @@
+@model ComparisonPageViewModel
+<section class="pc-panel">
+    <h2>Potential related companies</h2>
+    
+    @foreach (var item in Model.Items.Where(i => i.Report is not null))
+    {
+        <details class="pc-company-block pc-details">
+            <summary>@item.Label · @(item.Report!.Identifier)</summary>
+            @await Html.PartialAsync("_ComparisonJsonNode", new ComparisonNodeViewModel(ComparisonDisplay.Property(ComparisonDisplay.Section(item, "DirectorSignatoryMasterSummary"), "PotentialRelatedPartyMasterSummary")))
+        </details>
+    }
+</section>
+
